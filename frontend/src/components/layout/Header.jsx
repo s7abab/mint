@@ -7,20 +7,25 @@ import {
   Button,
   IconButton,
 } from "@material-tailwind/react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/features/authSlice";
+import {useSelector } from "react-redux";
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const isAuth = useSelector((state) => state.auth.user);
+
+  const token = localStorage.getItem("token");
 
   //HandleLogout
   const handleLogout = async (e) => {
-    localStorage.clear();
-    dispatch(logout());
-    navigate("/");
+    e.preventDefault()
+    try {
+      localStorage.clear()
+      navigate("/login");
+    } catch (error) {
+      console.log(error)
+      
+    }
   };
 
   React.useEffect(() => {
@@ -88,7 +93,7 @@ const Header = () => {
           </Typography>
           <div className="hidden lg:block">{navList}</div>
 
-          {isAuth ? (
+          {token ? (
             <Button
               variant="gradient"
               size="sm"

@@ -125,4 +125,24 @@ const login = async (req, res) => {
     });
   }
 };
-module.exports = { login, register, test };
+
+//get current user
+const currentUser = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ _id: req.body.userId });
+    return res.status(200).send({
+      success: true,
+      message: "User successfully featched",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Unable to featch user",
+      error,
+    });
+  }
+};
+
+module.exports = { login, register, test, currentUser };

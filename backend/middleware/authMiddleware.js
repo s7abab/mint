@@ -9,7 +9,7 @@ const isUser = async (req, res, next) => {
       req.headers.authorization,
       process.env.JWT_SECRET
     );
-    req.user = decode;
+    req.body.userId = decode._id
     next();
   } catch (error) {
     console.log(error);
@@ -19,8 +19,7 @@ const isUser = async (req, res, next) => {
 //CHECK IS ADMIN OR NOT
 const isAdmin = async (req, res, next) => {
   try {
-    console.log(req.user)
-    const user = await userModel.findById(req.user._id);
+    const user = await userModel.findById(req.body.userId);
     if (user.role !== "admin") {
       return res.status(401).send({
         success: false,
@@ -43,7 +42,7 @@ const isAdmin = async (req, res, next) => {
 const isCounselor = async (req, res, next) => {
     try {
       console.log(req.user)
-      const user = await counselorModel.findById(req.user._id);
+      const user = await counselorModel.findById(req.body.userId);
       console.log(user)
       if (user.role !== "counselor") {
         return res.status(401).send({

@@ -4,35 +4,19 @@ import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import Api from "../../services/axios";
+import { userRegister } from "../../redux/features/auth/authActions";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   //Handle register
   const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      const res = await Api.post("/auth/register", {
-        name,
-        email,
-        password,
-        confirmPassword,
-      });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        navigate("/login");
-      } else {
-        toast.error(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(userRegister({name,email,password,confirmPassword}))
   };
   return (
     <>
