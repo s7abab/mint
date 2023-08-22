@@ -27,7 +27,6 @@ export const userLogin = createAsyncThunk(
 export const userRegister = createAsyncThunk(
   "/auth/register",
   async ({ name, email, password, confirmPassword }, { rejectWithValue }) => {
-    console.log(name)
     try {
       const { data } = await Api.post("/auth/register", {
         name,
@@ -55,11 +54,11 @@ export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async ({ rejectWithValue }) => {
     try {
-      const res = Api.get("/auth/current-user");
-      if (res?.data) {
+      const res = await Api.get("/auth/current-user");
+      if (res.data) {
         return res?.data;
       }
-    } catch (error) {
+    } catch (error) { 
       console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
