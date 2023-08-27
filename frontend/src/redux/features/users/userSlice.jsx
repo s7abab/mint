@@ -17,15 +17,18 @@ export const fetchAllUsers = createAsyncThunk(
       throw error;
     }
   }
-);
+);  
 
 // Fetch selected user
 
 export const fetchSelectedUser = createAsyncThunk(
   "user/fetchOneUser",
-  async (name, { dispatch }) => {
+  async (userId, { dispatch }) => { 
+    if (!userId) {
+      throw new Error('Invalid userId');
+    }
     try {
-      const res = await Api.get(`user/user/${name}`);
+      const res = await Api.get(`user/user/${userId}`);
       if (res.data.success) {
         return res.data.user;
       }
@@ -36,23 +39,45 @@ export const fetchSelectedUser = createAsyncThunk(
   }
 );
 
+
 // Profile Photo Upload
-export const uploadUserProfilePhoto = createAsyncThunk("user/uploadProfilePhoto",
-async(file, thunkApi)=>{
-  try {
-    const name = thunkApi.getState().auth.user;
-    const formData = new FormData();
-    formData.append('image', file );
-    const res = await Api.post(`user/image/${name}`, formData);
-    if(res.data.success){
-      thunkApi.dispatch(fetchSelectedUser(name));
-      toast.success(res.data.message)
+export const uploadUserProfilePhoto = createAsyncThunk(
+  "user/uploadProfilePhoto",
+  async (file, thunkApi) => {
+    try {
+      const userId = thunkApi.getState().auth._id; // Use userId instead of name
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await Api.post(`user/image/${userId}`, formData); // Use userId instead of name
+      if (res.data.success) {
+        thunkApi.dispatch(fetchSelectedUser(userId)); // Use userId instead of name
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error)
   }
-}
-) 
+);
+
+
+// Update profile
+export const updateUserProfile = createAsyncThunk(
+  "user/updateUserProfile", 
+  async ({ field, value, userId }, { dispatch, rejectWithValue }) => { // Use userId instead of name
+    try {
+      const res = await Api.post(`user/user/${userId}`, { field, value }); // Use userId instead of name
+      if (res.data.success) {
+        toast.success(res.data.message);
+        dispatch(fetchSelectedUser(userId))
+        return res.data; 
+      } else {
+        return rejectWithValue(res.data.message); 
+      }
+    } catch (error) {
+      return rejectWithValue("An error occurred.");
+    }
+  }
+);
 
 
 const userSlice = createSlice({
@@ -69,6 +94,7 @@ const userSlice = createSlice({
     builder.addCase(fetchSelectedUser.fulfilled, (state, { payload }) => {
       state.selectedUser = payload;
     });
+
   },
 });
 

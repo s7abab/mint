@@ -8,6 +8,7 @@ const token = localStorage.getItem("token")
 const initialState = {
   loading: false,
   user: null,
+  _id: null,
   role:null,
   token,
   error: null,
@@ -28,6 +29,7 @@ const authSlice = createSlice({
     builder.addCase(userLogin.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.user = payload.user.name;
+      state._id = payload.user._id;
       state.role = payload.user.role;
       state.token = payload.token;
     });
@@ -45,6 +47,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = payload.user.name;
       state.role = payload.user.role;
+      state._id= payload.user._id;
       state.token = payload.token;
     });
     builder.addCase(getCurrentUser.rejected, (state, { payload }) => {

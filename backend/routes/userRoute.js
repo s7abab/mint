@@ -3,15 +3,18 @@ const {
   getAllUsers,
   getSelectedUser,
   uploadProfile,
+  updateProfile,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const router = express.Router();
 
-//All Users data
+// All Users data
 router.route("/users").get(getAllUsers);
+
 // One User data
-router.route("/user/:name").get(getSelectedUser);
+router.route("/user/:userId").get(getSelectedUser).post(updateProfile);
+
 // Image Upload
-router.route("/image/:name").post(upload.single("image"), uploadProfile);
+router.route("/image/:userId").post(upload.single("image"), uploadProfile);
 
 module.exports = router;

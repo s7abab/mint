@@ -5,28 +5,57 @@ import {
   fetchSelectedUser,
   uploadUserProfilePhoto,
 } from "../../redux/features/users/userSlice";
-import { Button } from "@material-tailwind/react";
+import { AiFillEdit, AiFillCheckCircle } from "react-icons/ai";
+import { updateUserProfile } from "../../redux/features/users/userSlice";
 
 const UserUser = () => {
   const [file, setFile] = useState(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editingField, setEditingField] = useState(""); // State to track the field being edited
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.auth.user);
+  const userId = useSelector((state) => state.auth._id); // Assuming you have an "_id" field for the authenticated user
   const user = useSelector((state) => state.user.selectedUser);
-  // Handle image upalod
-  const handleImageUpload = async (e) => {
+
+  // Handle image upload
+  const handleImageUpload = async () => {
     try {
-      dispatch(uploadUserProfilePhoto(file, userName));
+      dispatch(uploadUserProfilePhoto(file, userId));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    dispatch(fetchSelectedUser(userName));
+    dispatch(fetchSelectedUser(userId));
     if (file) {
       handleImageUpload();
     }
-  }, [dispatch, userName, file]);
+  }, [dispatch, userId, file]);
+
+  const handleEditClick = (field) => {
+    setEditingField(field);
+    if (field === "name") {
+      setEditedName(user && user[0]?.name);
+    } else if (field === "email") {
+      setEditedEmail(user && user[0]?.email);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (editingField === "name") {
+      await dispatch(
+        updateUserProfile({ field: "name", value: editedName, userId })
+      );
+      setEditingField("");
+    } else if (editingField === "email") {
+      await dispatch(
+        updateUserProfile({ field: "email", value: editedEmail, userId })
+      );
+      dispatch(fetchSelectedUser(userId)); // Refresh user data
+      setEditingField("");
+    }
+  };
 
   return (
     <>
@@ -48,7 +77,7 @@ const UserUser = () => {
                   <input
                     onChange={(e) => {
                       setFile(e.target.files[0]);
-                      handleImageUpload(e);
+                      handleImageUpload();
                     }}
                     type="file"
                     name="image"
@@ -60,19 +89,58 @@ const UserUser = () => {
               </div>
             </div>
           </div>
-          <h1 className="text-2xl font-semibold mt-4">
-            {user && user[0]?.name}
+          <h1 className="text-2xl font-semibold mt-4 flex items-center">
+            {editingField === "name" ? (
+              <>
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                />
+                <AiFillCheckCircle
+                  className="ml-2 cursor-pointer text-green-500"
+                  onClick={handleSaveEdit}
+                />
+              </>
+            ) : (
+              <>
+                {user && user[0]?.name}
+                <AiFillEdit
+                  className="ml-2 cursor-pointer"
+                  onClick={() => handleEditClick("name")}
+                />
+              </>
+            )}
           </h1>
-
           <div className="mt-2">
             <label
-              htmlFor="specialization"
+              htmlFor="email"
               className="block text-gray-700 font-medium mb-2"
             >
               Email
             </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100">
-              {user && user[0]?.email}
+            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
+              {editingField === "email" ? (
+                <>
+                  <input
+                    type="email"
+                    value={editedEmail}
+                    onChange={(e) => setEditedEmail(e.target.value)}
+                  />
+                  <AiFillCheckCircle
+                    className="ml-2 cursor-pointer text-green-500"
+                    onClick={handleSaveEdit}
+                  />
+                </>
+              ) : (
+                <>
+                  {user && user[0]?.email}
+                  <AiFillEdit
+                    className="ml-2 cursor-pointer"
+                    onClick={() => handleEditClick("email")}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
