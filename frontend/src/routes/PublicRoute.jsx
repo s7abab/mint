@@ -1,10 +1,11 @@
-import React from 'react'
-import {Navigate} from "react-router-dom"
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-export default function PublicRoute({children}) {
-  if(localStorage.getItem("token")){
-      return <Navigate to="/" />
-    }else{
-      return children
+function Protected({ children }) {
+  if (!localStorage.getItem("token")) {
+    return <Navigate to="/login" replace={true}></Navigate>;
   }
+  return children;
 }
+
+export default Protected;

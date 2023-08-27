@@ -1,12 +1,20 @@
-import React, { useState } from "react";
-import Layout from "../Layout";
-import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import React, { useEffect, useState } from "react";
+import Layout from "../../components/Layout";
+import {
+  Card,
+  Input,
+  Button,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import Api from "../../services/axios";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../redux/features/category/categorySlice";
 
 const Application = () => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,12 +23,18 @@ const Application = () => {
   const [experience, setExperience] = useState("");
   const [fee, setFee] = useState("");
 
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.category.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
   const handleApply = async (e) => {
     e.preventDefault();
     try {
       const res = await Api.post("/counselor/apply", {
-        firstname,
-        lastname,
+        name,
         email,
         password,
         confirmPassword,
@@ -30,9 +44,9 @@ const Application = () => {
         fee,
       });
       if (res.data.success) {
-        toast.success(res.data.message);
+        toast.success("Application Send Successfully");
       } else {
-        toast.error(res.data.message);
+        toast.error("Application Not Submited");
       }
     } catch (error) {
       console.log("by", error);
@@ -40,26 +54,21 @@ const Application = () => {
   };
   return (
     <>
-      <Layout>
-        <div className="flex justify-center items-center h-screen w-screen">
+      <Layout sidebar={true}>
+        <div className="flex  justify-center mt-10 h-screen w-screen">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
               Apply as counselor
             </Typography>
             <form
               onSubmit={handleApply}
-              className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+              className="mt-3 mb-2 w-80 max-w-screen-lg sm:w-96"
             >
               <div className="mb-4 flex flex-col gap-2">
                 <Input
-                  onChange={(e) => setFirstname(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   size="md"
-                  label="Firstname"
-                />
-                <Input
-                  onChange={(e) => setLastname(e.target.value)}
-                  size="md"
-                  label="Lastname"
+                  label="Name"
                 />
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
@@ -83,11 +92,18 @@ const Application = () => {
                   size="md"
                   label="Address"
                 />
-                <Input
-                  onChange={(e) => setSpecialization(e.target.value)}
-                  size="md"
+                <Select
                   label="Specialization"
-                />
+                  onChange={(e) => setSpecialization(e)}
+                >
+                  {categories
+                    .filter((category) => category.active)
+                    .map((category) => (
+                      <Option value={category.name} key={category._id}>
+                        {category.name}
+                      </Option>
+                    ))}
+                </Select>
                 <Input
                   onChange={(e) => setExperience(e.target.value)}
                   size="md"
@@ -101,7 +117,7 @@ const Application = () => {
               </div>
 
               <Button type="submit" className="mt-6" fullWidth>
-                Register
+                Apply
               </Button>
             </form>
           </Card>

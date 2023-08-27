@@ -1,5 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
 import Api from "../../../services/axios";
 
 //login
@@ -34,10 +33,7 @@ export const userRegister = createAsyncThunk(
         password,
         confirmPassword,
       });
-      if (data?.success) {
-        alert("User registerd successfully");
-        window.location.replace("/login");
-      }
+      return data;
     } catch (error) {
       console.log(error);
       if (error.response && error.response.data.message) {

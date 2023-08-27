@@ -12,15 +12,20 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   //Handle register
   const handleRegister = async (e) => {
     e.preventDefault();
-    dispatch(userRegister({name,email,password,confirmPassword}))
+    const res = await dispatch(userRegister({ name, email, password, confirmPassword }));
+    if(res.payload.success){
+      toast.success("User Registerd Successfully")
+      navigate("/login")
+    }
   };
   return (
     <>
-      <Layout>
+      <Layout sidebar={true}>
         <div className="w-full mt-12 flex justify-center items-center">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
@@ -67,6 +72,10 @@ const RegisterPage = () => {
                 </Link>
               </Typography>
             </form>
+
+            <Button onClick={() => navigate("/apply")} className="mt-3">
+              Apply as counselor
+            </Button>
           </Card>
         </div>
       </Layout>

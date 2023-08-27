@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
 import Api from "../services/axios";
 import { getCurrentUser } from "../redux/features/auth/authActions";
-import { Navigate } from "react-router-dom";
-
-const protectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }) => {
   const dispatch = useDispatch();
 
-  //get current user
+  //get user current
   const getUser = async () => {
     try {
       const { data } = await Api.get("/auth/current-user");
@@ -31,4 +30,4 @@ const protectedRoute = ({ children }) => {
   }
 };
 
-export default protectedRoute;
+export default ProtectedRoute;

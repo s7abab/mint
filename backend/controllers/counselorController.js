@@ -1,12 +1,30 @@
 const { hashPassword } = require("../helpers/authHelper");
+const userModel = require("../models/userModel");
 const counselorModel = require("../models/counselorModel");
 
-//Apply controller
+// Get Profile
+const getProfile = async (req, res) => {
+  try {
+    const { counselorId } = req.params;
+    const counselors = await counselorModel.findById(counselorId);
+    res.status(200).send({
+      success: true,
+      counselors,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+    });
+  }
+};
+
+// Apply controller
 const apply = async (req, res) => {
   try {
     const {
-      firstname,
-      lastname,
+      name,
       email,
       password,
       confirmPassword,
@@ -15,11 +33,9 @@ const apply = async (req, res) => {
       experience,
       fee,
     } = req.body;
-    console.log(req.body)
     //Validation
     if (
-      !firstname ||
-      !lastname ||
+      !name ||
       !email ||
       !password ||
       !confirmPassword ||
@@ -47,18 +63,29 @@ const apply = async (req, res) => {
     const hashedPassword = await hashPassword(password);
     req.body.status = "pending";
     const counselor = new counselorModel({
-      firstname,
-      lastname,
+      name,
       email,
       password: hashedPassword,
       address,
-      specialization,
+      category: specialization,
       experience,
       fee,
     });
     await counselor.save();
+    const admin = await userModel.findOne({ role: "admin" });
+    const notification = admin.notification;
+    notification.push({
+      type: "apply-counselor-request",
+      name: `${counselor.name}  has applied for a counselor account`,
+      data: {
+        counselorId: counselor._id,
+        name: counselor.name,
+        onClickPath: "/admin/counselors",
+      },
+    });
+    await userModel.findByIdAndUpdate(admin._id, { notification });
 
-    res.status(200).send({
+    res.status(201).send({
       success: true,
       message: "Application send successfully",
     });
@@ -72,4 +99,4 @@ const apply = async (req, res) => {
   }
 };
 
-module.exports = { apply };
+module.exports = { apply, getProfile };

@@ -2,14 +2,11 @@ import React from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({apply}) => {
   const navigate = useNavigate()
   return (
     <>
     <footer className=" flex w-full flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 border-t border-blue-gray-50 py-6 text-center md:justify-between p-5">
-      <Button onClick={()=> navigate("/application")}>
-        Apply as counselor
-      </Button>
       <Typography color="blue-gray" className="font-normal">
         &copy; 2023 MINt
       </Typography>

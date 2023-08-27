@@ -15,6 +15,14 @@ const UserSchema = new Schema({
   image: { type: String },
   booking: [{ type: Schema.Types.ObjectId }],
   isBlocked: { type: Boolean, default: false },
+  notification: {
+    type: Array,
+    default: [],
+  },
+  seennotification: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

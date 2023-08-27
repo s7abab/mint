@@ -26,8 +26,11 @@ const LoginPage = () => {
         return toast.error("Please provide all fields");
       }
       const res = await dispatch(userLogin({ email, password }));
-      if(res.payload.success){
-        navigate("/")
+      if(res.payload.user.role === "admin"){
+        navigate("/admin/applications")
+      }
+      if(res.payload.user.role === "user"){
+        navigate("/user/counselors")
       }
     } catch (error) {
       console.log(error);
@@ -35,7 +38,7 @@ const LoginPage = () => {
   };
   return (
     <>
-      <Layout>
+      <Layout sidebar={true}>
         <div className="w-full mt-24 flex justify-center items-center">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
