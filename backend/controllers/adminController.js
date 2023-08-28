@@ -1,5 +1,6 @@
 const categoryModal = require("../models/categoryModel");
 const counselorModel = require("../models/counselorModel");
+const sendOTPEmail = require("../utils/OTPVerification");
 
 const addCategory = async (req, res) => {
   try {
@@ -174,7 +175,7 @@ const changeStatus = async (req, res) => {
 // Get all counselors
 const getCounselors = async (req, res) => {
   try {
-    const counselors = await counselorModel.find({status:"active"});
+    const counselors = await counselorModel.find({ status: "active" });
     res.status(200).send({
       success: true,
       message: "Counselors featched",
@@ -195,11 +196,12 @@ const blockCounselor = async (req, res) => {
     const { counselorId, value } = req.body;
     const counselor = await counselorModel.findByIdAndUpdate(
       { _id: counselorId },
-      { isBlocked: value },{new:true}
+      { isBlocked: value },
+      { new: true }
     );
     res.status(200).send({
       success: true,
-      message: counselor.isBlocked
+      message: counselor.isBlocked,
     });
   } catch (error) {
     console.log(error);
@@ -220,5 +222,5 @@ module.exports = {
   getApplications,
   changeStatus,
   getCounselors,
-  blockCounselor
+  blockCounselor,
 };

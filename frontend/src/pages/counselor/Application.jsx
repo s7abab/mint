@@ -117,7 +117,7 @@ const Application = () => {
               </div>
 
               <Button type="submit" className="mt-6" fullWidth>
-                Apply
+               {email ?"Send otp" : "Apply"} 
               </Button>
             </form>
           </Card>

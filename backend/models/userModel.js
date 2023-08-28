@@ -14,6 +14,11 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   image: { type: String },
   booking: [{ type: Schema.Types.ObjectId }],
+  otp: { type: String },
+  otpExpiry: {
+    type: Date,
+  },
+  isVerified: { type: Boolean, default: false, required: true },
   isBlocked: { type: Boolean, default: false },
   notification: {
     type: Array,

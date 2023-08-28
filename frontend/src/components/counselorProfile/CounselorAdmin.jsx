@@ -1,8 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { changeStatus } from "../../redux/features/admin/adminSlice";
 
 const CounselorAdmin = () => {
+  const dispatch = useDispatch();
   const counselor = useSelector((state) => state.counselorProfile);
+  const userId = useSelector((state) => state.counselorProfile._id);
+
+  const statusHandler = (userId, status) => {
+    dispatch(changeStatus({ userId, status }));
+  };
   return (
     <>
       <div className="w-full">
@@ -62,6 +69,14 @@ const CounselorAdmin = () => {
                 </dd>
               </div>
             </dl>
+          </div>
+          <div className="flex justify-center gap-8 mt-5 mb-5">
+            <button className="bg-green-600 w-24 rounded-md" onClick={() => statusHandler(userId, "active")}>
+              Approve
+            </button>
+            <button className="bg-red-600 w-24 rounded-md" onClick={() => statusHandler(userId, "rejected")}>
+              Reject
+            </button>
           </div>
         </div>
       </div>

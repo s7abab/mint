@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCounselor } from "../../redux/features/profile/counselorProfileSlice";
 import Layout from "../../components/Layout";
 import Api from "../../services/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import CounselorAdmin from "../../components/counselorProfile/counselorAdmin";
 import CounselorUser from "../../components/counselorProfile/CounselorUser";
+import { fetchCounselor } from "../../redux/features/counselor/counselorProfileSlice";
 
 const CounselorProfile = () => {
   const { counselorId } = useParams();

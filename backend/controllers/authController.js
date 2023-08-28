@@ -2,6 +2,7 @@ const { comparePassword, hashPassword } = require("../helpers/authHelper");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 const JWT = require("jsonwebtoken");
+const sendOTPEmail = require("../utils/OTPVerification");
 
 //test
 const test = async (req, res) => {
@@ -29,7 +30,7 @@ const register = async (req, res) => {
       return res.send({ message: "Password do not match" });
     }
     //CHECK USER
-    const existingUser = await userModel.findOne({ email });
+    const existingUser = await userModel.findOne({ email, isVerified: true });
     //EXISTING USER
     if (existingUser) {
       return res.status(200).send({
@@ -37,6 +38,34 @@ const register = async (req, res) => {
         message: "Already registerd please login",
       });
     }
+
+    const notVerifiedUser = await userModel.findOne({
+      email,
+      isVerified: false,
+    });
+    if (notVerifiedUser) {
+      if (notVerifiedUser.otpExpiry && notVerifiedUser.otpExpiry > Date.now()) {
+        sendOTPEmail(email, notVerifiedUser.otp);
+        return res.status(200).send({
+          success: true,
+          message: "OTP resent successfully",
+        });
+      } else {
+        notVerifiedUser.otp = Math.floor(
+          100000 + Math.random() * 900000
+        ).toString();
+        notVerifiedUser.otpExpiry = Date.now() + 60 * 1000;
+        await notVerifiedUser.save();
+
+        // Send new OTP
+        sendOTPEmail(email, notVerifiedUser.otp);
+        return res.status(200).send({
+          success: true,
+          message: "OTP sent successfully",
+        });
+      }
+    }
+
     // REGISTER USER
     const hashedPassword = await hashPassword(password);
     //SAVE
@@ -44,12 +73,18 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      otp: Math.floor(100000 + Math.random() * 900000).toString(),
+      otpExpiry: Date.now() + 60 * 1000,
       role,
     });
     await user.save();
+    // Send OTP
+    sendOTPEmail(email, user.otp);
+    console.log(user.otp)
+
     res.status(201).send({
       success: true,
-      message: "User registerd successfully",
+      message: "OTP sent successfully",
       user,
     });
   } catch (error) {
@@ -57,6 +92,92 @@ const register = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error in registeration",
+      error,
+    });
+  }
+};
+
+// Verify OTP
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    console.log(req.body);
+    const currentTime = Date.now();
+
+    const user = await userModel.findOne({
+      email,
+      otp,
+      otpExpiry: { $gt: currentTime }, // Check if OTP is still valid
+    });
+
+    if (!user) {
+      return res.status(200).send({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    user.isVerified = true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "OTP verified successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in verify OTP API",
+      error,
+    });
+  }
+};
+
+// Resend OTP
+const resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const notVerifiedUser = await userModel.findOne({
+      email,
+      isVerified: false,
+    });
+
+    if (!notVerifiedUser) {
+      return res.status(200).send({
+        success: false,
+        message: "User not found or already verified",
+      });
+    }
+
+    if (notVerifiedUser.otpExpiry && notVerifiedUser.otpExpiry > Date.now()) {
+      sendOTPEmail(email, notVerifiedUser.otp);
+      return res.status(200).send({
+        success: true,
+        message: "OTP resent successfully",
+      });
+    } else {
+      notVerifiedUser.otp = Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
+      notVerifiedUser.otpExpiry = Date.now() + 60 * 1000;
+      await notVerifiedUser.save();
+
+      // Send new OTP
+      sendOTPEmail(email, notVerifiedUser.otp);
+      return res.status(200).send({
+        success: true,
+        message: "OTP sent successfully",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in resending OTP",
       error,
     });
   }
@@ -146,4 +267,4 @@ const currentUser = async (req, res) => {
   }
 };
 
-module.exports = { login, register, test, currentUser };
+module.exports = { login, register, test, currentUser, verifyOtp, resendOtp };

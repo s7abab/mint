@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import Layout from "../../components/Layout";
 import { Card, Typography } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCounselors } from "../../redux/features/users/counselorsSlice";
 import { useNavigate } from "react-router-dom";
 import Api from "../../services/axios";
 import toast from "react-hot-toast";
+import { fetchAllCounselors } from "../../redux/features/counselor/counselorsSlice";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();

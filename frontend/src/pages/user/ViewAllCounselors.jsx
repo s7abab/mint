@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCounselors } from "../../redux/features/users/counselorsSlice";
 import CounselorCard from "../../components/card/CounselorCard";
 import { Select, Option, Input } from "@material-tailwind/react";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
+import { fetchAllCounselors } from "../../redux/features/counselor/counselorsSlice";
 
 const ViewAllCounselors = () => {
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const ViewAllCounselors = () => {
           </div>
           <div className="flex flex-wrap gap-2 mt-10 mx-2 justify-center">
             {filteredCounselors.map((data) => (
-              <CounselorCard data={data} />
+              <CounselorCard key={data._id} data={data} />
             ))}
           </div>
         </div>

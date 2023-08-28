@@ -5,23 +5,32 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { userRegister } from "../../redux/features/auth/authActions";
+import VerifyOTP from "../../components/VerifyOTP";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //Handle register
   const handleRegister = async (e) => {
     e.preventDefault();
-    const res = await dispatch(userRegister({ name, email, password, confirmPassword }));
-    if(res.payload.success){
-      toast.success("User Registerd Successfully")
-      navigate("/login")
+    const res = await dispatch(
+      userRegister({ name, email, password, confirmPassword })
+    );
+    if (res.payload.success) {
+      toast.success(res.payload.message);
+      setModal(!modal);
     }
+  };
+
+  // Close Modal
+  const closeModal = () => {
+    setModal(false);
   };
   return (
     <>
@@ -43,27 +52,31 @@ const RegisterPage = () => {
                   onChange={(e) => setName(e.target.value)}
                   size="lg"
                   label="Name"
+                  required
                 />
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
                   size="lg"
                   label="Email"
+                  required
                 />
                 <Input
                   onChange={(e) => setPassword(e.target.value)}
                   type="password"
                   size="lg"
                   label="Password"
+                  required
                 />
                 <Input
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   type="password"
                   size="lg"
                   label="Confirm Password"
+                  required
                 />
               </div>
               <Button type="submit" className="mt-6" fullWidth>
-                Register
+                {email ? "Send OTP" : "Register"}
               </Button>
               <Typography color="gray" className="mt-4 text-center font-normal">
                 Already registered?{" "}
@@ -78,6 +91,7 @@ const RegisterPage = () => {
             </Button>
           </Card>
         </div>
+        {modal && <VerifyOTP closeModal={closeModal} email={email} />}
       </Layout>
     </>
   );

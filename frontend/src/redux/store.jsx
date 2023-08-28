@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./features/auth/authSlice";
 import categorySlice from "./features/category/categorySlice";
-import counselorProfileSlice from "./features/profile/counselorProfileSlice";
-import counselorSlice from "./features/users/counselorsSlice";
+import counselorSlice from "./features/counselor/counselorsSlice";
 import userSlice from "./features/users/userSlice";
+import counselorProfileSlice from "./features/counselor/counselorProfileSlice";
 
 export default configureStore({
   reducer: {
