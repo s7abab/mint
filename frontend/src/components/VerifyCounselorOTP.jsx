@@ -2,8 +2,9 @@ import { Button, Input, Card } from "@material-tailwind/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { resendOtp, verifyOtp } from "../redux/features/auth/authActions";
+import { resendCounselorOtp, verifyCounselorOtp } from "../redux/features/counselor/counselorsSlice";
 
-const VerifyOTP = ({ closeModal, email }) => {
+const VerifyCounselorOTP = ({ closeModal, email }) => {
   const dispatch = useDispatch();
   const [otp, setOtp] = useState("");
   const [time, setTime] = useState(60); 
@@ -11,12 +12,12 @@ const VerifyOTP = ({ closeModal, email }) => {
   // Send OTP
   const otpHandler = (e, email, otp) => {
     e.preventDefault();
-    dispatch(verifyOtp({ email, otp }));
+    dispatch(verifyCounselorOtp({ email, otp }));
   };
 
   // Resend OTP
   const resendOTPHandler = () => {
-    dispatch(resendOtp({ email }));
+    dispatch(resendCounselorOtp({ email }));
     setTime(60);
   };
 
@@ -77,4 +78,4 @@ const VerifyOTP = ({ closeModal, email }) => {
   );
 };
 
-export default VerifyOTP;
+export default VerifyCounselorOTP;

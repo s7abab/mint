@@ -23,6 +23,10 @@ const counselorSchema = new mongoose.Schema({
   },
   image: { type: String },
   isVerified: { type: Boolean, default: false, required: true },
+  otp: { type: String },
+  otpExpiry: {
+    type: Date,
+  },
   isBlocked: { type: Boolean, default: false },
   feedback: [{ type: Schema.Types.ObjectId }],
   report: [{ type: Schema.Types.ObjectId }],

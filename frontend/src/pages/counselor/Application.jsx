@@ -12,6 +12,8 @@ import Api from "../../services/axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
+import { applyAsCounselor } from "../../redux/features/counselor/counselorsSlice";
+import VerifyCounselorOTP from "../../components/VerifyCounselorOTP";
 
 const Application = () => {
   const [name, setName] = useState("");
@@ -22,6 +24,7 @@ const Application = () => {
   const [specialization, setSpecialization] = useState("");
   const [experience, setExperience] = useState("");
   const [fee, setFee] = useState("");
+  const [modal, setModal] = useState(false);
 
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.category.categories);
@@ -33,25 +36,33 @@ const Application = () => {
   const handleApply = async (e) => {
     e.preventDefault();
     try {
-      const res = await Api.post("/counselor/apply", {
-        name,
-        email,
-        password,
-        confirmPassword,
-        address,
-        specialization,
-        experience,
-        fee,
-      });
-      if (res.data.success) {
-        toast.success("Application Send Successfully");
-      } else {
-        toast.error("Application Not Submited");
+      const res = await dispatch(
+        applyAsCounselor({
+          name,
+          email,
+          password,
+          confirmPassword,
+          address,
+          specialization,
+          experience,
+          fee,
+        })
+      );
+      if (res.payload.success) {
+        console.log(res.payload);
+        toast.success(res.payload.message);
+        setModal(!modal);
       }
     } catch (error) {
-      console.log("by", error);
+      console.log(error);
     }
   };
+
+  // Close Modal
+  const closeModal = () => {
+    setModal(false);
+  };
+
   return (
     <>
       <Layout sidebar={true}>
@@ -69,32 +80,38 @@ const Application = () => {
                   onChange={(e) => setName(e.target.value)}
                   size="md"
                   label="Name"
+                  required
                 />
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
                   size="md"
                   label="Email"
+                  required
                 />
                 <Input
                   onChange={(e) => setPassword(e.target.value)}
                   size="md"
                   type="password"
                   label="Password"
+                  required
                 />
                 <Input
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   size="md"
                   type="password"
                   label="Confirm Password"
+                  required
                 />
                 <Input
                   onChange={(e) => setAddress(e.target.value)}
                   size="md"
                   label="Address"
+                  required
                 />
                 <Select
                   label="Specialization"
                   onChange={(e) => setSpecialization(e)}
+                  required
                 >
                   {categories
                     .filter((category) => category.active)
@@ -108,20 +125,23 @@ const Application = () => {
                   onChange={(e) => setExperience(e.target.value)}
                   size="md"
                   label="Experince"
+                  required
                 />
                 <Input
                   onChange={(e) => setFee(e.target.value)}
                   size="md"
                   label="Fee"
+                  required
                 />
               </div>
 
               <Button type="submit" className="mt-6" fullWidth>
-               {email ?"Send otp" : "Apply"} 
+                {email ? "Send otp" : "Apply"}
               </Button>
             </form>
           </Card>
         </div>
+        {modal && <VerifyCounselorOTP closeModal={closeModal} email={email} />}
       </Layout>
     </>
   );

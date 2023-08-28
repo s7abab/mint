@@ -38,7 +38,7 @@ const register = async (req, res) => {
         message: "Already registerd please login",
       });
     }
-
+// Not verified user
     const notVerifiedUser = await userModel.findOne({
       email,
       isVerified: false,
@@ -73,9 +73,9 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role,
       otp: Math.floor(100000 + Math.random() * 900000).toString(),
       otpExpiry: Date.now() + 60 * 1000,
-      role,
     });
     await user.save();
     // Send OTP
