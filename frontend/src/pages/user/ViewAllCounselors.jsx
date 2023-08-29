@@ -8,7 +8,7 @@ import { fetchAllCounselors } from "../../redux/features/counselor/counselorsSli
 
 const ViewAllCounselors = () => {
   const dispatch = useDispatch();
-  const counselors = useSelector((state) => state.counselors.counselors);
+  const counselors = useSelector((state) => state.counselor.counselors);
   const categories = useSelector((state) => state.category.categories);
   const [category, setCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");

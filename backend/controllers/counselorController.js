@@ -1,8 +1,7 @@
-const { hashPassword } = require("../helpers/authHelper");
-const userModel = require("../models/userModel");
+const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const counselorModel = require("../models/counselorModel");
 const sendOTPEmail = require("../utils/OTPVerification");
-
+const JWT = require("jsonwebtoken");
 // Get Profile
 const getProfile = async (req, res) => {
   try {
@@ -224,6 +223,5 @@ const resendOtp = async (req, res) => {
     });
   }
 };
-
 
 module.exports = { apply, getProfile, verifyOtp, resendOtp };

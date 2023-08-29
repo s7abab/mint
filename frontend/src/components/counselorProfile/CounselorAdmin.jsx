@@ -4,12 +4,17 @@ import { changeStatus } from "../../redux/features/admin/adminSlice";
 
 const CounselorAdmin = () => {
   const dispatch = useDispatch();
-  const counselor = useSelector((state) => state.counselorProfile);
-  const userId = useSelector((state) => state.counselorProfile._id);
+  const counselor = useSelector((state) => state.counselor.selectedCounselor);
+  const userId = useSelector((state) => state.counselor.selectedCounselor ? state.counselor.selectedCounselor._id : null);
 
   const statusHandler = (userId, status) => {
     dispatch(changeStatus({ userId, status }));
   };
+
+  if (!counselor) {
+    return <div>Loading...</div>; // You can provide a loading state here
+  }
+  
   return (
     <>
       <div className="w-full">

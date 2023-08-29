@@ -2,8 +2,12 @@ import { Button } from "@material-tailwind/react";
 import React from "react";
 import { useSelector } from "react-redux";
 
-const CounselorUser = () => {
-  const counselor = useSelector((state) => state.counselorProfile);
+const CounselorUser = ({counselorId}) => {
+  const counselor = useSelector((state) => state.counselor.selectedCounselor);
+
+  if (!counselor) {
+    return <p>Loading...</p>; // Add a loading state or message
+  }
   return (
     <>
       <div className=" w-screen h-1/2 flex justify-center ">
@@ -23,7 +27,7 @@ const CounselorUser = () => {
             <p className="text-gray-700 mt-2">
               {counselor.category} Specialist
             </p>
-            <p className="mt-4 text-gray-700 mt-2">Experience: {counselor.experience}</p>
+            <p className="mt-4 text-gray-700 ">Experience: {counselor.experience}</p>
             <p className="text-gray-700 mt-2">Fee: {counselor.fee}</p>
           </div>
           <div className="flex justify-center mt-10 gap-8">

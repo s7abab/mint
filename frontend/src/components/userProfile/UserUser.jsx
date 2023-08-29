@@ -12,9 +12,9 @@ const UserUser = () => {
   const [file, setFile] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
-  const [editingField, setEditingField] = useState(""); // State to track the field being edited
+  const [editingField, setEditingField] = useState(""); 
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth._id); // Assuming you have an "_id" field for the authenticated user
+  const userId = useSelector((state) => state.auth._id); 
   const user = useSelector((state) => state.user.selectedUser);
 
   // Handle image upload
@@ -52,7 +52,7 @@ const UserUser = () => {
       await dispatch(
         updateUserProfile({ field: "email", value: editedEmail, userId })
       );
-      dispatch(fetchSelectedUser(userId)); // Refresh user data
+      dispatch(fetchSelectedUser(userId)); 
       setEditingField("");
     }
   };

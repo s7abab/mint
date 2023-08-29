@@ -38,7 +38,7 @@ const register = async (req, res) => {
         message: "Already registerd please login",
       });
     }
-// Not verified user
+    // Not verified user
     const notVerifiedUser = await userModel.findOne({
       email,
       isVerified: false,
@@ -80,7 +80,7 @@ const register = async (req, res) => {
     await user.save();
     // Send OTP
     sendOTPEmail(email, user.otp);
-    console.log(user.otp)
+    console.log(user.otp);
 
     res.status(201).send({
       success: true,
@@ -197,8 +197,17 @@ const login = async (req, res) => {
 
     //Check user
     let user;
-    const patient = await userModel.findOne({ email });
-    const counselor = await counselorModel.findOne({ email });
+    const patient = await userModel.findOne({
+      email,
+      isVerified: true,
+      isBlocked: false,
+    });
+    const counselor = await counselorModel.findOne({
+      email,
+      isVerified: true,
+      isBlocked: false,
+      status: "active",
+    });
     if (patient) {
       user = patient;
     } else {
@@ -228,13 +237,14 @@ const login = async (req, res) => {
       success: true,
       message: "Login Successfully",
       user: {
-        name: user.name,
         _id: user._id,
-        email: user.email,
+        name: user.name,
         role: user.role,
+        email: user.email,
         image: user.image,
         booking: user.booking,
         isBlocked: user.isBlocked,
+     
       },
       token,
     });
@@ -251,7 +261,24 @@ const login = async (req, res) => {
 //get current user
 const currentUser = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    let user;
+    const patient = await userModel.findOne({
+      _id: req.body.userId,
+      isVerified: true,
+      isBlocked: false,
+    });
+    const counselor = await counselorModel.findOne({
+      _id: req.body.userId,
+      isVerified: true,
+      isBlocked: false,
+      status: "active",
+    });
+    if (patient) {
+      user = patient;
+    } else {
+      user = counselor;
+    }
+
     return res.status(200).send({
       success: true,
       message: "User successfully featched",

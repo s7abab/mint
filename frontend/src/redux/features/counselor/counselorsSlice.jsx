@@ -2,6 +2,24 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
 
+// Fetch Selected Counselor
+
+export const fetchSelectedCounselor = createAsyncThunk(
+  "counselorProfile/fetchCounselor",
+  async (counselorId, { dispatch }) => {
+    try {
+      const res = await Api.get(`/counselor/profile/${counselorId}`);
+      if (res.data.success) {
+        return res.data.counselors;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching counselor:", error);
+      throw error;
+    }
+  }
+);
+
 // Featch all counselors
 export const fetchAllCounselors = createAsyncThunk(
   "counselor/fetchAllCounselors",
@@ -95,12 +113,39 @@ const counselorSlice = createSlice({
   name: "counselor",
   initialState: {
     counselors: [],
+    selectedCounselor: null,
+    loading: false,
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAllCounselors.fulfilled, (state, { payload }) => {
-      state.counselors = payload;
-    });
+    builder
+      .addCase(fetchAllCounselors.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllCounselors.fulfilled, (state, {payload}) => {
+        state.loading = false;
+        state.counselors = payload;
+        state.error = null;
+      })
+      .addCase(fetchAllCounselors.rejected, (state, {error}) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      .addCase(fetchSelectedCounselor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSelectedCounselor.fulfilled, (state, {payload}) => {
+        state.loading = false;
+        state.selectedCounselor = payload;
+        state.error = null;
+      })
+      .addCase(fetchSelectedCounselor.rejected, (state, {error}) => {
+        state.loading = false;
+        state.error = error.message;
+      });
   },
 });
 

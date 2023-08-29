@@ -9,18 +9,17 @@ const initialState = {
   loading: false,
   user: null,
   _id: null,
-  role:null,
+  role: null,
   token,
   error: null,
 };
 
 //auth slice
 const authSlice = createSlice({
-  name:"auth",
+  name: "auth",
   initialState,
-  reducers:{
-  },
-  extraReducers: (builder)=>{
+  reducers: {},
+  extraReducers: (builder) => {
     //login user
     builder.addCase(userLogin.pending, (state) => {
       state.loading = true;
@@ -38,7 +37,7 @@ const authSlice = createSlice({
       state.error = payload;
     });
 
-    //current user  
+    //current user
     builder.addCase(getCurrentUser.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -47,14 +46,14 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = payload.user.name;
       state.role = payload.user.role;
-      state._id= payload.user._id;
+      state._id = payload.user._id;
       state.token = payload.token;
     });
     builder.addCase(getCurrentUser.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     });
-  }
-})
+  },
+});
 
 export default authSlice;

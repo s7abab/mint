@@ -9,11 +9,11 @@ const categorySlice = createSlice({
     selectedCategory: null,
   },
   reducers: {
-    setCategories: (state, action) => {
-      state.categories = action.payload;
+    setCategories: (state, {payload}) => {
+      state.categories = payload;
     },
-    setSelectedCategory: (state, action) => {
-      state.selectedCategory = action.payload;
+    setSelectedCategory: (state, {payload}) => {
+      state.selectedCategory = payload;
     },
   },
 });

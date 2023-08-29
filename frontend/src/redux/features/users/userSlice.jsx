@@ -17,15 +17,15 @@ export const fetchAllUsers = createAsyncThunk(
       throw error;
     }
   }
-);  
+);
 
 // Fetch selected user
 
 export const fetchSelectedUser = createAsyncThunk(
   "user/fetchOneUser",
-  async (userId, { dispatch }) => { 
+  async (userId, { dispatch }) => {
     if (!userId) {
-      throw new Error('Invalid userId');
+      throw new Error("Invalid userId");
     }
     try {
       const res = await Api.get(`user/user/${userId}`);
@@ -38,7 +38,6 @@ export const fetchSelectedUser = createAsyncThunk(
     }
   }
 );
-
 
 // Profile Photo Upload
 export const uploadUserProfilePhoto = createAsyncThunk(
@@ -59,19 +58,19 @@ export const uploadUserProfilePhoto = createAsyncThunk(
   }
 );
 
-
 // Update profile
 export const updateUserProfile = createAsyncThunk(
-  "user/updateUserProfile", 
-  async ({ field, value, userId }, { dispatch, rejectWithValue }) => { // Use userId instead of name
+  "user/updateUserProfile",
+  async ({ field, value, userId }, { dispatch, rejectWithValue }) => {
+    // Use userId instead of name
     try {
       const res = await Api.post(`user/user/${userId}`, { field, value }); // Use userId instead of name
       if (res.data.success) {
         toast.success(res.data.message);
-        dispatch(fetchSelectedUser(userId))
-        return res.data; 
+        dispatch(fetchSelectedUser(userId));
+        return res.data;
       } else {
-        return rejectWithValue(res.data.message); 
+        return rejectWithValue(res.data.message);
       }
     } catch (error) {
       return rejectWithValue("An error occurred.");
@@ -79,22 +78,43 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+// SLICE
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
     users: [],
     selectedUser: null,
+    loading: false,
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
-      state.users = payload;
-    });
-    builder.addCase(fetchSelectedUser.fulfilled, (state, { payload }) => {
-      state.selectedUser = payload;
-    });
-
+    builder
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
+        state.users = payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllUsers.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      .addCase(fetchSelectedUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSelectedUser.fulfilled, (state, { payload }) => {
+        state.selectedUser = payload;
+        state.loading = false;
+      })
+      .addCase(fetchSelectedUser.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      });
   },
 });
 

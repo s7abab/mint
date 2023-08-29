@@ -2,41 +2,26 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/Layout";
-import Api from "../../services/axios";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import CounselorAdmin from "../../components/counselorProfile/counselorAdmin";
 import CounselorUser from "../../components/counselorProfile/CounselorUser";
-import { fetchCounselor } from "../../redux/features/counselor/counselorProfileSlice";
+import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorsSlice";
+// import { fetchCounselor } from "../../redux/features/counselor/counselorProfileSlice";
 
 const CounselorProfile = () => {
   const { counselorId } = useParams();
   const dispatch = useDispatch();
-  const counselor = useSelector((state) => state.counselorProfile);
+  const counselor = useSelector((state) => state.counselor.selectedCounselor);
   const role = useSelector((state) => state.auth.role);
-  const navigate = useNavigate();
-  // Handle status
-  const handleStatus = async (status) => {
-    try {
-      const res = await Api.post(`/admin/status/${counselorId}`, { status });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        navigate("/admin/applications");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
-    dispatch(fetchCounselor(counselorId));
-  }, [dispatch]);
+    dispatch(fetchSelectedCounselor(counselorId));
+  },[dispatch]);
   return (
     <>
       <Layout>
         {/* User */}
         {role==="user" &&
-          <CounselorUser />
+          <CounselorUser counselorId={counselorId} />
         }
 
         {/* Admin */}

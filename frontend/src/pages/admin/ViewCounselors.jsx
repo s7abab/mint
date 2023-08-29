@@ -5,28 +5,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Api from "../../services/axios";
 import toast from "react-hot-toast";
-import { fetchAllCounselors } from "../../redux/features/counselor/counselorsSlice";
+import {
+  fetchAllCounselors,
+  fetchSelectedCounselor,
+} from "../../redux/features/counselor/counselorsSlice";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();
-  const counselors = useSelector((state) => state.counselors.counselors);
+  const counselors = useSelector((state) => state.counselor.counselors);
   const navigate = useNavigate();
 
   // Handle View Profile
   const handleViewProfile = (counselorId) => {
+    dispatch(fetchSelectedCounselor(counselorId));
     navigate(`/admin/counselors/${counselorId}`);
   };
 
   // Handle block counselor
   const handleBlock = async (counselorId, value) => {
     try {
-      const res = await Api.post("/admin/counselors", { counselorId, value:!value });
-      dispatch(fetchAllCounselors())
+      const res = await Api.post("/admin/counselors", {
+        counselorId,
+        value: !value,
+      });
+      dispatch(fetchAllCounselors());
       if (res.data.success) {
-        if(res.data.message){
-          toast.success("Blocked")
-        }else{
-          toast.success("Unblocked")
+        if (res.data.message) {
+          toast.success("Blocked");
+        } else {
+          toast.success("Unblocked");
         }
       }
     } catch (error) {

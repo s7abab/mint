@@ -20,6 +20,6 @@ router.route("/verify-otp").post(verifyOtp);
 router.route("/resend-otp").post(resendOtp);
 router.route("/login").post(login);
 router.route("/test").get(isUser, isAdmin, test);
-router.route("/current-user").get(isUser, currentUser);
+router.route("/current-user").get(isUser || isAdmin || isCounselor, currentUser);
 
 module.exports = router;
