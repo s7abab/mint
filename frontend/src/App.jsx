@@ -11,17 +11,26 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import ViewAllCounselors from "./pages/user/ViewAllCounselors";
 import UserProfile from "./pages/user/UserProfile";
 import CounselorProfile from "./pages/counselor/CounselorProfile";
+import CounselorCounselor from "./components/counselorProfile/CounselorCounselor";
+import ViewUsers from "./pages/admin/ViewUsers";
 
 const App = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        // Auth routes
-        <Route path="/login" element={<LoginPage />} />
+
+        {/* AUTH ROUTES */}
+        <Route
+          path="/login"
+          element={
+              <LoginPage />
+          }
+        />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/apply" element={<Application />} />
-        // Admin routes
+
+        {/* ADMIN ROUTES */}
         <Route
           path="/admin/category"
           element={
@@ -54,6 +63,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        {/* View counselors */}
         <Route
           path="/admin/counselors"
           element={
@@ -62,6 +72,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        {/* Block counselors */}
         <Route
           path="/admin/counselors/:counselorId"
           element={
@@ -70,7 +81,26 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        // Users routes
+        {/* View users */}
+         <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <ViewUsers />
+            </ProtectedRoute>
+          }
+        />
+        {/* Block users */}
+        <Route
+          path="/admin/users/:userId"
+          element={
+            <ProtectedRoute>
+              <CounselorProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* USER ROUTES */}
         <Route
           path="/user/counselors"
           element={
@@ -92,6 +122,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* COUNSELOR ROUTES */}
+        <Route
+          path="/counselor/profile"
+          element={
+            <ProtectedRoute>
+              <CounselorCounselor />
             </ProtectedRoute>
           }
         />

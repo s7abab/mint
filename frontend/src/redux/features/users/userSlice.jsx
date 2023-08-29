@@ -62,7 +62,6 @@ export const uploadUserProfilePhoto = createAsyncThunk(
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile",
   async ({ field, value, userId }, { dispatch, rejectWithValue }) => {
-    // Use userId instead of name
     try {
       const res = await Api.post(`user/user/${userId}`, { field, value }); // Use userId instead of name
       if (res.data.success) {

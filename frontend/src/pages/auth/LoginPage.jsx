@@ -16,7 +16,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const loginHandler = async (e) => {
@@ -26,11 +26,16 @@ const LoginPage = () => {
         return toast.error("Please provide all fields");
       }
       const res = await dispatch(userLogin({ email, password }));
-      if(res.payload.user.role === "admin"){
-        navigate("/admin/applications")
-      }
-      if(res.payload.user.role === "user"){
-        navigate("/user/counselors")
+
+      const role = res.payload.user.role;
+      if (role === "admin") {
+        navigate("/admin/applications");
+      } else if (role === "user") {
+        navigate("/user/counselors");
+      } else if (role === "counselor") {
+        navigate("/counselor/profile");
+      } else {
+        toast.error("Unknown user");
       }
     } catch (error) {
       console.log(error);

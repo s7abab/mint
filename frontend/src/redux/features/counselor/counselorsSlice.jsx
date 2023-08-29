@@ -109,6 +109,44 @@ export const resendCounselorOtp = createAsyncThunk(
   }
 );
 
+// Profile Photo Upload
+export const uploadCounselorProfilePhoto = createAsyncThunk(
+  "counselor/uploadProfilePhoto",
+  async (file, thunkApi) => {
+    try {
+      const counselorId = thunkApi.getState().auth._id; // Use userId instead of name
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await Api.post(`counselor/image/${counselorId}`, formData); // Use userId instead of name
+      if (res.data.success) {
+        thunkApi.dispatch(fetchSelectedCounselor(counselorId)); // Use userId instead of name
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+// Update profile
+export const updateCounselorProfile = createAsyncThunk(
+  "counselor/updateUserProfile",
+  async ({ field, value, counselorId }, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await Api.post(`counselor/profile/${counselorId}`, { field, value }); // Use userId instead of name
+      if (res.data.success) {
+        toast.success(res.data.message);
+        dispatch(fetchSelectedCounselor(counselorId));
+        return res.data;
+      } else {
+        return rejectWithValue(res.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue("An error occurred.");
+    }
+  }
+);
+
 const counselorSlice = createSlice({
   name: "counselor",
   initialState: {

@@ -9,6 +9,8 @@ const {
   changeStatus,
   getCounselors,
   blockCounselor,
+  getUsers,
+  blockUsers,
 } = require("../controllers/adminController");
 const { isAdmin, isUser } = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -23,13 +25,12 @@ router
   .get(getCategoryById);
 
 // Applications
-router.route("/applications").get(isUser,isAdmin,getApplications);
-
+router.route("/applications").get(isUser, isAdmin, getApplications);
 // Change status of counselor
 router.route("/status/:counselorId").post(changeStatus);
 // Get all counselors
-router.route("/counselors")
-.get(getCounselors)
-.post(blockCounselor)
+router.route("/counselors").get(getCounselors).post(blockCounselor);
+// Get all users
+router.route("/users").get(getUsers).post(blockUsers);
 
 module.exports = router;

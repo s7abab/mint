@@ -13,11 +13,18 @@ const CounselorCard = (data) => {
         <div className="w-52">
           <div className="bg-white shadow-xl rounded-lg py-3">
             <div className="photo-wrapper p-2">
-              <img
+              {data.data.image ? (<img
                 className="w-32 h-32 rounded-full mx-auto"
-                src="https://www.gravatar.com/avatar/2acfb745ecf9d4dccb3364752d17f65f?s=260&d=mp"
+                src= {`http://localhost:8080${data.data.image}`}
+                alt="John Doe"
+              />) :(
+                <img
+                className="w-32 h-32 rounded-full mx-auto"
+                src= "https://cdn.pixabay.com/photo/2021/06/07/13/46/user-6318011_1280.png"
                 alt="John Doe"
               />
+              )}
+              
             </div>
             <div className="p-2">
               <h3 className="text-center text-xl text-gray-900 font-medium leading-8">

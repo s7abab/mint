@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import CounselorAdmin from "../../components/counselorProfile/counselorAdmin";
 import CounselorUser from "../../components/counselorProfile/CounselorUser";
 import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorsSlice";
+import CounselorCounselor from "../../components/counselorProfile/CounselorCounselor";
 // import { fetchCounselor } from "../../redux/features/counselor/counselorProfileSlice";
 
 const CounselorProfile = () => {
@@ -27,6 +28,10 @@ const CounselorProfile = () => {
         {/* Admin */}
         {role === "admin" && (
           <CounselorAdmin />
+        )}
+        {/* Counselor */}
+        {role === "counselor" && (
+          <CounselorCounselor />
         )}
       </Layout>
     </>

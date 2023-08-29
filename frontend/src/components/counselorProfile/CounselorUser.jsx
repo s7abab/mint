@@ -13,11 +13,17 @@ const CounselorUser = ({counselorId}) => {
       <div className=" w-screen h-1/2 flex justify-center ">
         <div className="w-96 m-2 mt-8 py-10 b border-2 border-white object-cover object-center shadow-xl shadow-blue-gray-900/50 rounded-2xl">
           <div className="flex justify-center">
-            <img
-              className="rounded-full w-36 h-36 border-2 border-white object-cover object-center shadow-xl shadow-blue-gray-900/50"
-              src="https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U"
-              alt=""
-            />
+          {counselor.image ? (<img
+                className="w-32 h-32 rounded-full mx-auto"
+                src= {`http://localhost:8080${counselor.image}`}
+                alt="John Doe"
+              />) :(
+                <img
+                className="w-32 h-32 rounded-full mx-auto"
+                src= "https://cdn.pixabay.com/photo/2021/06/07/13/46/user-6318011_1280.png"
+                alt="John Doe"
+              />
+              )}
           </div>
           <div className="flex justify-center mt-4 text-lg font-bold">
             <h1>{counselor.name}</h1>

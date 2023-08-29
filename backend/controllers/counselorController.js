@@ -223,5 +223,63 @@ const resendOtp = async (req, res) => {
     });
   }
 };
+// Upload Profile Photo
+const uploadProfilePhoto = async (req, res) => {
+  try {
+    if (req.file) {
+      const imageUrl = `/images/${req.file.filename}`;
+      const { counselorId } = req.params;
 
-module.exports = { apply, getProfile, verifyOtp, resendOtp };
+      const image = await counselorModel.findOneAndUpdate(
+        { _id: counselorId },
+        { image: imageUrl }
+      );
+      res.status(200).send({
+        success: true,
+        message: "Profile photo updated",
+        image,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in upload profile Api",
+      error,
+    });
+  }
+};
+
+// Update profile
+const updateProfile = async (req, res) => {
+  try {
+    const { field, value } = req.body;
+    const { counselorId } = req.params;
+    const updatedUser = await counselorModel.findOneAndUpdate(
+      { _id: counselorId },
+      { [field]: value },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: "Counselor profile updated",
+      updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in counselor update profile Api",
+      error,
+    });
+  }
+};
+
+module.exports = {
+  apply,
+  getProfile,
+  verifyOtp,
+  resendOtp,
+  uploadProfilePhoto,
+  updateProfile,
+};

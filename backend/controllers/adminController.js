@@ -1,5 +1,6 @@
 const categoryModal = require("../models/categoryModel");
 const counselorModel = require("../models/counselorModel");
+const userModel = require("../models/userModel");
 const sendOTPEmail = require("../utils/OTPVerification");
 
 const addCategory = async (req, res) => {
@@ -213,6 +214,47 @@ const blockCounselor = async (req, res) => {
   }
 };
 
+// Get all users
+const getUsers = async (req, res) => {
+  try {
+    const users = await userModel.find();
+    res.status(200).send({
+      success: true,
+      message: "Users featched",
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in get all users Api",
+      error,
+    });
+  }
+};
+
+const blockUsers = async (req, res) => {
+  try {
+    const { userId, value } = req.body;
+    const user = await userModel.findByIdAndUpdate(
+      { _id: userId },
+      { isBlocked: value },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: user.isBlocked,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in user block Api",
+      error,
+    });
+  }
+};
+
 module.exports = {
   addCategory,
   editCategory,
@@ -223,4 +265,6 @@ module.exports = {
   changeStatus,
   getCounselors,
   blockCounselor,
+  getUsers,
+  blockUsers,
 };

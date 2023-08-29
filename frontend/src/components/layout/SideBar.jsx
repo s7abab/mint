@@ -5,15 +5,12 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
+
 } from "@material-tailwind/react";
 import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
+
   UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
+
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import {
@@ -21,6 +18,7 @@ import {
   AiOutlineForm,
   AiOutlineUser,
   AiOutlineBook,
+  AiOutlineMessage
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
 import { BiUserCircle } from "react-icons/bi";
@@ -54,7 +52,6 @@ const Sidebar = () => {
                   <AiOutlineUser className="h-5 w-5" />
                 </ListItemPrefix>
                 Counselors
-                <ListItemSuffix></ListItemSuffix>
               </ListItem>
             </Link>
             <Link to={"/user/bookings"}>
@@ -63,7 +60,6 @@ const Sidebar = () => {
                   <AiOutlineBook className="h-5 w-5" />
                 </ListItemPrefix>
                 Bookings
-                <ListItemSuffix></ListItemSuffix>
               </ListItem>
             </Link>
             <Link to={"/user/profile"}>
@@ -72,7 +68,56 @@ const Sidebar = () => {
                   <BiUserCircle className="h-5 w-5" />
                 </ListItemPrefix>
                 Profile
-                <ListItemSuffix></ListItemSuffix>
+              </ListItem>
+            </Link>
+            <ListItem>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Log Out
+            </ListItem>
+          </List>
+        )}
+        {role === "counselor" && (
+          <List>
+            <Link to={"/counselor/dashboard"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiFillAppstore className="h-5 w-5" />
+                </ListItemPrefix>
+                Dashboard
+              </ListItem>
+            </Link>
+            <Link to={"/counselor/patients"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineUser className="h-5 w-5" />
+                </ListItemPrefix>
+                My Patients
+              </ListItem>
+            </Link>
+            <Link to={"/counselor/bookings"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineBook className="h-5 w-5" />
+                </ListItemPrefix>
+                Bookings
+              </ListItem>
+            </Link>
+            <Link to={"/counselor/messages"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineMessage className="h-5 w-5" />
+                </ListItemPrefix>
+                Messages
+              </ListItem>
+            </Link>
+            <Link to={"/counselor/profile"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <BiUserCircle className="h-5 w-5" />
+                </ListItemPrefix>
+                Profile
               </ListItem>
             </Link>
             <ListItem>
@@ -108,7 +153,6 @@ const Sidebar = () => {
                   <AiOutlineUser className="h-5 w-5" />
                 </ListItemPrefix>
                 Counselors
-                <ListItemSuffix></ListItemSuffix>
               </ListItem>
             </Link>
             <Link to={"/admin/users"}>
