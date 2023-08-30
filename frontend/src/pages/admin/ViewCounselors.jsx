@@ -3,12 +3,12 @@ import Layout from "../../components/Layout";
 import { Card, Typography } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Api from "../../services/axios";
-import toast from "react-hot-toast";
+
 import {
   fetchAllCounselors,
   fetchSelectedCounselor,
 } from "../../redux/features/counselor/counselorsSlice";
+import { blockCounselor } from "../../redux/features/admin/adminSlice";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();
@@ -22,23 +22,8 @@ const ViewCounselors = () => {
   };
 
   // Handle block counselor
-  const handleBlock = async (counselorId, value) => {
-    try {
-      const res = await Api.post("/admin/counselors", {
-        counselorId,
-        value: !value,
-      });
-      dispatch(fetchAllCounselors());
-      if (res.data.success) {
-        if (res.data.message) {
-          toast.success("Blocked");
-        } else {
-          toast.success("Unblocked");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleBlock = (counselorId, value) => {
+    dispatch(blockCounselor({ counselorId, value }));
   };
 
   useEffect(() => {

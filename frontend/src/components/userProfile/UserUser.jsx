@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSelectedUser,
   uploadUserProfilePhoto,
-} from "../../redux/features/users/userSlice";
+} from "../../redux/features/users/userActions";
 import { AiFillEdit, AiFillCheckCircle } from "react-icons/ai";
-import { updateUserProfile } from "../../redux/features/users/userSlice";
+import { updateUserProfile } from "../../redux/features/users/userActions";
 
 const UserUser = () => {
   const [file, setFile] = useState(null);

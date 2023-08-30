@@ -8,6 +8,7 @@ const {
   updateProfile,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
+const { isCounselor, isSigned, isUser } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -18,8 +19,8 @@ router.route("/verify-otp").post(verifyOtp);
 // Resend OTP
 router.route("/resend-otp").post(resendOtp);
 // Get profile
-router.route("/profile/:counselorId").get(getProfile).post(updateProfile)
+router.route("/profile/:counselorId").get(isSigned,isCounselor, getProfile).post(isSigned,isCounselor, updateProfile)
 // Image Upload
-router.route("/image/:counselorId").post(upload.single("image"), uploadProfilePhoto);
+router.route("/image/:counselorId").post(isSigned,isCounselor, upload.single("image"), uploadProfilePhoto);
 
 module.exports = router;

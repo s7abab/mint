@@ -36,13 +36,13 @@ const ApplicationsPage = () => {
     <>
       <Layout>
         <>
-          <Card className="w-screen mt-10">
+          <Card className="w-screen mt-2">
             <List>
               {applications.map((data) => (
                 <ListItem
                   key={data._id}
                   ripple={false}
-                  className="py-1 pr-1 pl-4"
+                  className="border border-2"
                 >
                   {data.name}
                   <ListItemSuffix onClick={()=>handleViewProfile(data._id)}>

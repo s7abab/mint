@@ -10,9 +10,8 @@ import CounselorCounselor from "../../components/counselorProfile/CounselorCouns
 
 const CounselorProfile = () => {
   const { counselorId } = useParams();
-  const dispatch = useDispatch();
-  const counselor = useSelector((state) => state.counselor.selectedCounselor);
-  const role = useSelector((state) => state.auth.role);
+ const dispatch = useDispatch();
+  const role = useSelector((state) => state.auth.role); 
 
   useEffect(() => {
     dispatch(fetchSelectedCounselor(counselorId));
@@ -22,7 +21,7 @@ const CounselorProfile = () => {
       <Layout>
         {/* User */}
         {role==="user" &&
-          <CounselorUser counselorId={counselorId} />
+          <CounselorUser />
         }
 
         {/* Admin */}

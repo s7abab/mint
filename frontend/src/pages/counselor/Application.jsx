@@ -8,7 +8,6 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-import Api from "../../services/axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
@@ -110,13 +109,14 @@ const Application = () => {
                 />
                 <Select
                   label="Specialization"
-                  onChange={(e) => setSpecialization(e)}
+                  value={specialization}
+                  onChange={(e)=> setSpecialization(e)}
                   required
                 >
                   {categories
                     .filter((category) => category.active)
                     .map((category) => (
-                      <Option value={category.name} key={category._id}>
+                      <Option  value={category.name} key={category._id}>
                         {category.name}
                       </Option>
                     ))}

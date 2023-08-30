@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 // Fetch Selected Counselor
 
@@ -81,7 +82,8 @@ export const verifyCounselorOtp = createAsyncThunk(
       const res = await Api.post("/counselor/verify-otp", { email, otp });
       if (res.data.success) {
         toast.success(res.data.message);
-        window.location.replace("/login");
+        const navigate = useNavigate();
+        navigate("/login");
         return res?.data;
       } else {
         toast.error(res.data.message);
@@ -133,7 +135,10 @@ export const updateCounselorProfile = createAsyncThunk(
   "counselor/updateUserProfile",
   async ({ field, value, counselorId }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await Api.post(`counselor/profile/${counselorId}`, { field, value }); // Use userId instead of name
+      const res = await Api.post(`counselor/profile/${counselorId}`, {
+        field,
+        value,
+      }); // Use userId instead of name
       if (res.data.success) {
         toast.success(res.data.message);
         dispatch(fetchSelectedCounselor(counselorId));
@@ -162,12 +167,12 @@ const counselorSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllCounselors.fulfilled, (state, {payload}) => {
+      .addCase(fetchAllCounselors.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.counselors = payload;
         state.error = null;
       })
-      .addCase(fetchAllCounselors.rejected, (state, {error}) => {
+      .addCase(fetchAllCounselors.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       })
@@ -175,12 +180,12 @@ const counselorSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchSelectedCounselor.fulfilled, (state, {payload}) => {
+      .addCase(fetchSelectedCounselor.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.selectedCounselor = payload;
         state.error = null;
       })
-      .addCase(fetchSelectedCounselor.rejected, (state, {error}) => {
+      .addCase(fetchSelectedCounselor.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

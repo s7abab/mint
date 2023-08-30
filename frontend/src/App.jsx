@@ -13,6 +13,7 @@ import UserProfile from "./pages/user/UserProfile";
 import CounselorProfile from "./pages/counselor/CounselorProfile";
 import CounselorCounselor from "./components/counselorProfile/CounselorCounselor";
 import ViewUsers from "./pages/admin/ViewUsers";
+import CounselorProfileAdmin from "./components/counselorProfile/CounselorProfileAdmin";
 
 const App = () => {
   return (
@@ -63,7 +64,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        {/* View counselors */}
+        {/* View all counselors */}
         <Route
           path="/admin/counselors"
           element={
@@ -72,16 +73,16 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        {/* Block counselors */}
+        {/* View single user */}
         <Route
           path="/admin/counselors/:counselorId"
           element={
             <ProtectedRoute>
-              <CounselorProfile />
+              <CounselorProfileAdmin />
             </ProtectedRoute>
           }
         />
-        {/* View users */}
+        {/* View all users */}
          <Route
           path="/admin/users"
           element={
@@ -90,12 +91,12 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        {/* Block users */}
+        {/* View single user */}
         <Route
           path="/admin/users/:userId"
           element={
             <ProtectedRoute>
-              <CounselorProfile />
+              <UserProfile />
             </ProtectedRoute>
           }
         />

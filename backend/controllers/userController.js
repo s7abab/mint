@@ -1,22 +1,5 @@
+const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
-
-// GET ALL USERS
-const getAllUsers = async (req, res) => {
-  try {
-    const users = await userModel.find();
-    res.status(200).send({
-      success: true,
-      users,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Error in getAllUsers Api",
-      error,
-    });
-  }
-};
 
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
@@ -89,4 +72,31 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getSelectedUser, uploadProfile, updateProfile };
+// Get all counselors
+const getCounselors = async (req, res) => {
+  try {
+    const counselors = await counselorModel.find(
+      { status: "active" },
+      { name: 1, experience: 1, fee: 1, category: 1, image: 1 }
+    );
+    res.status(200).send({
+      success: true,
+      message: "Counselors featched",
+      counselors,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in get all counselors Api",
+      error,
+    });
+  }
+};
+
+module.exports = {
+  getSelectedUser,
+  uploadProfile,
+  updateProfile,
+  getCounselors,
+};

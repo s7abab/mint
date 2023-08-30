@@ -2,7 +2,7 @@ const { comparePassword, hashPassword } = require("../helpers/authHelper");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 const JWT = require("jsonwebtoken");
-const sendOTPEmail = require("../utils/OTPVerification");
+const { sendOTPEmail } = require("../utils/OTPVerification");
 
 //test
 const test = async (req, res) => {

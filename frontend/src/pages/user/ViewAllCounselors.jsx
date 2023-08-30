@@ -4,17 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import CounselorCard from "../../components/card/CounselorCard";
 import { Select, Option, Input } from "@material-tailwind/react";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
-import { fetchAllCounselors } from "../../redux/features/counselor/counselorsSlice";
+import { fetchCounselorsForUsers } from "../../redux/features/users/userActions";
 
 const ViewAllCounselors = () => {
   const dispatch = useDispatch();
-  const counselors = useSelector((state) => state.counselor.counselors);
+  const counselors = useSelector((state) => state.user.counselors);
   const categories = useSelector((state) => state.category.categories);
   const [category, setCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    dispatch(fetchAllCounselors());
+    dispatch(fetchCounselorsForUsers());
     dispatch(fetchCategories());
   }, [dispatch]);
 

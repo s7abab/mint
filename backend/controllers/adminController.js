@@ -1,7 +1,10 @@
 const categoryModal = require("../models/categoryModel");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
-const sendOTPEmail = require("../utils/OTPVerification");
+const {
+  sendRejectionEmail,
+  sendApprovalEmail,
+} = require("../utils/OTPVerification");
 
 const addCategory = async (req, res) => {
   try {
@@ -157,8 +160,15 @@ const changeStatus = async (req, res) => {
     const { status } = req.body;
     const changeStatus = await counselorModel.findByIdAndUpdate(
       { _id: counselorId },
-      { status }
+      { status },
+      { new: true }
     );
+    if (changeStatus.status === "active") {
+      sendApprovalEmail(changeStatus.email);
+    } else if (changeStatus.status === "rejected") {
+      sendRejectionEmail(changeStatus.email);
+    }
+    console.log(changeStatus.status);
     res.status(200).send({
       success: true,
       message: "Status changed",
@@ -217,7 +227,7 @@ const blockCounselor = async (req, res) => {
 // Get all users
 const getUsers = async (req, res) => {
   try {
-    const users = await userModel.find();
+    const users = await userModel.find({ role: "user" });
     res.status(200).send({
       success: true,
       message: "Users featched",
@@ -232,6 +242,8 @@ const getUsers = async (req, res) => {
     });
   }
 };
+
+// BLOCK USER
 
 const blockUsers = async (req, res) => {
   try {

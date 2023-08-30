@@ -1,6 +1,6 @@
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const counselorModel = require("../models/counselorModel");
-const sendOTPEmail = require("../utils/OTPVerification");
+const {sendOTPEmail, sendApplicationEmail} = require("../utils/OTPVerification");
 const JWT = require("jsonwebtoken");
 // Get Profile
 const getProfile = async (req, res) => {
@@ -162,6 +162,8 @@ const verifyOtp = async (req, res) => {
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
+    
+    sendApplicationEmail(user.email)
 
     res.status(200).send({
       success: true,
