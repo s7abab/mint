@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import {
   fetchAllCounselors,
   fetchSelectedCounselor,
-} from "../../redux/features/counselor/counselorsSlice";
-import { blockCounselor } from "../../redux/features/admin/adminSlice";
+} from "../../redux/features/counselor/counselorActions";
+import { blockCounselor } from "../../redux/features/admin/adminActions";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();

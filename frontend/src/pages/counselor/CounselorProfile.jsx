@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/Layout";
 import CounselorAdmin from "../../components/counselorProfile/counselorAdmin";
 import CounselorUser from "../../components/counselorProfile/CounselorUser";
-import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorsSlice";
+import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorActions";
 import CounselorCounselor from "../../components/counselorProfile/CounselorCounselor";
-// import { fetchCounselor } from "../../redux/features/counselor/counselorProfileSlice";
 
 const CounselorProfile = () => {
   const { counselorId } = useParams();

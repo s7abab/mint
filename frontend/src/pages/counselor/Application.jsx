@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
-import { applyAsCounselor } from "../../redux/features/counselor/counselorsSlice";
+import { applyAsCounselor } from "../../redux/features/counselor/counselorActions";
 import VerifyCounselorOTP from "../../components/VerifyCounselorOTP";
 
 const Application = () => {

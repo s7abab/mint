@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import { fetchAllUsers } from "../users/userActions";
 import toast from "react-hot-toast";
-import { fetchAllCounselors } from "../counselor/counselorsSlice";
+import { fetchAllCounselors } from "../counselor/counselorActions";
 
 // Approve or reject counselors
 export const changeStatus = createAsyncThunk(

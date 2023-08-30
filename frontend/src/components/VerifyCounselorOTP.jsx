@@ -1,8 +1,7 @@
 import { Button, Input, Card } from "@material-tailwind/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { resendOtp, verifyOtp } from "../redux/features/auth/authActions";
-import { resendCounselorOtp, verifyCounselorOtp } from "../redux/features/counselor/counselorsSlice";
+import { resendCounselorOtp, verifyCounselorOtp } from "../redux/features/counselor/counselorActions";
 
 const VerifyCounselorOTP = ({ closeModal, email }) => {
   const dispatch = useDispatch();

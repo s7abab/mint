@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { changeStatus } from "../../redux/features/admin/adminSlice";
+import { changeStatus } from "../../redux/features/admin/adminActions";
 
 const CounselorAdmin = () => {
   const dispatch = useDispatch();

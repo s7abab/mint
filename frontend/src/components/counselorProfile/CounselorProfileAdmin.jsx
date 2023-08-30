@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorsSlice";
+import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorActions";
 import Layout from "../Layout";
 
 const CounselorProfileAdmin = () => {

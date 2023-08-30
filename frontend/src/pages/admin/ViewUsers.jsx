@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import { fetchAllUsers, fetchSelectedUser } from "../../redux/features/users/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Typography } from "@material-tailwind/react";
-import { blockUser } from "../../redux/features/admin/adminSlice";
+import { blockUser } from "../../redux/features/admin/adminActions";
 import { useNavigate } from "react-router-dom";
 
 const ViewUsers = () => {

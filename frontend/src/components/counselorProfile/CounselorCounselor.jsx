@@ -6,7 +6,7 @@ import {
   fetchSelectedCounselor,
   updateCounselorProfile,
   uploadCounselorProfilePhoto,
-} from "../../redux/features/counselor/counselorsSlice";
+} from "../../redux/features/counselor/counselorActions";
 
 const UserUser = () => {
   const [file, setFile] = useState(null);
