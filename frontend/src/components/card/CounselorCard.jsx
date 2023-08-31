@@ -6,7 +6,7 @@ const CounselorCard = (data) => {
 
   // Handle View Profile
   const handleViewProfile = (counselorId) => {
-    navigate(`/user/counselors/${counselorId}`);
+    navigate(`/counselors/${counselorId}`);
   };
   return (
     <>

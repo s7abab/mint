@@ -38,7 +38,7 @@ const Sidebar = () => {
         </div>
         {role === "user" && (
           <List>
-            <Link to={"/user/dashboard"}>
+            <Link to={"/dashboard"}>
               <ListItem>
                 <ListItemPrefix>
                   <AiFillAppstore className="h-5 w-5" />
@@ -46,7 +46,7 @@ const Sidebar = () => {
                 Dashboard
               </ListItem>
             </Link>
-            <Link to={"/user/counselors"}>
+            <Link to={"/counselors"}>
               <ListItem>
                 <ListItemPrefix>
                   <AiOutlineUser className="h-5 w-5" />
@@ -54,7 +54,7 @@ const Sidebar = () => {
                 Counselors
               </ListItem>
             </Link>
-            <Link to={"/user/bookings"}>
+            <Link to={"/bookings"}>
               <ListItem>
                 <ListItemPrefix>
                   <AiOutlineBook className="h-5 w-5" />
@@ -62,7 +62,7 @@ const Sidebar = () => {
                 Bookings
               </ListItem>
             </Link>
-            <Link to={"/user/profile"}>
+            <Link to={"/profile"}>
               <ListItem>
                 <ListItemPrefix>
                   <BiUserCircle className="h-5 w-5" />

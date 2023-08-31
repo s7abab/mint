@@ -4,6 +4,7 @@ const {
   uploadProfile,
   updateProfile,
   getCounselors,
+  getCounselorProfile,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
@@ -11,7 +12,7 @@ const router = express.Router();
 
 // One User data
 router
-  .route("/user/:userId")
+  .route("/user/:userid")
   .get(isSigned, isUser, getSelectedUser)
   .post(isSigned, isUser, updateProfile);
 
@@ -21,6 +22,8 @@ router
   .post(isSigned, isUser, upload.single("image"), uploadProfile);
 
 // Get all counselors
-router.route("/counselors").get(getCounselors)
+router.route("/counselors").get(isSigned, isUser, getCounselors)
+// Get specific counselor
+router.route("/counselor/:counselorId").get(isSigned,isUser, getCounselorProfile)
 
 module.exports = router;

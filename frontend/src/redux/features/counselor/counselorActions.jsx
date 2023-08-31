@@ -1,10 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 // Fetch Selected Counselor
-
 export const fetchSelectedCounselor = createAsyncThunk(
   "counselorProfile/fetchCounselor",
   async (counselorId, { dispatch }) => {
@@ -16,23 +14,6 @@ export const fetchSelectedCounselor = createAsyncThunk(
       return null;
     } catch (error) {
       console.error("Error fetching counselor:", error);
-      throw error;
-    }
-  }
-);
-
-// Featch all counselors
-export const fetchAllCounselors = createAsyncThunk(
-  "counselor/fetchAllCounselors",
-  async (_, { dispatch }) => {
-    try {
-      const res = await Api.get("/admin/counselors");
-      if (res.data.success) {
-        return res.data.counselors;
-      }
-      return null;
-    } catch (error) {
-      console.log("Error in fetching counselors", error);
       throw error;
     }
   }
@@ -82,7 +63,7 @@ export const verifyCounselorOtp = createAsyncThunk(
       const res = await Api.post("/counselor/verify-otp", { email, otp });
       if (res.data.success) {
         toast.success(res.data.message);
-        const navigate = useNavigate();
+        window.location.replace("/");
         navigate("/login");
         return res?.data;
       } else {

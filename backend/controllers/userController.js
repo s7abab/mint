@@ -4,8 +4,8 @@ const userModel = require("../models/userModel");
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await userModel.find({ _id: userId });
+    const { userid } = req.params;
+    const user = await userModel.find({ _id: userid });
     res.status(200).send({
       success: true,
       user,
@@ -51,9 +51,9 @@ const uploadProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { field, value } = req.body;
-    const { userId } = req.params;
+    const { userid } = req.params;
     const updatedUser = await userModel.findOneAndUpdate(
-      { _id: userId },
+      { _id: userid },
       { [field]: value },
       { new: true }
     );
@@ -94,9 +94,28 @@ const getCounselors = async (req, res) => {
   }
 };
 
+// Get specific counselor
+const getCounselorProfile = async (req, res) => {
+  try {
+    const { counselorId } = req.params;
+    const counselors = await counselorModel.findById(counselorId);
+    res.status(200).send({
+      success: true,
+      counselors,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+    });
+  }
+};
+
 module.exports = {
   getSelectedUser,
   uploadProfile,
   updateProfile,
   getCounselors,
+  getCounselorProfile,
 };

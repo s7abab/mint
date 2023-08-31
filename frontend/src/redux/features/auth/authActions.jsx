@@ -94,11 +94,11 @@ export const resendOtp = createAsyncThunk(
 //current user
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
-  async ({ rejectWithValue }) => {
+  async (_,{ rejectWithValue }) => {
     try {
       const res = await Api.get("/auth/current-user");
       if (res.data) {
-        return res?.data;
+        return res?.data.user
       }
     } catch (error) {
       console.log(error);

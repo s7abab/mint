@@ -7,11 +7,11 @@ const {
 } = require("../utils/OTPVerification");
 
 const addCategory = async (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name) {
-      return res.send({ message: "Fill the field" });
-    }
+    try {
+      const { name } = req.body;
+      if (!name) {
+        return res.send({ message: "Fill the field" });
+      }
     //existing category
     const existingCategory = await categoryModal.findOne({ name });
     if (existingCategory) {
@@ -186,7 +186,10 @@ const changeStatus = async (req, res) => {
 // Get all counselors
 const getCounselors = async (req, res) => {
   try {
-    const counselors = await counselorModel.find({ status: "active" });
+    const counselors = await counselorModel.find(
+      { status: "active" },
+      { password: 0 }
+    );
     res.status(200).send({
       success: true,
       message: "Counselors featched",
@@ -197,6 +200,24 @@ const getCounselors = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error in get all counselors Api",
+      error,
+    });
+  }
+};
+
+// Get specific counselor
+const getCounselorProfile = async (req, res) => {
+  try {
+    const { counselorId } = req.params;
+    const counselors = await counselorModel.findById(counselorId);
+    res.status(200).send({
+      success: true,
+      counselors,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
       error,
     });
   }
@@ -267,6 +288,25 @@ const blockUsers = async (req, res) => {
   }
 };
 
+// GET ONE USER
+const getSelectedUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await userModel.find({ _id: userId });
+    res.status(200).send({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getSelectedUser Api",
+      error,
+    });
+  }
+};
+
 module.exports = {
   addCategory,
   editCategory,
@@ -276,7 +316,9 @@ module.exports = {
   getApplications,
   changeStatus,
   getCounselors,
+  getCounselorProfile,
   blockCounselor,
   getUsers,
   blockUsers,
+  getSelectedUser
 };

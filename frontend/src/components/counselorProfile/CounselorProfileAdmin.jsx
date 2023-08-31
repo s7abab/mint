@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSelectedCounselor } from "../../redux/features/counselor/counselorActions";
 import Layout from "../Layout";
+import { fetchSelectedCounselorForAdmin } from "../../redux/features/admin/adminActions";
 
 const CounselorProfileAdmin = () => {
   const { counselorId } = useParams();
@@ -10,7 +11,7 @@ const CounselorProfileAdmin = () => {
   const counselor = useSelector((state) => state.counselor.selectedCounselor);
 
   useEffect(() => {
-    dispatch(fetchSelectedCounselor(counselorId));
+    dispatch(fetchSelectedCounselorForAdmin(counselorId));
   }, [dispatch]);
 
   return (

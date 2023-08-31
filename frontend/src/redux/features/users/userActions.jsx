@@ -1,4 +1,4 @@
-import {createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
 
@@ -23,12 +23,12 @@ export const fetchAllUsers = createAsyncThunk(
 
 export const fetchSelectedUser = createAsyncThunk(
   "user/fetchOneUser",
-  async (userId, { dispatch }) => {
-    if (!userId) {
+  async (userid, { dispatch }) => {
+    if (!userid) {
       throw new Error("Invalid userId");
     }
     try {
-      const res = await Api.get(`user/user/${userId}`);
+      const res = await Api.get(`user/user/${userid}`);
       if (res.data.success) {
         return res.data.user;
       }
@@ -89,6 +89,23 @@ export const fetchCounselorsForUsers = createAsyncThunk(
       return [];
     } catch (error) {
       console.log("Error in fetching counselors", error);
+      throw error;
+    }
+  }
+);
+
+// Fetch Selected Counselor
+export const fetchSelectedCounselorForUser = createAsyncThunk(
+  "counselorProfile/fetchCounselor",
+  async (counselorId, { dispatch }) => {
+    try {
+      const res = await Api.get(`/user/counselor/${counselorId}`);
+      if (res.data.success) {
+        return res.data.counselors;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching counselor:", error);
       throw error;
     }
   }

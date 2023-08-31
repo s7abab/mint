@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../components/Layout";
 
 import Section1 from "../components/homePage/section1";
 import Section2 from "../components/homePage/Section2";
 import Section3 from "../components/homePage/Section3";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
+  
+  
   return (
     <>
       <Layout sidebar={true}>

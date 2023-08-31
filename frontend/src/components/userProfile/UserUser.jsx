@@ -6,16 +6,24 @@ import {
   uploadUserProfilePhoto,
 } from "../../redux/features/users/userActions";
 import { AiFillEdit, AiFillCheckCircle } from "react-icons/ai";
+
 import { updateUserProfile } from "../../redux/features/users/userActions";
+import { useParams } from "react-router-dom";
 
 const UserUser = () => {
   const [file, setFile] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
-  const [editingField, setEditingField] = useState(""); 
+  const [editingField, setEditingField] = useState("");
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth._id); 
+  const userId = useSelector((state) => state.auth._id);
   const user = useSelector((state) => state.user.selectedUser);
+
+  const { userid } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchSelectedUser(userid));
+  }, [dispatch, userid]);
 
   // Handle image upload
   const handleImageUpload = async () => {
@@ -52,7 +60,7 @@ const UserUser = () => {
       await dispatch(
         updateUserProfile({ field: "email", value: editedEmail, userId })
       );
-      dispatch(fetchSelectedUser(userId)); 
+      dispatch(fetchSelectedUser(userId));
       setEditingField("");
     }
   };

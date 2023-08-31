@@ -13,7 +13,7 @@ const ViewUsers = () => {
 
    // Handle View Profile
    const handleViewProfile = (userId) => {
-    dispatch(fetchSelectedUser(userId));
+    // dispatch(fetchSelectedUser(userId));
     navigate(`/admin/users/${userId}`);
   };
 

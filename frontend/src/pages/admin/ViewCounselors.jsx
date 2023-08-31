@@ -3,21 +3,16 @@ import Layout from "../../components/Layout";
 import { Card, Typography } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-import {
-  fetchAllCounselors,
-  fetchSelectedCounselor,
-} from "../../redux/features/counselor/counselorActions";
-import { blockCounselor } from "../../redux/features/admin/adminActions";
+import { blockCounselor, fetchCounselorsForAdmin, fetchSelectedCounselorForAdmin } from "../../redux/features/admin/adminActions";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();
-  const counselors = useSelector((state) => state.counselor.counselors);
+  const counselors = useSelector((state) => state.admin.counselors);
   const navigate = useNavigate();
 
   // Handle View Profile
   const handleViewProfile = (counselorId) => {
-    dispatch(fetchSelectedCounselor(counselorId));
+    dispatch(fetchSelectedCounselorForAdmin(counselorId));
     navigate(`/admin/counselors/${counselorId}`);
   };
 
@@ -27,7 +22,7 @@ const ViewCounselors = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchAllCounselors());
+    dispatch(fetchCounselorsForAdmin());
   }, [dispatch]);
   return (
     <>

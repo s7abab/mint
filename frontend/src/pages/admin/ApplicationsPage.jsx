@@ -15,10 +15,11 @@ const ApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
   const navigate = useNavigate();
   // Handle View Profile
-  const handleViewProfile = (counselorId)=>{
-    navigate(`/admin/applications/${counselorId}`)
-  }
-  
+  const handleViewProfile = (counselorId) => {
+    navigate(`/admin/applications/${counselorId}`);
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,10 +43,10 @@ const ApplicationsPage = () => {
                 <ListItem
                   key={data._id}
                   ripple={false}
-                  className="border border-2"
+                  className=" border-2"
                 >
                   {data.name}
-                  <ListItemSuffix onClick={()=>handleViewProfile(data._id)}>
+                  <ListItemSuffix onClick={() => handleViewProfile(data._id)}>
                     <BsViewStacked />
                     View
                     <IconButton variant="text" color="blue-gray"></IconButton>

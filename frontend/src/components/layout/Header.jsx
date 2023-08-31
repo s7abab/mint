@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Navbar,
@@ -7,28 +7,18 @@ import {
   Button,
   IconButton,
 } from "@material-tailwind/react";
-import {useSelector } from "react-redux";
+import { logout } from "../../redux/features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../../redux/features/auth/authActions";
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const navigate = useNavigate();
-  const isAuth = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.auth.token);
 
-  //HandleLogout
-  const handleLogout = async (e) => {
-    e.preventDefault()
-    try {
-      localStorage.clear()
-      navigate("/login");
-    } catch (error) {
-      console.log(error)
-      
-    }
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
@@ -36,9 +26,7 @@ const Header = () => {
   }, []);
 
   const navList = (
-    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      
-    </ul>
+    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6"></ul>
   );
   return (
     <>
@@ -59,7 +47,10 @@ const Header = () => {
               variant="gradient"
               size="sm"
               className="hidden lg:inline-block"
-              onClick={handleLogout}
+              onClick={() => {
+                dispatch(logout());
+                navigate("/");
+              }}
             >
               <span>Logout</span>
             </Button>
@@ -115,12 +106,27 @@ const Header = () => {
         <Collapse open={openNav}>
           <div className="container mx-auto">
             {navList}
-            {isAuth ? (
-              <Button onClick={handleLogout} variant="gradient" size="sm" fullWidth className="mb-2">
+            {token ? (
+              <Button
+                onClick={() => {
+                  dispatch(logout());
+                  navigate("/");
+                }}
+                variant="gradient"
+                size="sm"
+                fullWidth
+                className="mb-2"
+              >
                 <span>Logout </span>
               </Button>
             ) : (
-              <Button onClick={()=> navigate("/login")} variant="gradient" size="sm" fullWidth className="mb-2">
+              <Button
+                onClick={() => navigate("/login")}
+                variant="gradient"
+                size="sm"
+                fullWidth
+                className="mb-2"
+              >
                 <span>Login </span>
               </Button>
             )}

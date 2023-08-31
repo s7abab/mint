@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllUsers, fetchCounselorsForUsers, fetchSelectedUser } from "./userActions";
+import {
+  fetchAllUsers,
+  fetchCounselorsForUsers,
+  fetchSelectedCounselorForUser,
+  fetchSelectedUser,
+} from "./userActions";
 
 const userSlice = createSlice({
   name: "user",
@@ -7,6 +12,7 @@ const userSlice = createSlice({
     users: [],
     selectedUser: null,
     counselors: [],
+    selectedCounselor: null,
     loading: false,
     error: null,
   },
@@ -49,6 +55,23 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchCounselorsForUsers.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // Fetch selected counselor
+      .addCase(fetchSelectedCounselorForUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchSelectedCounselorForUser.fulfilled,
+        (state, { payload }) => {
+          state.loading = false;
+          state.selectedCounselor = payload;
+          state.error = null;
+        }
+      )
+      .addCase(fetchSelectedCounselorForUser.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

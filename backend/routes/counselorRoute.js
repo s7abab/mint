@@ -8,7 +8,7 @@ const {
   updateProfile,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
-const { isCounselor, isSigned, isUser } = require("../middleware/authMiddleware");
+const { isCounselor, isSigned } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 

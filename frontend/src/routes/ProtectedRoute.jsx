@@ -1,33 +1,32 @@
-import React, { useEffect } from "react";
+// ProtectedRoute.js
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
-import Api from "../services/axios";
+import { NavLink, Outlet } from "react-router-dom";
 import { getCurrentUser } from "../redux/features/auth/authActions";
-const ProtectedRoute = ({ children }) => {
+
+const ProtectedRoute = () => {
+  const token = localStorage.getItem("token");
+
+  // Get current user's data
   const dispatch = useDispatch();
-
-  //get user current
-  const getUser = async () => {
-    try {
-      const { data } = await Api.get("/auth/current-user");
-      if (data?.success) {
-        dispatch(getCurrentUser(data));
-      }
-    } catch (error) {
-      localStorage.clear();
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    getUser();
-  });
+    if (token) {
+      dispatch(getCurrentUser());
+    }
+  }, [token, dispatch]);
 
-  if (localStorage.getItem("token")) {
-    return children;
-  } else {
-    return <Navigate to="/login" />;
+  //
+  if (!token) {
+    return (
+      <div className="unauthorized">
+        <h1>Unauthorized :(</h1>
+        <span>
+          <NavLink to="/login">Login</NavLink> to gain access
+        </span>
+      </div>
+    );
   }
+  // returns child route elements
+  return <Outlet />;
 };
-
 export default ProtectedRoute;

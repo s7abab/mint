@@ -1,13 +1,7 @@
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../../redux/features/auth/authActions";
@@ -17,29 +11,25 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
 
-  const loginHandler = async (e) => {
-    e.preventDefault();
-    try {
-      if (!email || !password) {
-        return toast.error("Please provide all fields");
-      }
-      const res = await dispatch(userLogin({ email, password }));
-
-      const role = res.payload.user.role;
-      if (role === "admin") {
-        navigate("/admin/applications");
-      } else if (role === "user") {
-        navigate("/user/counselors");
-      } else if (role === "counselor") {
-        navigate("/counselor/profile");
-      } else {
-        toast.error("Unknown user");
-      }
-    } catch (error) {
-      console.log(error);
+  // Redirect authenticated user to profile screen
+  useEffect(() => {
+    if (role === "admin") {
+      navigate("/admin/dashboard");
+    } else if (role === "user") {
+      navigate("/dashboard");
+    } else if (role === "counselor") {
+      navigate("/counselor/dashboard");
     }
+  }, [navigate, role]);
+
+  const loginHandler = (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      return toast.error("Please provide all fields");
+    }
+    dispatch(userLogin({ email, password }));
   };
   return (
     <>

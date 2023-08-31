@@ -11,12 +11,17 @@ const {
   blockCounselor,
   getUsers,
   blockUsers,
+  getCounselorProfile,
+  getSelectedUser,
 } = require("../controllers/adminController");
-const { isAdmin, isSigned, isUser } = require("../middleware/authMiddleware");
+const { isAdmin, isSigned } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Category
-router.route("/category").post(isSigned, isAdmin, addCategory).get( getCategories);
+router
+  .route("/category")
+  .post(isSigned, isAdmin, addCategory)
+  .get(getCategories);
 
 router
   .route("/category/:categoryId")
@@ -31,9 +36,17 @@ router.route("/status/:counselorId").post(isSigned, isAdmin, changeStatus);
 // Get all counselors
 router
   .route("/counselors")
-  .get(isSigned, isUser || isAdmin , getCounselors)
+  .get(isSigned, isAdmin, getCounselors)
   .post(isSigned, isAdmin, blockCounselor);
+// Get specific counselor
+router
+  .route("/counselor/:counselorId")
+  .get(isSigned, isAdmin, getCounselorProfile);
 // Get all users
-router.route("/users").get(isSigned, isAdmin, getUsers).post(isSigned, isAdmin, blockUsers);
+router
+  .route("/users")
+  .get(isSigned, isAdmin, getUsers)
+  .post(isSigned, isAdmin, blockUsers);
+router.route("/user/:userId").get(isSigned, isAdmin, getSelectedUser);
 
 module.exports = router;

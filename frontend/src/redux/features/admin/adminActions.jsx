@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import { fetchAllUsers } from "../users/userActions";
 import toast from "react-hot-toast";
-import { fetchAllCounselors } from "../counselor/counselorActions";
 
 // Approve or reject counselors
 export const changeStatus = createAsyncThunk(
@@ -12,7 +11,6 @@ export const changeStatus = createAsyncThunk(
     try {
       const res = await Api.post(`admin/status/${userId}`, { status });
       if (res.data.success) {
-        window.location.replace("/admin/applications");
         return res.data;
       } else {
         rejectWithValue(res.data.message);
@@ -28,7 +26,7 @@ export const changeStatus = createAsyncThunk(
 export const blockUser = createAsyncThunk(
   "/admin/users",
   async ({ userId, value }, { rejectWithValue, dispatch }) => {
-    console.log(userId, value)
+    console.log(userId, value);
     try {
       const res = await Api.post("/admin/users", {
         userId,
@@ -53,14 +51,14 @@ export const blockUser = createAsyncThunk(
 export const blockCounselor = createAsyncThunk(
   "/admin/counselors",
   async ({ counselorId, value }, { rejectWithValue, dispatch }) => {
-    console.log(counselorId, value)
+    console.log(counselorId, value);
     try {
       const res = await Api.post("/admin/counselors", {
         counselorId,
         value: !value,
       });
       if (res.data.success) {
-        dispatch(fetchAllCounselors());
+        dispatch(fetchCounselorsForAdmin());
         if (res.data.message) {
           toast.success("Blocked");
         } else {
@@ -70,6 +68,58 @@ export const blockCounselor = createAsyncThunk(
     } catch (error) {
       console.log(error);
       rejectWithValue(error);
+    }
+  }
+);
+
+// Featch all counselors
+export const fetchCounselorsForAdmin = createAsyncThunk(
+  "counselor/fetchAllCounselors",
+  async (_, { dispatch }) => {
+    try {
+      const res = await Api.get("/admin/counselors");
+      if (res.data.success) {
+        return res.data.counselors;
+      }
+      return null;
+    } catch (error) {
+      console.log("Error in fetching counselors", error);
+      throw error;
+    }
+  }
+);
+
+// Fetch Selected Counselor
+export const fetchSelectedCounselorForAdmin = createAsyncThunk(
+  "counselorProfile/fetchCounselor",
+  async (counselorId, { dispatch }) => {
+    try {
+      const res = await Api.get(`/admin/counselor/${counselorId}`);
+      if (res.data.success) {
+        return res.data.counselors;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching counselor:", error);
+      throw error;
+    }
+  }
+);
+// Fetch selected user
+export const fetchSelectedUserForAdmin = createAsyncThunk(
+  "admin/fetchOneUser",
+  async (userId, { dispatch }) => {
+    if (!userId) {
+      throw new Error("Invalid userId");
+    }
+    try {
+      const res = await Api.get(`admin/user/${userId}`);
+      if (res.data.success) {
+        return res.data.user;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 );

@@ -6,7 +6,7 @@ import { resendOtp, verifyOtp } from "../redux/features/auth/authActions";
 const VerifyOTP = ({ closeModal, email }) => {
   const dispatch = useDispatch();
   const [otp, setOtp] = useState("");
-  const [time, setTime] = useState(60); 
+  const [time, setTime] = useState(60);
 
   // Send OTP
   const otpHandler = (e, email, otp) => {
@@ -47,7 +47,7 @@ const VerifyOTP = ({ closeModal, email }) => {
     <>
       <div className="flex justify-center items-center fixed inset-0">
         <Card className="bg-gray-200 p-5" color="transparent" shadow={false}>
-          <p className="cursor-pointer" onClick={closeModal}>
+          <p className="cursor-pointer w-2" onClick={closeModal}>
             X
           </p>
           <form
@@ -65,10 +65,11 @@ const VerifyOTP = ({ closeModal, email }) => {
                   ? `OTP expires in ${time} seconds`
                   : "OTP has expired"}
               </p>
-
-              <Button onClick={() => resendOTPHandler(email)}>
-                Resend OTP
-              </Button>
+              {time <= 0 && (
+                <Button onClick={() => resendOTPHandler(email)}>
+                  Resend OTP
+                </Button>
+              )}
             </div>
           </form>
         </Card>

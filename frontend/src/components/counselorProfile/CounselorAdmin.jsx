@@ -1,18 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { changeStatus } from "../../redux/features/admin/adminActions";
+import {
+  changeStatus,
+  fetchSelectedCounselorForAdmin,
+} from "../../redux/features/admin/adminActions";
+import { useParams } from "react-router-dom";
+import { Loading } from "../Loading";
+import { useNavigate } from "react-router-dom";
+import Api from "../../services/axios";
 
 const CounselorAdmin = () => {
   const dispatch = useDispatch();
-  const counselor = useSelector((state) => state.counselor.selectedCounselor);
-  const userId = useSelector((state) =>
-    state.counselor.selectedCounselor
-      ? state.counselor.selectedCounselor._id
-      : null
-  );
+  const { counselorId } = useParams();
+  const navigate = useNavigate();
 
-  const statusHandler = (userId, status) => {
-    dispatch(changeStatus({ userId, status }));
+  useEffect(() => {
+    dispatch(fetchSelectedCounselorForAdmin(counselorId));
+  }, [dispatch]);
+
+  const counselor = useSelector((state) => state?.admin?.selectedCounselor);
+
+  if (!counselor) {
+    return <Loading />;
+  }
+
+  const statusHandler = async (userId, status) => {
+    try {
+      const res = await Api.post(`admin/status/${userId}`, { status });
+      if (res.data.success) {
+        navigate("/admin/applications");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -78,13 +98,13 @@ const CounselorAdmin = () => {
           <div className="flex justify-center gap-8 mt-5 mb-5">
             <button
               className="bg-green-600 w-24 rounded-md"
-              onClick={() => statusHandler(userId, "active")}
+              onClick={() => statusHandler(counselorId, "active")}
             >
               Approve
             </button>
             <button
               className="bg-red-600 w-24 rounded-md"
-              onClick={() => statusHandler(userId, "rejected")}
+              onClick={() => statusHandler(counselorId, "rejected")}
             >
               Reject
             </button>
