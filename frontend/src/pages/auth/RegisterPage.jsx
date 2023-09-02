@@ -2,8 +2,8 @@ import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import Layout from "../../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../../redux/features/auth/authActions";
 import VerifyOTP from "../../components/VerifyOTP";
 
@@ -32,6 +32,13 @@ const RegisterPage = () => {
   const closeModal = () => {
     setModal(false);
   };
+
+  const user = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    if (user) {
+      navigate("/login");
+    }
+  }, [user,navigate]);
   return (
     <>
       <Layout sidebar={true}>

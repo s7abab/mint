@@ -7,28 +7,40 @@ const {
 } = require("../utils/OTPVerification");
 
 const addCategory = async (req, res) => {
-    try {
-      const { name } = req.body;
-      if (!name) {
-        return res.send({ message: "Fill the field" });
-      }
-    //existing category
-    const existingCategory = await categoryModal.findOne({ name });
+  try {
+    const { name } = req.body;
+
+    // Define a regex pattern for the category name
+    const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
+
+    if (!name) {
+      return res.status(400).send({ message: "Fill the field" });
+    }
+
+    if (!nameRegex.test(name)) {
+      return res.status(400).send({ message: "Invalid category name" });
+    }
+
+    // Check if a category with the same name (case-insensitive) already exists
+    const existingCategory = await categoryModal.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+
     if (existingCategory) {
       return res.status(200).send({
         success: false,
         message: "Category already added",
       });
     }
-    //save category
+
+    // Save the category with the original case
     const category = new categoryModal({ name });
     await category.save();
+
     res.status(201).send({
       success: true,
-      message: "Category created succussfully",
+      message: "Category created successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send({
       success: false,
       message: "Error in category",
@@ -37,12 +49,34 @@ const addCategory = async (req, res) => {
   }
 };
 
+
 //edit category
 const editCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
     const { name } = req.body;
 
+     // Define a regex pattern for the category name
+     const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
+
+     if (!name) {
+       return res.status(400).send({ message: "Fill the field" });
+     }
+ 
+     if (!nameRegex.test(name)) {
+       return res.status(400).send({ message: "Invalid category name" });
+     }
+ 
+     // Check if a category with the same name (case-insensitive) already exists
+     const existingCategory = await categoryModal.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+ 
+     if (existingCategory) {
+       return res.status(200).send({
+         success: false,
+         message: "Category already added",
+       });
+     }
+     
     const updatedCategory = await categoryModal.findByIdAndUpdate(
       categoryId,
       { name },

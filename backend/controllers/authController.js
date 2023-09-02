@@ -263,12 +263,12 @@ const currentUser = async (req, res) => {
   try {
     let user;
     const patient = await userModel.findOne({
-      _id: req.body.userId,
+      _id: req.body.authId,
       isVerified: true,
       isBlocked: false,
     });
     const counselor = await counselorModel.findOne({
-      _id: req.body.userId,
+      _id: req.body.authId,
       isVerified: true,
       isBlocked: false,
       status: "active",

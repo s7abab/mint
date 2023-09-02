@@ -28,7 +28,7 @@ const uploadProfile = async (req, res) => {
       const { userId } = req.params;
 
       const image = await userModel.findOneAndUpdate(
-        { _id: userId },
+        { _id: userId, isBlocked: false  },
         { image: imageUrl }
       );
       res.status(200).send({
@@ -53,7 +53,7 @@ const updateProfile = async (req, res) => {
     const { field, value } = req.body;
     const { userid } = req.params;
     const updatedUser = await userModel.findOneAndUpdate(
-      { _id: userid },
+      { _id: userid, isBlocked: false },
       { [field]: value },
       { new: true }
     );

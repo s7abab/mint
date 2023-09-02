@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import { toast } from "react-hot-toast";
+import endpoints from "../../../services/endpoints";
 
 const categorySlice = createSlice({
   name: "category",
@@ -9,10 +10,10 @@ const categorySlice = createSlice({
     selectedCategory: null,
   },
   reducers: {
-    setCategories: (state, {payload}) => {
+    setCategories: (state, { payload }) => {
       state.categories = payload;
     },
-    setSelectedCategory: (state, {payload}) => {
+    setSelectedCategory: (state, { payload }) => {
       state.selectedCategory = payload;
     },
   },
@@ -23,7 +24,7 @@ export const { setCategories, setSelectedCategory } = categorySlice.actions;
 // Featch categories
 export const fetchCategories = () => async (dispatch) => {
   try {
-    const res = await Api.get("/admin/category");
+    const res = await Api.get(endpoints.category.fetch_categories_admin);
     dispatch(setCategories(res.data.categories));
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -33,10 +34,12 @@ export const fetchCategories = () => async (dispatch) => {
 // Create category
 export const createCategory = (newCategory) => async (dispatch) => {
   try {
-    const res = await Api.post("/admin/category", { name: newCategory });
+    const res = await Api.post(endpoints.category.create_category, { name: newCategory });
     if (res.data.success) {
       toast.success(res.data.message);
       dispatch(fetchCategories());
+    } else {
+      toast.error(res.data.message);
     }
   } catch (error) {
     console.log(error);
@@ -46,12 +49,14 @@ export const createCategory = (newCategory) => async (dispatch) => {
 // Edit category
 export const editCategory = (categoryId, newName) => async (dispatch) => {
   try {
-    const res = await Api.put(`/admin/category/${categoryId}`, {
+    const res = await Api.put(endpoints.category.edit_category+categoryId, {
       name: newName,
     });
     if (res.data.success) {
       toast.success(res.data.message);
       dispatch(fetchCategories());
+    } else {
+      toast.error(res.data.message);
     }
   } catch (error) {
     console.log(error);
@@ -62,13 +67,15 @@ export const editCategory = (categoryId, newName) => async (dispatch) => {
 export const unlistCategory =
   (categoryId, currentValue) => async (dispatch) => {
     try {
-      const res = await Api.patch(`/admin/category/${categoryId}`, {
+      const res = await Api.patch(endpoints.category.unlist_category+categoryId, {
         value: !currentValue,
       });
 
       if (res.data.success) {
         dispatch(fetchCategories());
         toast.success("Changed Category Listing");
+      } else {
+        toast.error(res.data.message);
       }
     } catch (error) {
       console.log(error);

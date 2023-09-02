@@ -1,19 +1,18 @@
 import React, { useEffect } from "react";
 import Layout from "../../components/Layout";
-import { fetchAllUsers, fetchSelectedUser } from "../../redux/features/users/userActions";
+import { fetchSelectedUser } from "../../redux/features/users/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Typography } from "@material-tailwind/react";
-import { blockUser } from "../../redux/features/admin/adminActions";
+import { blockUser, fetchAllUsers } from "../../redux/features/admin/adminActions";
 import { useNavigate } from "react-router-dom";
 
 const ViewUsers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const users = useSelector((state) => state.user.users);
+  const users = useSelector((state) => state.admin.users);
 
    // Handle View Profile
    const handleViewProfile = (userId) => {
-    // dispatch(fetchSelectedUser(userId));
     navigate(`/admin/users/${userId}`);
   };
 

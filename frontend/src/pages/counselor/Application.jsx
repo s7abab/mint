@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import {
   Card,
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
 import { applyAsCounselor } from "../../redux/features/counselor/counselorActions";
 import VerifyCounselorOTP from "../../components/VerifyCounselorOTP";
+import { useNavigate } from "react-router-dom";
 
 const Application = () => {
   const [name, setName] = useState("");
@@ -26,6 +27,7 @@ const Application = () => {
   const [modal, setModal] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const categories = useSelector((state) => state.category.categories);
 
   useEffect(() => {
@@ -56,11 +58,17 @@ const Application = () => {
       console.log(error);
     }
   };
-
   // Close Modal
   const closeModal = () => {
     setModal(false);
   };
+
+  const user = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    if (user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   return (
     <>
@@ -110,13 +118,13 @@ const Application = () => {
                 <Select
                   label="Specialization"
                   value={specialization}
-                  onChange={(e)=> setSpecialization(e)}
+                  onChange={(e) => setSpecialization(e)}
                   required
                 >
                   {categories
                     .filter((category) => category.active)
                     .map((category) => (
-                      <Option  value={category.name} key={category._id}>
+                      <Option value={category.name} key={category._id}>
                         {category.name}
                       </Option>
                     ))}

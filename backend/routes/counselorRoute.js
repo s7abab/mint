@@ -6,6 +6,8 @@ const {
   resendOtp,
   uploadProfilePhoto,
   updateProfile,
+  changeTime,
+  timeSlots,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -19,8 +21,16 @@ router.route("/verify-otp").post(verifyOtp);
 // Resend OTP
 router.route("/resend-otp").post(resendOtp);
 // Get profile
-router.route("/profile/:counselorId").get(isSigned,isCounselor, getProfile).post(isSigned,isCounselor, updateProfile)
+router
+  .route("/profile/:counselorId")
+  .get(isSigned, isCounselor, getProfile)
+  .post(isSigned, isCounselor, updateProfile);
+// Add time
+router.route("/time/:counselorId").post(isSigned, isCounselor, changeTime);
 // Image Upload
-router.route("/image/:counselorId").post(isSigned,isCounselor, upload.single("image"), uploadProfilePhoto);
+router
+  .route("/image/:counselorId")
+  .post(isSigned, isCounselor, upload.single("image"), uploadProfilePhoto);
 
+router.route("/time-slots").post(timeSlots);
 module.exports = router;

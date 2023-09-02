@@ -1,131 +1,67 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { AiFillEdit, AiFillCheckCircle } from "react-icons/ai";
 import {
   fetchSelectedCounselor,
   updateCounselorProfile,
+  updateTime,
   uploadCounselorProfilePhoto,
 } from "../../redux/features/counselor/counselorActions";
+import Layout from "../Layout";
+import { Col, Input, Row, Space, TimePicker } from "antd";
+import moment from "moment";
+import { DatePicker, Form } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button } from "@material-tailwind/react";
+import { Loading } from "../Loading";
 
-const UserUser = () => {
-  const [file, setFile] = useState(null);
-  const [editedName, setEditedName] = useState("");
-  const [editedEmail, setEditedEmail] = useState("");
-  const [editedAddress, setEditedAddress] = useState("");
-  const [editedSpecialization, setEditedSpecialization] = useState("");
-  const [editedExperience, setEditedExperience] = useState("");
-  const [editedFee, setEditedFee] = useState("");
-  const [editingField, setEditingField] = useState("");
+const CounselorCounselor = () => {
   const dispatch = useDispatch();
   const counselorId = useSelector((state) => state.auth._id);
-  const user = useSelector((state) => state.counselor.selectedCounselor);
-
-  // Handle image upload
-  const handleImageUpload = async () => {
-    try {
-      dispatch(uploadCounselorProfilePhoto(file, counselorId));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const user = useSelector((state) => state?.counselor?.selectedCounselor);
+  const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   useEffect(() => {
     if (counselorId !== null) {
-      dispatch(fetchSelectedCounselor(counselorId));
+      dispatch(fetchSelectedCounselor(counselorId)).then(() => {
+        setIsLoading(false);
+      });
     }
     if (file) {
-      handleImageUpload();
+      dispatch(uploadCounselorProfilePhoto(file, counselorId));
     }
   }, [dispatch, counselorId, file]);
 
-  // To show value in input field when click edit
-  const handleEditClick = (field) => {
-    setEditingField(field);
-    if (field === "name") {
-      setEditedName(user?.name);
-    } else if (field === "email") {
-      setEditedEmail(user?.email);
-    } else if (field === "specialization") {
-      setEditedSpecialization(user?.category);
-    } else if (field === "address") {
-      setEditedAddress(user?.address);
-    } else if (field === "experience") {
-      setEditedExperience(user?.experience);
-    } else if (field === "fee") {
-      setEditedFee(user?.fee);
-    }
-  };
-  // Handle profile edit
-  const handleSaveEdit = async () => {
-    if (editingField === "name") {
-      await dispatch(
-        updateCounselorProfile({
-          field: "name",
-          value: editedName,
-          counselorId,
-        })
-      );
-      setEditingField("");
-    } else if (editingField === "email") {
-      await dispatch(
-        updateCounselorProfile({
-          field: "email",
-          value: editedEmail,
-          counselorId,
-        })
-      );
-      dispatch(fetchSelectedCounselor(counselorId));
-      setEditingField("");
-    } else if (editingField === "fee") {
-      await dispatch(
-        updateCounselorProfile({
-          field: "fee",
-          value: editedFee,
-          counselorId,
-        })
-      );
-      dispatch(fetchSelectedCounselor(counselorId));
-      setEditingField("");
-    } else if (editingField === "address") {
-      await dispatch(
-        updateCounselorProfile({
-          field: "address",
-          value: editedAddress,
-          counselorId,
-        })
-      );
-      dispatch(fetchSelectedCounselor(counselorId));
-      setEditingField("");
-    } else if (editingField === "specialization") {
-      await dispatch(
-        updateCounselorProfile({
-          field: "specialization",
-          value: editedSpecialization,
-          counselorId,
-        })
-      );
-      dispatch(fetchSelectedCounselor(counselorId));
-      setEditingField("");
-    }
-
-    else if (editingField === "experience") {
-        await dispatch(
-          updateCounselorProfile({
-            field: "experience",
-            value: editedExperience,
-            counselorId,
-          })
-        );
-        dispatch(fetchSelectedCounselor(counselorId));
-        setEditingField("");
-      }
+  const onFinishHandler = (values) => {
+    dispatch(
+      updateCounselorProfile({
+        values: {
+          ...values,
+          timings: [startTime, endTime],
+        },
+        counselorId: counselorId,
+      })
+    );
   };
 
+  const handleTimeChange = (time, timeString) => {
+    console.log(timeString);
+    const startTime = moment(timeString[0], "HH:mm").format("HH:mm");
+    const endTime = moment(timeString[1], "HH:mm").format("HH:mm");
+    setStartTime(startTime);
+    setEndTime(endTime);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
-    <>
-      <Layout>
-        <div className="w-screen mx-auto mt-5 p-6 bg-white shadow-lg rounded-lg">
+    <Layout>
+      <div>
+        {/* Profile Photo */}
+        <div className="w-full mx-auto mt-5 p-6  rounded-lg">
           <div className="flex justify-center">
             <div className="relative w-32 h-32 rounded-full overflow-hidden">
               <img
@@ -142,7 +78,6 @@ const UserUser = () => {
                   <input
                     onChange={(e) => {
                       setFile(e.target.files[0]);
-                      handleImageUpload();
                     }}
                     type="file"
                     name="image"
@@ -154,188 +89,97 @@ const UserUser = () => {
               </div>
             </div>
           </div>
-          <h1 className="text-2xl font-semibold mt-4 flex items-center">
-            {editingField === "name" ? (
-              <>
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                />
-                <AiFillCheckCircle
-                  className="ml-2 cursor-pointer text-green-500"
-                  onClick={handleSaveEdit}
-                />
-              </>
-            ) : (
-              <>
-                {user?.name}
-                <AiFillEdit
-                  className="ml-2 cursor-pointer"
-                  onClick={() => handleEditClick("name")}
-                />
-              </>
-            )}
-          </h1>
-          <div className="mt-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Email
-            </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
-              {editingField === "email" ? (
-                <>
-                  <input
-                    type="email"
-                    value={editedEmail}
-                    onChange={(e) => setEditedEmail(e.target.value)}
-                  />
-                  <AiFillCheckCircle
-                    className="ml-2 cursor-pointer text-green-500"
-                    onClick={handleSaveEdit}
-                  />
-                </>
-              ) : (
-                <>
-                  {user?.email}
-                  <AiFillEdit
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleEditClick("email")}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Address
-            </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
-              {editingField === "address" ? (
-                <>
-                  <input
-                    type="text"
-                    value={editedAddress}
-                    onChange={(e) => setEditedAddress(e.target.value)}
-                  />
-                  <AiFillCheckCircle
-                    className="ml-2 cursor-pointer text-green-500"
-                    onClick={handleSaveEdit}
-                  />
-                </>
-              ) : (
-                <>
-                  {user?.address}
-                  <AiFillEdit
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleEditClick("address")}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Specialization
-            </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
-              {editingField === "specialization" ? (
-                <>
-                  <input
-                    type="text"
-                    value={editedSpecialization}
-                    onChange={(e) => setEditedSpecialization(e.target.value)}
-                  />
-                  <AiFillCheckCircle
-                    className="ml-2 cursor-pointer text-green-500"
-                    onClick={handleSaveEdit}
-                  />
-                </>
-              ) : (
-                <>
-                  {user?.category}
-                  <AiFillEdit
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleEditClick("specialization")}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Experience
-            </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
-              {editingField === "experience" ? (
-                <>
-                  <input
-                    type="text"
-                    value={editedExperience}
-                    onChange={(e) => setEditedExperience(e.target.value)}
-                  />
-                  <AiFillCheckCircle
-                    className="ml-2 cursor-pointer text-green-500"
-                    onClick={handleSaveEdit}
-                  />
-                </>
-              ) : (
-                <>
-                  {user?.experience} Years
-                  <AiFillEdit
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleEditClick("experience")}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          <div className="mt-2">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Fee
-            </label>
-            <div className="w-full px-3 py-2 border rounded-lg bg-gray-100 flex items-center">
-              {editingField === "fee" ? (
-                <>
-                  <input
-                    type="text"
-                    value={editedFee}
-                    onChange={(e) => setEditedFee(e.target.value)}
-                  />
-                  <AiFillCheckCircle
-                    className="ml-2 cursor-pointer text-green-500"
-                    onClick={handleSaveEdit}
-                  />
-                </>
-              ) : (
-                <>
-                  {user?.fee}
-                  <AiFillEdit
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleEditClick("fee")}
-                  />
-                </>
-              )}
-            </div>
-          </div>
         </div>
-      </Layout>
-    </>
+        {/* Profile Photo */}
+        <Form
+          layout="vertical"
+          onFinish={onFinishHandler}
+          className="m-3"
+          initialValues={{
+            ...user,
+            timings: [
+              moment(user.timings[0], "HH:mm"),
+              moment(user.timings[1], "HH:mm"),
+            ],
+          }}
+        >
+          <Row gutter={20}>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Fullname"
+                name="name"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Email"
+                name="email"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Address"
+                name="address"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Specialization"
+                name="category"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Experience"
+                name="experience"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item
+                label="Fee"
+                name="fee"
+                required
+                rules={[{ required: true }]}
+              >
+                <Input type="text" placeholder="your first name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <Form.Item label="Timings" name="timings" required>
+                <TimePicker.RangePicker
+                  onChange={handleTimeChange}
+                  format="HH:mm"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Button className="" type="submit">
+            Update
+          </Button>
+        </Form>
+      </div>
+    </Layout>
   );
 };
 
-export default UserUser;
+export default CounselorCounselor;

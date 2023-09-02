@@ -1,5 +1,4 @@
-import React from "react";
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "../src/pages/auth/LoginPage";
 import RegisterPage from "../src/pages/auth/RegisterPage";
@@ -17,17 +16,21 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserDashboard from "./pages/user/UserDashboard";
 import CounselorDashboard from "./pages/counselor/CounselorDashboard";
+import PublicRoute from "./routes/PublicRoute";
+import BookingSettings from "./components/counselorProfile/BookingSettings";
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<HomePage />} />
 
-        {/* AUTH ROUTES */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/apply" element={<Application />} />
+          {/* AUTH ROUTES */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/apply" element={<Application />} />
+        </Route>
         <Route element={<ProtectedRoute />}>
           {/* ADMIN ROUTES */}
           <Route path="/admin/category" element={<CategoryPage />} />
@@ -62,6 +65,7 @@ const App = () => {
           {/* COUNSELOR ROUTES */}
           <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
           <Route path="/counselor/profile" element={<CounselorCounselor />} />
+          <Route path="/counselor/profile/booking-settings" element={<BookingSettings />} />
         </Route>
       </Routes>
     </>

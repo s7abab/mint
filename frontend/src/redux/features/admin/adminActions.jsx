@@ -1,15 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
-import { fetchAllUsers } from "../users/userActions";
 import toast from "react-hot-toast";
+import endpoints from "../../../services/endpoints";
 
 // Approve or reject counselors
 export const changeStatus = createAsyncThunk(
   "/admin/status",
   async ({ userId, status }, { rejectWithValue }) => {
-    console.log(userId);
     try {
-      const res = await Api.post(`admin/status/${userId}`, { status });
+      const res = await Api.post(endpoints.admin.change_status + userId, {
+        status,
+      });
       if (res.data.success) {
         return res.data;
       } else {
@@ -26,9 +27,9 @@ export const changeStatus = createAsyncThunk(
 export const blockUser = createAsyncThunk(
   "/admin/users",
   async ({ userId, value }, { rejectWithValue, dispatch }) => {
-    console.log(userId, value);
+    console.log(userId);
     try {
-      const res = await Api.post("/admin/users", {
+      const res = await Api.post(endpoints.admin.block_user, {
         userId,
         value: !value,
       });
@@ -53,7 +54,7 @@ export const blockCounselor = createAsyncThunk(
   async ({ counselorId, value }, { rejectWithValue, dispatch }) => {
     console.log(counselorId, value);
     try {
-      const res = await Api.post("/admin/counselors", {
+      const res = await Api.post(endpoints.admin.block_counselor, {
         counselorId,
         value: !value,
       });
@@ -77,7 +78,7 @@ export const fetchCounselorsForAdmin = createAsyncThunk(
   "counselor/fetchAllCounselors",
   async (_, { dispatch }) => {
     try {
-      const res = await Api.get("/admin/counselors");
+      const res = await Api.get(endpoints.admin.fetch_all_counselors);
       if (res.data.success) {
         return res.data.counselors;
       }
@@ -94,13 +95,31 @@ export const fetchSelectedCounselorForAdmin = createAsyncThunk(
   "counselorProfile/fetchCounselor",
   async (counselorId, { dispatch }) => {
     try {
-      const res = await Api.get(`/admin/counselor/${counselorId}`);
+      const res = await Api.get(
+        endpoints.admin.fetch_selected_counselor + counselorId
+      );
       if (res.data.success) {
         return res.data.counselors;
       }
       return null;
     } catch (error) {
       console.error("Error fetching counselor:", error);
+      throw error;
+    }
+  }
+);
+// Fetch all users
+export const fetchAllUsers = createAsyncThunk(
+  "user/featchAllUsers",
+  async (_, { dispatch }) => {
+    try {
+      const res = await Api.get(endpoints.admin.fetch_all_users);
+      if (res.data.success) {
+        return res.data.users;
+      }
+      return null;
+    } catch (error) {
+      console.log("Error in fetching users");
       throw error;
     }
   }
@@ -113,7 +132,7 @@ export const fetchSelectedUserForAdmin = createAsyncThunk(
       throw new Error("Invalid userId");
     }
     try {
-      const res = await Api.get(`admin/user/${userId}`);
+      const res = await Api.get(endpoints.admin.fetch_selected_user + userId);
       if (res.data.success) {
         return res.data.user;
       }

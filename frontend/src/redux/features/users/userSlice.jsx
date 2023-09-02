@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  fetchAllUsers,
+
   fetchCounselorsForUsers,
   fetchSelectedCounselorForUser,
   fetchSelectedUser,
@@ -19,19 +19,7 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch all users
-      .addCase(fetchAllUsers.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
-        state.users = payload;
-        state.loading = false;
-      })
-      .addCase(fetchAllUsers.rejected, (state, { error }) => {
-        state.loading = false;
-        state.error = error.message;
-      })
+
       // Fetch selected user
       .addCase(fetchSelectedUser.pending, (state) => {
         state.loading = true;

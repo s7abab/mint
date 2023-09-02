@@ -13,6 +13,9 @@ const counselorSchema = new mongoose.Schema({
   password: { type: String, required: true },
   address: { type: String, required: true },
   experience: { type: String, required: true },
+  timings: {
+    type: Array,
+  },
   fee: { type: String, required: true },
   category: { type: String, required: true },
   booking: [{ type: Schema.Types.ObjectId }],

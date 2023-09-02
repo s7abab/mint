@@ -9,7 +9,7 @@ const isSigned = async (req, res, next) => {
       req.headers.authorization,
       process.env.JWT_SECRET
     );
-    req.body.userId = decode._id
+    req.body.authId = decode._id
     next();
   } catch (error) {
     console.log(error);
@@ -19,7 +19,7 @@ const isSigned = async (req, res, next) => {
 //CHECK IS USER OR NOT
 const isUser = async (req, res, next) => {
   try {
-    const user = await userModel.findById(req.body.userId);
+    const user = await userModel.findById(req.body.authId);
     if (user.role !== "user") {
       return res.status(401).send({
         success: false,
@@ -41,7 +41,7 @@ const isUser = async (req, res, next) => {
 //CHECK IS ADMIN OR NOT
 const isAdmin = async (req, res, next) => {
   try {
-    const user = await userModel.findById(req.body.userId);
+    const user = await userModel.findById(req.body.authId);
     if (user.role !== "admin") {
       return res.status(401).send({
         success: false,
@@ -64,7 +64,7 @@ const isAdmin = async (req, res, next) => {
 const isCounselor = async (req, res, next) => {
     try {
       console.log(req.user)
-      const user = await counselorModel.findById(req.body.userId);
+      const user = await counselorModel.findById(req.body.authId);
       console.log(user)
       if (user.role !== "counselor") {
         return res.status(401).send({

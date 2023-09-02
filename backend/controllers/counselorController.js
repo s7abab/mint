@@ -1,6 +1,10 @@
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
+const { generateTimeSlots } = require("../helpers/timeSlots");
 const counselorModel = require("../models/counselorModel");
-const {sendOTPEmail, sendApplicationEmail} = require("../utils/OTPVerification");
+const {
+  sendOTPEmail,
+  sendApplicationEmail,
+} = require("../utils/OTPVerification");
 const JWT = require("jsonwebtoken");
 // Get Profile
 const getProfile = async (req, res) => {
@@ -162,8 +166,8 @@ const verifyOtp = async (req, res) => {
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
-    
-    sendApplicationEmail(user.email)
+
+    sendApplicationEmail(user.email);
 
     res.status(200).send({
       success: true,
@@ -255,11 +259,12 @@ const uploadProfilePhoto = async (req, res) => {
 // Update profile
 const updateProfile = async (req, res) => {
   try {
-    const { field, value } = req.body;
     const { counselorId } = req.params;
+    const { values } = req.body;
+    console.log(values)
     const updatedUser = await counselorModel.findOneAndUpdate(
       { _id: counselorId },
-      { [field]: value },
+      { $set: values },
       { new: true }
     );
     res.status(200).send({
@@ -276,6 +281,57 @@ const updateProfile = async (req, res) => {
     });
   }
 };
+const changeTime = async (req, res) => {
+  try {
+    const { counselorId } = req.params;
+    const { timings } = req.body;
+
+    await counselorModel.findByIdAndUpdate({ _id: counselorId }, { timings });
+    res.status(200).send({
+      success: true,
+      message: "Time updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in changing time",
+      error,
+    });
+  }
+};
+
+// Generate time slots
+const timeSlots = (req, res) => {
+  try {
+    const { timings } = req.body;
+    [startTime, endTime] = timings;
+    console.log(timings);
+    const interval = 60;
+    // Convert interval to an integer
+    const intervalValue = parseInt(interval, 10);
+    if (isNaN(intervalValue)) {
+      throw new Error("Interval must be a valid number");
+    }
+    const timeSlotsResult = generateTimeSlots(
+      startTime,
+      endTime,
+      intervalValue
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Time slots created",
+      timeSlots: timeSlotsResult,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "An error in time slots generation",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   apply,
@@ -284,4 +340,6 @@ module.exports = {
   resendOtp,
   uploadProfilePhoto,
   updateProfile,
+  changeTime,
+  timeSlots,
 };
