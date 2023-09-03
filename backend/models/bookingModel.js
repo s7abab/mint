@@ -13,13 +13,14 @@ const bookingSchema = new mongoose.Schema(
       required: true,
     },
     counselorInfo: {
-      type: String,
+      type: Object,
       required: true,
     },
     userInfo: {
-      type: String,
+      type: Object,
+      required: true,
     },
-    date: {
+    note: {
       type: String,
       required: true,
     },
@@ -28,6 +29,11 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       default: "pending",
     },
+    date: {
+      type: String,
+      required: true,
+    },
+
     time: {
       type: String,
       required: true,

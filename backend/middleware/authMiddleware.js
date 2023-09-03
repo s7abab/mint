@@ -63,9 +63,9 @@ const isAdmin = async (req, res, next) => {
 //CHECK IS COUNSELOR OR NOT
 const isCounselor = async (req, res, next) => {
     try {
-      console.log(req.user)
+    
       const user = await counselorModel.findById(req.body.authId);
-      console.log(user)
+      
       if (user.role !== "counselor") {
         return res.status(401).send({
           success: false,

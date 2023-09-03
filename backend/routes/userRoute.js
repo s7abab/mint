@@ -6,6 +6,7 @@ const {
   getCounselors,
   getCounselorProfile,
   bookAppointment,
+  bookingAvailability,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
@@ -32,5 +33,9 @@ router
 
 // BOOK APPOINTMENT
 router.route("/book-appointment").post(isSigned, isUser, bookAppointment);
+// BOOKING AVAILABILITY
+router
+  .route("/booking-availability")
+  .post(isSigned, isUser, bookingAvailability);
 
 module.exports = router;

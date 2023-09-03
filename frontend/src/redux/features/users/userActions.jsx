@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
 import endpoints from "../../../services/endpoints";
+import { bookingAvailable, bookingNotAvailable } from "./userSlice";
 
 // Fetch selected user
 
@@ -112,18 +113,43 @@ export const fetchSelectedCounselorForUser = createAsyncThunk(
 // BOOK APPOINTMENT
 export const bookAppointment = createAsyncThunk(
   "user/book-appointment",
-  async (values, { rejectWithValue }) => {    
+  async (values, { rejectWithValue }) => {
+    console.log(values);
     try {
       const res = await Api.post(endpoints.user.book_appointment, {
         ...values,
       });
-      if(res.data.success){
+      if (res.data.success) {
         toast.success(res.data.message);
       }
     } catch (error) {
       toast.error(error.response.data.message);
       console.error(error);
       rejectWithValue(error.message);
+    }
+  }
+);
+
+// CHECK BOOKING AVAILABILITY
+
+export const checkAvailability = createAsyncThunk(
+  "/user/checkAvailability",
+  async (values, { dispatch }) => {
+    try {
+      const res = await Api.post(endpoints.user.check_availability, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        dispatch(bookingAvailable());
+      } else {
+        toast.error(res.data.message);
+        dispatch(bookingNotAvailable());
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      throw Error;
     }
   }
 );

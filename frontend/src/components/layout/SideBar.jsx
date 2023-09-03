@@ -5,20 +5,14 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-
 } from "@material-tailwind/react";
-import {
-
-  UserCircleIcon,
-
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
 import {
   AiFillAppstore,
   AiOutlineForm,
   AiOutlineUser,
   AiOutlineBook,
-  AiOutlineMessage
+  AiOutlineMessage,
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
 import { BiUserCircle } from "react-icons/bi";
@@ -104,6 +98,14 @@ const Sidebar = () => {
                 Bookings
               </ListItem>
             </Link>
+            <Link to={"/counselor/slots"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineMessage className="h-5 w-5" />
+                </ListItemPrefix>
+                Slots
+              </ListItem>
+            </Link>
             <Link to={"/counselor/messages"}>
               <ListItem>
                 <ListItemPrefix>
@@ -112,6 +114,7 @@ const Sidebar = () => {
                 Messages
               </ListItem>
             </Link>
+
             <Link to={"/counselor/profile"}>
               <ListItem>
                 <ListItemPrefix>

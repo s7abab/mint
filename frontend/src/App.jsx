@@ -19,6 +19,7 @@ import CounselorDashboard from "./pages/counselor/CounselorDashboard";
 import PublicRoute from "./routes/PublicRoute";
 import BookingSettings from "./components/counselorProfile/BookingSettings";
 import BookingPage from "./pages/user/BookingPage";
+import SlotsPage from "./pages/counselor/SlotsPage";
 
 const App = () => {
   return (
@@ -70,6 +71,7 @@ const App = () => {
 
           {/* COUNSELOR ROUTES */}
           <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
+          <Route path="/counselor/slots" element={<SlotsPage />} />
           <Route path="/counselor/profile" element={<CounselorCounselor />} />
         </Route>
       </Routes>

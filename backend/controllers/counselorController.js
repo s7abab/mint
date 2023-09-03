@@ -1,11 +1,13 @@
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const { generateTimeSlots } = require("../helpers/timeSlots");
 const counselorModel = require("../models/counselorModel");
+const slotModel = require("../models/slotModel");
 const {
   sendOTPEmail,
   sendApplicationEmail,
 } = require("../utils/OTPVerification");
 const JWT = require("jsonwebtoken");
+const moment = require("moment");
 // Get Profile
 const getProfile = async (req, res) => {
   try {
@@ -261,7 +263,7 @@ const updateProfile = async (req, res) => {
   try {
     const { counselorId } = req.params;
     const { values } = req.body;
-    console.log(values)
+    // console.log(values);
     const updatedUser = await counselorModel.findOneAndUpdate(
       { _id: counselorId },
       { $set: values },
@@ -301,35 +303,70 @@ const changeTime = async (req, res) => {
   }
 };
 
-// Generate time slots
-const timeSlots = (req, res) => {
+// CREATE SLOT
+const createSlot = async (req, res) => {
   try {
-    const { timings } = req.body;
-    [startTime, endTime] = timings;
-    console.log(timings);
-    const interval = 60;
-    // Convert interval to an integer
-    const intervalValue = parseInt(interval, 10);
-    if (isNaN(intervalValue)) {
-      throw new Error("Interval must be a valid number");
-    }
-    const timeSlotsResult = generateTimeSlots(
-      startTime,
-      endTime,
-      intervalValue
-    );
+    const { counselorId, date, time } = req.body;
+    const Date = moment(date, "YYYY-MM-DD").toISOString();
+    console.log(Date)
+    const Time = moment(time, "HH:mm").toISOString();
+    // CHECKING AVAILABILITY (1HR)
+    const fromTime = moment(time, "HH:mm").subtract(1, "hours").toISOString();
+    const toTime = moment(time, "HH:mm").add(1, "hours").toISOString();
 
+    const existingSlot = await slotModel.find({
+      counselorId,
+      date: Date,
+      time: {
+        $gt: fromTime,
+        $lt: toTime,
+      },
+    });
+    if (existingSlot.length > 0) {
+      return res.status(200).send({
+        success: false,
+        message: "Slot already existing on this time",
+      });
+    }
+    const slot = new slotModel({
+      counselorId,
+      date: Date,
+      time: Time,
+      status: "pending",
+    });
+    await slot.save();
     res.status(200).send({
       success: true,
-      message: "Time slots created",
-      timeSlots: timeSlotsResult,
+      message: "New time slot created",
     });
   } catch (error) {
     res.status(500).send({
       success: false,
-      message: "An error in time slots generation",
-      error: error.message,
+      message: "An error occured while creating slot",
+      error,
     });
+    console.log(error);
+  }
+};
+
+// GET CREATED SLOTS
+const scheduledSlots = async (req, res) => {
+  try {
+    const slots = await slotModel.find({ counselorId: req.body.authId });
+    console.log(req.body)
+    res.status(200).send({
+      success:true,
+      message:"slots fetched",
+      slots
+    })
+  } catch (error) {
+    console.log(error),
+      res.status(500).send({
+        success: false,
+        message:
+          "An error occured while fetching created slots, Please try again later",
+        error,
+      });
   }
 };
 
@@ -341,5 +378,6 @@ module.exports = {
   uploadProfilePhoto,
   updateProfile,
   changeTime,
-  timeSlots,
+  createSlot,
+  scheduledSlots,
 };

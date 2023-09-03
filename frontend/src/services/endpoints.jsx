@@ -28,7 +28,9 @@ const endpoints = {
     resend_OTP: "/counselor/resend-otp",
     photo_upload: "counselor/image/",
     update_profile: "counselor/profile/",
-    update_time: "/counselor/time/"
+    update_time: "/counselor/time/",
+    create_slot: "counselor/create-slot",
+    fetch_slots: "counselor/scheduled-slots",
   },
   user: {
     fetch_selected_user: "user/user/",
@@ -37,6 +39,7 @@ const endpoints = {
     fetch_all_counselors: "/user/counselors",
     fetch_selected_counselor: "/user/counselor/",
     book_appointment: "/user/book-appointment",
+    check_availability: "user/booking-availability",
   },
 };
 

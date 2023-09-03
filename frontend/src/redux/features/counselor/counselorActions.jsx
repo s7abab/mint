@@ -158,9 +158,12 @@ export const updateTime = createAsyncThunk(
   "counselor/updateTime",
   async ({ timings, counselorId }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await Api.post(endpoints.counselor.update_time+counselorId, {
-        timings,
-      });
+      const res = await Api.post(
+        endpoints.counselor.update_time + counselorId,
+        {
+          timings,
+        }
+      );
       if (res.data.success) {
         toast.success(res.data.message);
         dispatch(fetchSelectedCounselor(counselorId));
@@ -172,6 +175,49 @@ export const updateTime = createAsyncThunk(
       toast.error(error.message);
 
       return rejectWithValue("An error occurred.");
+    }
+  }
+);
+
+// CREATE SLOT
+export const createSlot = createAsyncThunk(
+  "counselor/createSlot",
+  async (values, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.create_slot, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data;
+      } else {
+        toast.error(res.data.message);
+        return rejectWithValue(res.data);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// FETCH SCHEDULED SLOTS
+export const fetchScheduledSlots = createAsyncThunk(
+  "/counselor/fetchScheduledSlots",
+  async ({ counselorId }, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.fetch_slots, {
+        counselorId,
+      });
+      if (res.data.success) {
+        return res.data.slots;
+
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(err.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );

@@ -8,6 +8,8 @@ const {
   updateProfile,
   changeTime,
   timeSlots,
+  createSlot,
+  scheduledSlots,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -31,6 +33,7 @@ router.route("/time/:counselorId").post(isSigned, isCounselor, changeTime);
 router
   .route("/image/:counselorId")
   .post(isSigned, isCounselor, upload.single("image"), uploadProfilePhoto);
-
-router.route("/time-slots").post(timeSlots);
+// SLOTS
+router.route("/create-slot").post(isSigned, isCounselor, createSlot);
+router.route("/scheduled-slots").post(isSigned, isCounselor, scheduledSlots);
 module.exports = router;

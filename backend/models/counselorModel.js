@@ -33,7 +33,7 @@ const counselorSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", " active", " rejected"],
+      enum: ["pending", "active", " rejected"],
       default: "pending",
     },
     isVerified: { type: Boolean, default: false, required: true },

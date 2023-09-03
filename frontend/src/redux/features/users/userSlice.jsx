@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-
   fetchCounselorsForUsers,
   fetchSelectedCounselorForUser,
   fetchSelectedUser,
@@ -15,8 +14,16 @@ const userSlice = createSlice({
     selectedCounselor: null,
     loading: false,
     error: null,
+    isbookingAvailable: false,
   },
-  reducers: {},
+  reducers: {
+    bookingAvailable: (state, action) => {
+      state.isbookingAvailable = true;
+    },
+    bookingNotAvailable: (state, action) => {
+      state.isbookingAvailable = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -66,4 +73,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { bookingAvailable, bookingNotAvailable } = userSlice.actions;
 export default userSlice;
