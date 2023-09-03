@@ -1,3 +1,4 @@
+const bookingModel = require("../models/bookingModel");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 
@@ -28,7 +29,7 @@ const uploadProfile = async (req, res) => {
       const { userId } = req.params;
 
       const image = await userModel.findOneAndUpdate(
-        { _id: userId, isBlocked: false  },
+        { _id: userId, isBlocked: false },
         { image: imageUrl }
       );
       res.status(200).send({
@@ -112,10 +113,52 @@ const getCounselorProfile = async (req, res) => {
   }
 };
 
+// BOOK APPOINTMENT
+const bookAppointment = async (req, res) => {
+  const { counselorId, userId, counselorInfo, date, time } = req.body;
+  if (counselorId || userId || counselorInfo || date || time) {
+    return res.status(400).send({
+      success: false,
+      message: "Fill all the fields",
+    });
+  }
+  try {
+    req.body.status = "pending";
+    const booking = new bookingModel({
+      counselorId,
+      userId,
+      counselorInfo,
+      date,
+      time,
+    });
+    await booking.save();
+    const counselor = await counselorModel.findOne({ _id: counselorId });
+    counselor.notification.push({
+      type: "New-appointment-request",
+      message: `A new appointment request from `,
+      onClickPatch: "/user/appointments",
+    });
+    await user.save();
+    res.status(204).send({
+      success: true,
+      message: "Appointment booked successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message:
+        "An error occurred while booking the appointment. Please try again later.",
+      error,
+    });
+  }
+};
+
 module.exports = {
   getSelectedUser,
   uploadProfile,
   updateProfile,
   getCounselors,
   getCounselorProfile,
+  bookAppointment,
 };

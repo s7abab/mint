@@ -18,6 +18,7 @@ import UserDashboard from "./pages/user/UserDashboard";
 import CounselorDashboard from "./pages/counselor/CounselorDashboard";
 import PublicRoute from "./routes/PublicRoute";
 import BookingSettings from "./components/counselorProfile/BookingSettings";
+import BookingPage from "./pages/user/BookingPage";
 
 const App = () => {
   return (
@@ -60,12 +61,16 @@ const App = () => {
             path="/counselors/:counselorId"
             element={<CounselorProfile />}
           />
+          <Route
+            path="counselors/book-appoinment/:counselorId"
+            element={<BookingPage />}
+          />
+
           <Route path="/profile" element={<UserProfile />} />
 
           {/* COUNSELOR ROUTES */}
           <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
           <Route path="/counselor/profile" element={<CounselorCounselor />} />
-          <Route path="/counselor/profile/booking-settings" element={<BookingSettings />} />
         </Route>
       </Routes>
     </>

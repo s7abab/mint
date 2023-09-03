@@ -3,14 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSelectedCounselor,
   updateCounselorProfile,
-  updateTime,
   uploadCounselorProfilePhoto,
 } from "../../redux/features/counselor/counselorActions";
 import Layout from "../Layout";
-import { Col, Input, Row, Space, TimePicker } from "antd";
+import { Form, Col, Input, Row } from "antd";
 import moment from "moment";
-import { DatePicker, Form } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "@material-tailwind/react";
 import { Loading } from "../Loading";
 
@@ -20,8 +17,8 @@ const CounselorCounselor = () => {
   const user = useSelector((state) => state?.counselor?.selectedCounselor);
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState(user ? user.timings[0]: "00:00");
+  const [endTime, setEndTime] = useState(user? user.timings[1]: "00:00"); 
 
   useEffect(() => {
     if (counselorId !== null) {
@@ -46,22 +43,22 @@ const CounselorCounselor = () => {
     );
   };
 
-  const handleTimeChange = (time, timeString) => {
-    console.log(timeString);
-    const startTime = moment(timeString[0], "HH:mm").format("HH:mm");
-    const endTime = moment(timeString[1], "HH:mm").format("HH:mm");
-    setStartTime(startTime);
-    setEndTime(endTime);
-  };
+  // const handleTimeChange = (time, timeString) => {
+  //   console.log(time);
+  //   const startTime = moment(timeString[0], "HH:mm").format("HH:mm");
+  //   const endTime = moment(timeString[1], "HH:mm").format("HH:mm");
+  //   setStartTime(startTime);
+  //   setEndTime(endTime);
+  // };
 
   if (isLoading) {
     return <Loading />;
   }
   return (
     <Layout>
-      <div>
+      <div className="overflow-y-auto">
         {/* Profile Photo */}
-        <div className="w-full mx-auto mt-5 p-6  rounded-lg">
+        <div className="w-full mx-auto mt-5 p-6  rounded-lg ">
           <div className="flex justify-center">
             <div className="relative w-32 h-32 rounded-full overflow-hidden">
               <img
@@ -97,10 +94,6 @@ const CounselorCounselor = () => {
           className="m-3"
           initialValues={{
             ...user,
-            timings: [
-              moment(user.timings[0], "HH:mm"),
-              moment(user.timings[1], "HH:mm"),
-            ],
           }}
         >
           <Row gutter={20}>
@@ -164,13 +157,37 @@ const CounselorCounselor = () => {
                 <Input type="text" placeholder="your first name" />
               </Form.Item>
             </Col>
-            <Col xs={24} md={24} lg={8}>
-              <Form.Item label="Timings" name="timings" required>
-                <TimePicker.RangePicker
-                  onChange={handleTimeChange}
-                  format="HH:mm"
-                />
-              </Form.Item>
+            <Col xs={24} md={24} lg={8} className="mb-4">
+              <label
+                htmlFor="startTime"
+                className="text-lg font-medium text-gray-700"
+              >
+                Start Time:
+              </label>
+              <input
+                id="startTime"
+                type="time"
+                name="startTime"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none text-gray-700"
+              />
+            </Col>
+            <Col xs={24} md={24} lg={8} className="mb-4">
+              <label
+                htmlFor="endTime"
+                className="text-lg font-medium text-gray-700"
+              >
+                End Time:
+              </label>
+              <input
+                id="endTime"
+                type="time"
+                name="endtime"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none text-gray-700"
+              />
             </Col>
           </Row>
           <Button className="" type="submit">

@@ -12,33 +12,32 @@ const endpoints = {
     block_counselor: "/admin/counselors",
     fetch_all_counselors: "/admin/counselors",
     fetch_selected_counselor: "/admin/counselor/",
-    fetch_all_users:"/admin/users",
+    fetch_all_users: "/admin/users",
     fetch_selected_user: "admin/user/",
   },
-  category:{
+  category: {
     fetch_categories_admin: "/admin/category",
-    create_category : "/admin/category",
+    create_category: "/admin/category",
     edit_category: "/admin/category/",
-    unlist_category:"/admin/category/",
-
+    unlist_category: "/admin/category/",
   },
-  counselor:{
+  counselor: {
     fetch_selected_counselor: "/counselor/profile/",
-    apply_counselor : "counselor/apply",
+    apply_counselor: "counselor/apply",
     verify_OTP: "/counselor/verify-otp",
     resend_OTP: "/counselor/resend-otp",
     photo_upload: "counselor/image/",
     update_profile: "counselor/profile/",
-
+    update_time: "/counselor/time/"
   },
-  user:{
+  user: {
     fetch_selected_user: "user/user/",
     photo_upload: "user/image/",
-    update_profile:"user/user/",
+    update_profile: "user/user/",
     fetch_all_counselors: "/user/counselors",
-    fetch_selected_counselor:"/user/counselor/",
-
-  }
+    fetch_selected_counselor: "/user/counselor/",
+    book_appointment: "/user/book-appointment",
+  },
 };
 
 export default endpoints;

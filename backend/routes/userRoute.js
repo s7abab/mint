@@ -5,25 +5,32 @@ const {
   updateProfile,
   getCounselors,
   getCounselorProfile,
+  bookAppointment,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-// One User data
+// SELECTED USER DATA
 router
   .route("/user/:userid")
   .get(isSigned, isUser, getSelectedUser)
   .post(isSigned, isUser, updateProfile);
 
-// Image Upload
+// PROFILE PHOTO UPLOAD
 router
   .route("/image/:userId")
   .post(isSigned, isUser, upload.single("image"), uploadProfile);
 
-// Get all counselors
-router.route("/counselors").get(isSigned, isUser, getCounselors)
-// Get specific counselor
-router.route("/counselor/:counselorId").get(isSigned,isUser, getCounselorProfile)
+// GET ALL COUNSELORS
+router.route("/counselors").get(isSigned, isUser, getCounselors);
+
+// GET SELECTED COUNSELOR
+router
+  .route("/counselor/:counselorId")
+  .get(isSigned, isUser, getCounselorProfile);
+
+// BOOK APPOINTMENT
+router.route("/book-appointment").post(isSigned, isUser, bookAppointment);
 
 module.exports = router;

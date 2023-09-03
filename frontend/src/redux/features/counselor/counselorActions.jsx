@@ -158,7 +158,7 @@ export const updateTime = createAsyncThunk(
   "counselor/updateTime",
   async ({ timings, counselorId }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await Api.post(`/counselor/time/${counselorId}`, {
+      const res = await Api.post(endpoints.counselor.update_time+counselorId, {
         timings,
       });
       if (res.data.success) {

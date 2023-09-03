@@ -2,11 +2,12 @@ import { Button } from "@material-tailwind/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "../Loading";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchSelectedCounselorForUser } from "../../redux/features/users/userActions";
 
 const CounselorUser = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { counselorId } = useParams();
   useEffect(() => {
     dispatch(fetchSelectedCounselorForUser(counselorId));
@@ -52,7 +53,7 @@ const CounselorUser = () => {
           </div>
           <div className="flex justify-center mt-10 gap-8">
             <Button className="w-28">Message</Button>
-            <Button className="w-28">Book</Button>
+            <Button onClick={()=>navigate(`/counselors/book-appoinment/${counselorId}`)} className="w-28">Book</Button>
           </div>
         </div>
       </div>

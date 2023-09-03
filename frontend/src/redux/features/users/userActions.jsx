@@ -12,7 +12,7 @@ export const fetchSelectedUser = createAsyncThunk(
       throw new Error("Invalid userId");
     }
     try {
-      const res = await Api.get(endpoints.user.fetch_selected_user+userid);
+      const res = await Api.get(endpoints.user.fetch_selected_user + userid);
       if (res.data.success) {
         return res.data.user;
       }
@@ -32,7 +32,10 @@ export const uploadUserProfilePhoto = createAsyncThunk(
       const userId = thunkApi.getState().auth._id;
       const formData = new FormData();
       formData.append("image", file);
-      const res = await Api.post(endpoints.user.photo_upload+userId, formData);
+      const res = await Api.post(
+        endpoints.user.photo_upload + userId,
+        formData
+      );
       if (res.data.success) {
         thunkApi.dispatch(fetchSelectedUser(userId));
         toast.success(res.data.message);
@@ -48,9 +51,12 @@ export const uploadUserProfilePhoto = createAsyncThunk(
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile",
   async ({ field, value, userId }, { dispatch, rejectWithValue }) => {
-    console.log(field,value,userId)
+    console.log(field, value, userId);
     try {
-      const res = await Api.post(endpoints.user.update_profile+userId, { field, value }); // Use userId instead of name
+      const res = await Api.post(endpoints.user.update_profile + userId, {
+        field,
+        value,
+      }); // Use userId instead of name
       if (res.data.success) {
         toast.success(res.data.message);
         dispatch(fetchSelectedUser(userId));
@@ -88,7 +94,9 @@ export const fetchSelectedCounselorForUser = createAsyncThunk(
   "counselorProfile/fetchCounselor",
   async (counselorId, { dispatch }) => {
     try {
-      const res = await Api.get(endpoints.user.fetch_selected_counselor+counselorId);
+      const res = await Api.get(
+        endpoints.user.fetch_selected_counselor + counselorId
+      );
       if (res.data.success) {
         return res.data.counselors;
       }
@@ -97,6 +105,25 @@ export const fetchSelectedCounselorForUser = createAsyncThunk(
       toast.error("An error occurred.");
       console.error("Error fetching counselor:", error);
       throw error;
+    }
+  }
+);
+
+// BOOK APPOINTMENT
+export const bookAppointment = createAsyncThunk(
+  "user/book-appointment",
+  async (values, { rejectWithValue }) => {    
+    try {
+      const res = await Api.post(endpoints.user.book_appointment, {
+        ...values,
+      });
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.error(error);
+      rejectWithValue(error.message);
     }
   }
 );
