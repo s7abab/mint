@@ -63,7 +63,7 @@ const App = () => {
             element={<CounselorProfile />}
           />
           <Route
-            path="counselors/book-appoinment/:counselorId"
+            path="counselors/book-appointment/:counselorId"
             element={<BookingPage />}
           />
 

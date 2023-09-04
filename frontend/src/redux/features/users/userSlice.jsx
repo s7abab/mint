@@ -3,6 +3,7 @@ import {
   fetchCounselorsForUsers,
   fetchSelectedCounselorForUser,
   fetchSelectedUser,
+  fetchSlots,
 } from "./userActions";
 
 const userSlice = createSlice({
@@ -15,6 +16,11 @@ const userSlice = createSlice({
     loading: false,
     error: null,
     isbookingAvailable: false,
+    slots: [],
+    selectedSlot: {
+      time: null,
+      date: null,
+    },
   },
   reducers: {
     bookingAvailable: (state, action) => {
@@ -22,6 +28,10 @@ const userSlice = createSlice({
     },
     bookingNotAvailable: (state, action) => {
       state.isbookingAvailable = false;
+    },
+    selectSlot: (state, action) => {
+      console.log("Hello");
+      state.selectedSlot = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -69,9 +79,25 @@ const userSlice = createSlice({
       .addCase(fetchSelectedCounselorForUser.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
+      })
+
+      // SCHEDULED SLOTS
+      .addCase(fetchSlots.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSlots.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.slots = payload;
+        state.error = null;
+      })
+      .addCase(fetchSlots.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
       });
   },
 });
 
-export const { bookingAvailable, bookingNotAvailable } = userSlice.actions;
+export const { bookingAvailable, bookingNotAvailable, selectSlot } =
+  userSlice.actions;
 export default userSlice;

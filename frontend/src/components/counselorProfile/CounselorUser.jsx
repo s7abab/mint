@@ -53,7 +53,7 @@ const CounselorUser = () => {
           </div>
           <div className="flex justify-center mt-10 gap-8">
             <Button className="w-28">Message</Button>
-            <Button onClick={()=>navigate(`/counselors/book-appoinment/${counselorId}`)} className="w-28">Book</Button>
+            <Button onClick={()=>navigate(`/counselors/book-appointment/${counselorId}`)} className="w-28">Book</Button>
           </div>
         </div>
       </div>

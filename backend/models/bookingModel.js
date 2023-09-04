@@ -4,29 +4,29 @@ const { Schema, ObjectId } = mongoose;
 
 const bookingSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
     counselorId: {
       type: String,
       required: true,
     },
-    counselorInfo: {
-      type: Object,
-      required: true,
+    userId: {
+      type: String,
     },
-    userInfo: {
+    counselorName: {
       type: Object,
-      required: true,
+    },
+    userName: {
+      type: String,
+    },
+    userAge: {
+      type: String,
     },
     note: {
       type: String,
-      required: true,
     },
     status: {
       type: String,
       required: true,
+      enum: ["pending", "booked", "completed", "cancel"],
       default: "pending",
     },
     date: {

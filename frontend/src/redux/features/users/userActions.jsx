@@ -131,25 +131,43 @@ export const bookAppointment = createAsyncThunk(
 );
 
 // CHECK BOOKING AVAILABILITY
+// export const checkAvailability = createAsyncThunk(
+//   "/user/checkAvailability",
+//   async (values, { dispatch }) => {
+//     try {
+//       const res = await Api.post(endpoints.user.check_availability, {
+//         ...values,
+//       });
+//       if (res.data.success) {
+//         toast.success(res.data.message);
+//         dispatch(bookingAvailable());
+//       } else {
+//         toast.error(res.data.message);
+//         dispatch(bookingNotAvailable());
+//       }
+//     } catch (error) {
+//       toast.error(error.response.data.message);
+//       console.log(error);
+//       throw Error;
+//     }
+//   }
+// );
 
-export const checkAvailability = createAsyncThunk(
-  "/user/checkAvailability",
-  async (values, { dispatch }) => {
+// FETCH SLOTS
+export const fetchSlots = createAsyncThunk(
+  "/user/fetchSlots",
+  async ({ counselorId }, { rejectWithValue }) => {
     try {
-      const res = await Api.post(endpoints.user.check_availability, {
-        ...values,
+      const res = await Api.post(endpoints.user.fetch_slots, {
+        counselorId,
       });
       if (res.data.success) {
-        toast.success(res.data.message);
-        dispatch(bookingAvailable());
-      } else {
-        toast.error(res.data.message);
-        dispatch(bookingNotAvailable());
+        return res.data.slots;
       }
     } catch (error) {
-      toast.error(error.response.data.message);
       console.log(error);
-      throw Error;
+      toast.error(err.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );

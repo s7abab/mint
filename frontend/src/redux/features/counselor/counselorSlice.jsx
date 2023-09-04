@@ -12,7 +12,11 @@ const counselorSlice = createSlice({
     error: null,
     slots: [],
   },
-  reducers: {},
+  reducers: {
+    createSlot: (state, action) => {
+      state.slots.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSelectedCounselor.pending, (state) => {
@@ -46,4 +50,5 @@ const counselorSlice = createSlice({
   },
 });
 
+export const { createSlot } = counselorSlice.actions;
 export default counselorSlice;

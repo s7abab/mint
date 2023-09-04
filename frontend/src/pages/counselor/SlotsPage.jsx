@@ -17,7 +17,7 @@ const SlotsPage = () => {
           <Button className="" size="md" onClick={handleClick}>
             Create Time Slot
           </Button>
-          {isModal && <CreateSlot close={setIsModal} />}
+          {isModal && <CreateSlot close={handleClick} />}
           <div className="">
             <ScheduledSlots />
           </div>

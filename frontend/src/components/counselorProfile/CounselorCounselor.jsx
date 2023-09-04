@@ -17,8 +17,8 @@ const CounselorCounselor = () => {
   const user = useSelector((state) => state?.counselor?.selectedCounselor);
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [startTime, setStartTime] = useState(user ? user.timings[0]: "00:00");
-  const [endTime, setEndTime] = useState(user? user.timings[1]: "00:00"); 
+  const [startTime, setStartTime] = useState(user ? user.timings[0] : "00:00");
+  const [endTime, setEndTime] = useState(user ? user.timings[1] : "00:00");
 
   useEffect(() => {
     if (counselorId !== null) {
@@ -156,38 +156,6 @@ const CounselorCounselor = () => {
               >
                 <Input type="text" placeholder="your first name" />
               </Form.Item>
-            </Col>
-            <Col xs={24} md={24} lg={8} className="mb-4">
-              <label
-                htmlFor="startTime"
-                className="text-lg font-medium text-gray-700"
-              >
-                Start Time:
-              </label>
-              <input
-                id="startTime"
-                type="time"
-                name="startTime"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none text-gray-700"
-              />
-            </Col>
-            <Col xs={24} md={24} lg={8} className="mb-4">
-              <label
-                htmlFor="endTime"
-                className="text-lg font-medium text-gray-700"
-              >
-                End Time:
-              </label>
-              <input
-                id="endTime"
-                type="time"
-                name="endtime"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none text-gray-700"
-              />
             </Col>
           </Row>
           <Button className="" type="submit">

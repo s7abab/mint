@@ -182,14 +182,17 @@ export const updateTime = createAsyncThunk(
 // CREATE SLOT
 export const createSlot = createAsyncThunk(
   "counselor/createSlot",
-  async (values, { rejectWithValue }) => {
+  async ({ date, time, counselorId }, { rejectWithValue }) => {
     try {
       const res = await Api.post(endpoints.counselor.create_slot, {
-        ...values,
+        date,
+        time,
+        counselorId,
       });
+
       if (res.data.success) {
         toast.success(res.data.message);
-        return res.data;
+        dispatch(createSlot(res.data));
       } else {
         toast.error(res.data.message);
         return rejectWithValue(res.data);
@@ -206,13 +209,13 @@ export const createSlot = createAsyncThunk(
 export const fetchScheduledSlots = createAsyncThunk(
   "/counselor/fetchScheduledSlots",
   async ({ counselorId }, { rejectWithValue }) => {
+    console.log(counselorId);
     try {
       const res = await Api.post(endpoints.counselor.fetch_slots, {
         counselorId,
       });
       if (res.data.success) {
         return res.data.slots;
-
       }
     } catch (error) {
       console.log(error);

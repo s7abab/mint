@@ -40,6 +40,7 @@ const endpoints = {
     fetch_selected_counselor: "/user/counselor/",
     book_appointment: "/user/book-appointment",
     check_availability: "user/booking-availability",
+    fetch_slots: "user/scheduled-slots",
   },
 };
 

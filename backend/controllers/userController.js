@@ -1,7 +1,7 @@
-const bookingModel = require("../models/bookingModel");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 const moment = require("moment");
+const bookingModel = require("../models/bookingModel");
 
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
@@ -116,13 +116,22 @@ const getCounselorProfile = async (req, res) => {
 
 // BOOK APPOINTMENT
 const bookAppointment = async (req, res) => {
-  const { counselorId, userId, counselorInfo, userInfo, note, date, time } =
-    req.body;
+  const {
+    counselorId,
+    userId,
+    counselorName,
+    userName,
+    userAge,
+    note,
+    date,
+    time,
+  } = req.body;
   if (
     !counselorId ||
     !userId ||
-    !counselorInfo ||
-    !userInfo ||
+    !counselorName ||
+    !userName ||
+    !userAge ||
     !note ||
     !date ||
     !time
@@ -133,30 +142,48 @@ const bookAppointment = async (req, res) => {
     });
   }
   try {
-    const Date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-    const Time = moment(req.body.time, "HH:mm").toISOString();
-    const booking = new bookingModel({
+    // Find an existing booking based on counselorId, date, and time
+    const booking = await bookingModel.findOne({
       counselorId,
-      userId,
-      userInfo,
-      counselorInfo,
-      status: "pending",
-      note,
-      date: Date,
-      time: Time,
+      date,
+      time,
     });
+
+    if (!booking) {
+      return res.status(404).send({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    // Update the booking fields
+    booking.userId = userId;
+    booking.counselorName = counselorName;
+    booking.userName = userName;
+    booking.userAge = userAge;
+    booking.note = note;
+    booking.status = "booked";
+
+    // Save the updated booking
     await booking.save();
-    const counselor = await counselorModel.findOne({ _id: counselorId });
-    counselor.notification.push({
-      type: "New-appointment-request",
-      message: `A new appointment request from `,
-      onClickPatch: "/user/appointments",
-    });
-    await counselor.save();
-    res.status(200).send({
+
+    return res.status(200).send({
       success: true,
-      message: "Appointment booked successfully",
+      message: "Booking updated successfully",
+      booking,
     });
+
+    // const counselor = await counselorModel.findOne({ _id: counselorId });
+    // counselor.notification.push({
+    //   type: "New-appointment-request",
+    //   message: `A new appointment request from `,
+    //   onClickPatch: "/user/appointments",
+    // });
+    // await counselor.save();
+    // res.status(200).send({
+    //   success: true,
+    //   message: "Appointment booked successfully",
+    // });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -169,41 +196,74 @@ const bookAppointment = async (req, res) => {
 };
 
 // BOOKING AVAILABILITY
-const bookingAvailability = async (req, res) => {
+// const bookingAvailability = async (req, res) => {
+//   try {
+//     const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+//     const fromTime = moment(req.body.time, "HH:mm")
+//       .subtract(1, "hours")
+//       .toISOString();
+//     const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
+//     const counselorId = req.body.counselorId;
+//     const bookings = await bookingModel.find({
+//       counselorId,
+//       date,
+//       time: {
+//         $gt: fromTime,
+//         $lt: toTime,
+//       },
+//     });
+//     if (bookings.length > 0) {
+//       return res.status(200).send({
+//         success: false,
+//         message: "Booking not available at this time",
+//       });
+//     } else {
+//       return res.status(200).send({
+//         success: true,
+//         message: "Booking available",
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error),
+//       res.status(500).send({
+//         success: false,
+//         message:
+//           "An error occured while checking availability, Please try again!",
+//         error,
+//       });
+//   }
+// };
+
+// GET SLOTS
+const scheduledSlots = async (req, res) => {
   try {
-    const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-    const fromTime = moment(req.body.time, "HH:mm")
-      .subtract(1, "hours")
-      .toISOString();
-    const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
-    const counselorId = req.body.counselorId;
-    const bookings = await bookingModel.find({
+    const { counselorId } = req.body;
+    const currentDateTime = moment().toISOString();
+    // Find and delete expired slots
+    await bookingModel.deleteMany({
       counselorId,
-      date,
-      time: {
-        $gt: fromTime,
-        $lt: toTime,
-      },
+      time: { $lt: currentDateTime },
+      status: "pending",
     });
-    if (bookings.length > 0) {
-      return res.status(200).send({
-        success: false,
-        message: "Booking not available at this time",
-      });
-    } else {
-      return res.status(200).send({
-        success: true,
-        message: "Booking available",
-      });
-    }
+
+    // Find available slots
+    const slots = await bookingModel.find({
+      counselorId,
+      time: { $gt: currentDateTime },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Slots fetched successfully",
+      slots,
+    });
   } catch (error) {
-    console.log(error),
-      res.status(500).send({
-        success: false,
-        message:
-          "An error occured while checking availability, Please try again!",
-        error,
-      });
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving slots",
+      error: error.message, // Send only the error message for security reasons
+    });
   }
 };
 
@@ -214,5 +274,6 @@ module.exports = {
   getCounselors,
   getCounselorProfile,
   bookAppointment,
-  bookingAvailability,
+  // bookingAvailability,
+  scheduledSlots,
 };

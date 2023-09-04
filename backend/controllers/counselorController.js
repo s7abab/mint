@@ -1,7 +1,6 @@
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
-const { generateTimeSlots } = require("../helpers/timeSlots");
+const bookingModel = require("../models/bookingModel");
 const counselorModel = require("../models/counselorModel");
-const slotModel = require("../models/slotModel");
 const {
   sendOTPEmail,
   sendApplicationEmail,
@@ -308,13 +307,12 @@ const createSlot = async (req, res) => {
   try {
     const { counselorId, date, time } = req.body;
     const Date = moment(date, "YYYY-MM-DD").toISOString();
-    console.log(Date)
     const Time = moment(time, "HH:mm").toISOString();
     // CHECKING AVAILABILITY (1HR)
     const fromTime = moment(time, "HH:mm").subtract(1, "hours").toISOString();
     const toTime = moment(time, "HH:mm").add(1, "hours").toISOString();
 
-    const existingSlot = await slotModel.find({
+    const existingSlot = await bookingModel.find({
       counselorId,
       date: Date,
       time: {
@@ -328,7 +326,7 @@ const createSlot = async (req, res) => {
         message: "Slot already existing on this time",
       });
     }
-    const slot = new slotModel({
+    const slot = new bookingModel({
       counselorId,
       date: Date,
       time: Time,
@@ -352,13 +350,13 @@ const createSlot = async (req, res) => {
 // GET CREATED SLOTS
 const scheduledSlots = async (req, res) => {
   try {
-    const slots = await slotModel.find({ counselorId: req.body.authId });
-    console.log(req.body)
+    const slots = await bookingModel.find({ counselorId: req.body.authId });
+    console.log(req.body);
     res.status(200).send({
-      success:true,
-      message:"slots fetched",
-      slots
-    })
+      success: true,
+      message: "slots fetched",
+      slots,
+    });
   } catch (error) {
     console.log(error),
       res.status(500).send({

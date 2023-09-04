@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { createSlot } from "../../redux/features/counselor/counselorActions";
+import { createSlot, fetchScheduledSlots } from "../../redux/features/counselor/counselorActions";
 import toast from "react-hot-toast";
 
 const CreateSlot = ({ close }) => {
   const dispatch = useDispatch();
   const counselorId = useSelector((state) => state.auth._id);
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const [date, setDate] = useState(null);
+  const [time, setTime] = useState(null);
 
   const handleCreate = () => {
     if(!date){
@@ -18,14 +18,14 @@ const CreateSlot = ({ close }) => {
         return toast.error("Select Time")
     }
     dispatch(createSlot({ date, time, counselorId }));
-    close(false);
+    close()
   };
   
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
         <div className="flex">
-          <p className="cursor-pointer" onClick={() => close(false)}>
+          <p className="cursor-pointer" onClick={close}>
             X
           </p>
           <h2 className="mx-5 text-2xl font-semibold mb-4">Create a Slot</h2>
@@ -41,7 +41,6 @@ const CreateSlot = ({ close }) => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
               type="date"
             />
-            {console.log(date)}
           </div>
           <div className="mb-4">
             <label htmlFor="time" className="block text-gray-600 font-medium">
