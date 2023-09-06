@@ -5,7 +5,7 @@ import endpoints from "../../../services/endpoints";
 
 // Approve or reject counselors
 export const changeStatus = createAsyncThunk(
-  "/admin/status",
+  "/admin/changeStatus",
   async ({ userId, status }, { rejectWithValue }) => {
     try {
       const res = await Api.post(endpoints.admin.change_status + userId, {
@@ -25,7 +25,7 @@ export const changeStatus = createAsyncThunk(
 
 // Block user
 export const blockUser = createAsyncThunk(
-  "/admin/users",
+  "/admin/blockUser",
   async ({ userId, value }, { rejectWithValue, dispatch }) => {
     console.log(userId);
     try {
@@ -50,7 +50,7 @@ export const blockUser = createAsyncThunk(
 
 // Block counselor
 export const blockCounselor = createAsyncThunk(
-  "/admin/counselors",
+  "/admin/blockCounselor",
   async ({ counselorId, value }, { rejectWithValue, dispatch }) => {
     console.log(counselorId, value);
     try {
@@ -75,7 +75,7 @@ export const blockCounselor = createAsyncThunk(
 
 // Featch all counselors
 export const fetchCounselorsForAdmin = createAsyncThunk(
-  "counselor/fetchAllCounselors",
+  "admin/fetchCounselorsForAdmin",
   async (_, { dispatch }) => {
     try {
       const res = await Api.get(endpoints.admin.fetch_all_counselors);
@@ -92,7 +92,7 @@ export const fetchCounselorsForAdmin = createAsyncThunk(
 
 // Fetch Selected Counselor
 export const fetchSelectedCounselorForAdmin = createAsyncThunk(
-  "counselorProfile/fetchCounselor",
+  "admin/fetchSelectedCounselorForAdmin",
   async (counselorId, { dispatch }) => {
     try {
       const res = await Api.get(
@@ -110,7 +110,7 @@ export const fetchSelectedCounselorForAdmin = createAsyncThunk(
 );
 // Fetch all users
 export const fetchAllUsers = createAsyncThunk(
-  "user/featchAllUsers",
+  "admin/featchAllUsers",
   async (_, { dispatch }) => {
     try {
       const res = await Api.get(endpoints.admin.fetch_all_users);
@@ -126,7 +126,7 @@ export const fetchAllUsers = createAsyncThunk(
 );
 // Fetch selected user
 export const fetchSelectedUserForAdmin = createAsyncThunk(
-  "admin/fetchOneUser",
+  "admin/fetchSelectedUserForAdmin",
   async (userId, { dispatch }) => {
     if (!userId) {
       throw new Error("Invalid userId");

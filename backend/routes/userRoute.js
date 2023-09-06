@@ -8,6 +8,9 @@ const {
   bookAppointment,
   bookingAvailability,
   scheduledSlots,
+  bookingDetails,
+  selectedBookings,
+  cancelBookings,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
@@ -34,12 +37,16 @@ router
 
 // BOOK APPOINTMENT
 router.route("/book-appointment").post(isSigned, isUser, bookAppointment);
-// // BOOKING AVAILABILITY
-// router
-//   .route("/booking-availability")
-//   .post(isSigned, isUser, bookingAvailability);
 
 // GET SLOTS
 router.route("/scheduled-slots").post(isSigned, isUser, scheduledSlots);
 
+// GET BOOKINGS DETAILS
+router.route("/bookings").post(isSigned, isUser, bookingDetails);
+
+// GET SELECTED BOOKING DETAILS
+router.route("/selected-bookings").post(isSigned, isUser, selectedBookings);
+
+// CANCEL BOOKING
+router.route("/cancel-booking").post(isSigned, isUser, cancelBookings);
 module.exports = router;

@@ -19,7 +19,6 @@ const counselorSchema = new mongoose.Schema(
     },
     fee: { type: String, required: true },
     category: { type: String, required: true },
-    booking: [{ type: Schema.Types.ObjectId }],
     image: { type: String },
     feedback: [{ type: Schema.Types.ObjectId }],
     report: [{ type: Schema.Types.ObjectId }],

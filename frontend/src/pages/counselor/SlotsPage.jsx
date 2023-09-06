@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { Button } from "@material-tailwind/react";
 import CreateSlot from "../../components/counselor/CreateSlot";
 import ScheduledSlots from "../../components/counselor/ScheduledSlots";
 
 const SlotsPage = () => {
-     
   const [isModal, setIsModal] = useState(false);
   const handleClick = () => {
     setIsModal(!isModal);

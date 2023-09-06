@@ -8,7 +8,7 @@ import { fetchSelectedCounselorForAdmin } from "../../redux/features/admin/admin
 const CounselorProfileAdmin = () => {
   const { counselorId } = useParams();
   const dispatch = useDispatch();
-  const counselor = useSelector((state) => state.counselor.selectedCounselor);
+  const counselor = useSelector((state) => state.admin.selectedCounselor);
 
   useEffect(() => {
     dispatch(fetchSelectedCounselorForAdmin(counselorId));

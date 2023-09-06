@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  fetchAllBookings,
   fetchCounselorsForUsers,
   fetchSelectedCounselorForUser,
   fetchSelectedUser,
@@ -21,6 +22,7 @@ const userSlice = createSlice({
       time: null,
       date: null,
     },
+    bookings: [],
   },
   reducers: {
     bookingAvailable: (state, action) => {
@@ -92,6 +94,20 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchSlots.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // ALL BOOKINGS
+      .addCase(fetchAllBookings.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllBookings.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.bookings = payload;
+        state.error = null;
+      })
+      .addCase(fetchAllBookings.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

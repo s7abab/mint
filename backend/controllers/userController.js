@@ -2,6 +2,7 @@ const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 const moment = require("moment");
 const bookingModel = require("../models/bookingModel");
+const { connections } = require("mongoose");
 
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
@@ -164,26 +165,20 @@ const bookAppointment = async (req, res) => {
     booking.note = note;
     booking.status = "booked";
 
-    // Save the updated booking
     await booking.save();
 
-    return res.status(200).send({
-      success: true,
-      message: "Booking updated successfully",
-      booking,
+    // PUSH NOTIFICATION
+    const counselor = await counselorModel.findOne({ _id: counselorId });
+    counselor.notification.push({
+      type: "New-appointment-request",
+      message: `A new appointment request from ${userName}`,
+      onClickPath: "counselor/bookings",
     });
-
-    // const counselor = await counselorModel.findOne({ _id: counselorId });
-    // counselor.notification.push({
-    //   type: "New-appointment-request",
-    //   message: `A new appointment request from `,
-    //   onClickPatch: "/user/appointments",
-    // });
-    // await counselor.save();
-    // res.status(200).send({
-    //   success: true,
-    //   message: "Appointment booked successfully",
-    // });
+    await counselor.save();
+    res.status(200).send({
+      success: true,
+      message: "Appointment booked successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -238,18 +233,22 @@ const bookAppointment = async (req, res) => {
 const scheduledSlots = async (req, res) => {
   try {
     const { counselorId } = req.body;
-    const currentDateTime = moment().toISOString();
+    const currentDate = new Date();
+    const currentDateTime = moment(currentDate)
+      .subtract(1, "days")
+      .toISOString();
+
     // Find and delete expired slots
     await bookingModel.deleteMany({
       counselorId,
-      time: { $lt: currentDateTime },
+      date: { $lte: currentDateTime },
       status: "pending",
     });
 
     // Find available slots
     const slots = await bookingModel.find({
       counselorId,
-      time: { $gt: currentDateTime },
+      date: { $gte: currentDateTime },
     });
 
     res.status(200).json({
@@ -267,6 +266,107 @@ const scheduledSlots = async (req, res) => {
   }
 };
 
+// GET ALL BOOKINGS DETAILS
+const bookingDetails = async (req, res) => {
+  try {
+    const { authId } = req.body;
+    if (!authId) {
+      return res.status(200).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    const bookings = await bookingModel.find({ userId: authId });
+    res.status(200).send({
+      success: true,
+      message: "Booking details fetched successfully",
+      bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching booking details",
+      error,
+    });
+  }
+};
+
+// GET SPECIFIC BOOKING DETAILS
+const selectedBookings = async (req, res) => {
+  try {
+    const { userId, counselorId, time, date } = req.body;
+    if ((!userId || !counselorId, !time || !date)) {
+      return res.status(200).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    const bookings = await bookingModel.findById({
+      userId,
+      counselorId,
+      time,
+      date,
+    });
+    res.status(200).send({
+      success: true,
+      message: "Booking details fetched successfully",
+      bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching booking details",
+      error,
+    });
+  }
+};
+
+// CANCEL BOOKING
+const cancelBookings = async (req, res) => {
+  try {
+    const { _id, counselorId, time, date } = req.body;
+
+    const Time = moment(time, "HH:mm").add(1, "hours").toISOString();
+    const Date = moment(date, "DD-MM-YYYY").toISOString();
+
+    const existingSlot = await bookingModel.find({
+      _id,
+      $and: [{ time: { $gt: Time } }, { date: { $gte: Date } }],
+    });
+
+    if (existingSlot.length > 0) {
+      const newTime = existingSlot[0].time;
+      const newDate = existingSlot[0].date;
+      console.log(newTime);
+
+      const newSlot = new bookingModel({
+        counselorId,
+        date: newDate,
+        time: newTime,
+        status: "pending",
+      });
+      await newSlot.save();
+    }
+
+    const slot = await bookingModel.findById(_id);
+    slot.status = "userCancelled";
+    await slot.save();
+    res.status(200).send({
+      success: true,
+      message: "Booking cancelled successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while canceling booking",
+      error,
+    });
+  }
+};
+
 module.exports = {
   getSelectedUser,
   uploadProfile,
@@ -274,6 +374,9 @@ module.exports = {
   getCounselors,
   getCounselorProfile,
   bookAppointment,
-  // bookingAvailability,
+  bookingDetails,
   scheduledSlots,
+  bookingDetails,
+  selectedBookings,
+  cancelBookings,
 };

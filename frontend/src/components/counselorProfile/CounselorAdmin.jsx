@@ -23,6 +23,7 @@ const CounselorAdmin = () => {
   if (!counselor) {
     return <Loading />;
   }
+  console.log(counselor)
 
   const statusHandler = async (userId, status) => {
     try {

@@ -31,6 +31,10 @@ const endpoints = {
     update_time: "/counselor/time/",
     create_slot: "counselor/create-slot",
     fetch_slots: "counselor/scheduled-slots",
+    cancel_booking: "counselor/cancel-booking",
+    delete_slot: "counselor/delete-slot",
+    fetch_all_bookings: "/counselor/bookings",
+    fetch_selected_bookings: "/counselor/selected-bookings",
   },
   user: {
     fetch_selected_user: "user/user/",
@@ -41,6 +45,9 @@ const endpoints = {
     book_appointment: "/user/book-appointment",
     check_availability: "user/booking-availability",
     fetch_slots: "user/scheduled-slots",
+    fetch_all_bookings: "/user/bookings",
+    fetch_selected_bookings: "/user/selected-bookings",
+    cancel_booking: "/user/cancel-booking",
   },
 };
 

@@ -7,9 +7,12 @@ const {
   uploadProfilePhoto,
   updateProfile,
   changeTime,
-  timeSlots,
   createSlot,
   scheduledSlots,
+  cancelBookings,
+  deleteSlot,
+  bookingDetails,
+  selectedBookings,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -35,5 +38,18 @@ router
   .post(isSigned, isCounselor, upload.single("image"), uploadProfilePhoto);
 // SLOTS
 router.route("/create-slot").post(isSigned, isCounselor, createSlot);
+
 router.route("/scheduled-slots").post(isSigned, isCounselor, scheduledSlots);
+
+router.route("/cancel-booking").post(isSigned, isCounselor, cancelBookings);
+
+router.route("/delete-slot").post(isSigned, isCounselor, deleteSlot);
+
+// GET BOOKINGS DETAILS
+router.route("/bookings").post(isSigned, isCounselor, bookingDetails);
+
+// GET SELECTED BOOKING DETAILS
+router
+  .route("/selected-bookings")
+  .post(isSigned, isCounselor, selectedBookings);
 module.exports = router;

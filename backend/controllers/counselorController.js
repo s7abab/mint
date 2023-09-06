@@ -306,7 +306,7 @@ const changeTime = async (req, res) => {
 const createSlot = async (req, res) => {
   try {
     const { counselorId, date, time } = req.body;
-    const Date = moment(date, "YYYY-MM-DD").toISOString();
+    const Date = moment(date, "DD-MM-YYYY").toISOString();
     const Time = moment(time, "HH:mm").toISOString();
     // CHECKING AVAILABILITY (1HR)
     const fromTime = moment(time, "HH:mm").subtract(1, "hours").toISOString();
@@ -351,7 +351,6 @@ const createSlot = async (req, res) => {
 const scheduledSlots = async (req, res) => {
   try {
     const slots = await bookingModel.find({ counselorId: req.body.authId });
-    console.log(req.body);
     res.status(200).send({
       success: true,
       message: "slots fetched",
@@ -368,6 +367,114 @@ const scheduledSlots = async (req, res) => {
   }
 };
 
+// CANCEL BOOKING
+const cancelBookings = async (req, res) => {
+  try {
+    const { _id, counselorId } = req.body;
+    const slot = await bookingModel.findOne({
+      _id,
+      counselorId,
+    });
+    slot.status = "cancelled";
+    await slot.save();
+    res.status(200).send({
+      success: true,
+      message: "Booking cancelled successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while canceling booking",
+      error,
+    });
+  }
+};
+
+// DELETE SLOT
+const deleteSlot = async (req, res) => {
+  try {
+    const { _id, counselorId } = req.body;
+
+    const slot = await bookingModel.findOneAndDelete({
+      _id,
+      counselorId,
+      status: "pending",
+    });
+    res.status(200).send({
+      success: true,
+      message: "Slot deleted successfully",
+      slot,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while deleting booking",
+      error,
+    });
+  }
+};
+
+// GET ALL BOOKINGS DETAILS
+const bookingDetails = async (req, res) => {
+  try {
+    const { authId } = req.body;
+    if (!authId) {
+      return res.status(200).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    const bookings = await bookingModel.find({ counselorId: authId });
+    res.status(200).send({
+      success: true,
+      message: "Booking details fetched successfully",
+      bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching booking details",
+      error,
+    });
+  }
+};
+
+// GET SPECIFIC BOOKING DETAILS
+const selectedBookings = async (req, res) => {
+  try {
+    const { counselorId, userId, time, date } = req.body;
+    if ((!userId || !counselorId, !time || !date)) {
+      return res.status(200).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    const bookings = await bookingModel.findById({
+      counselorId,
+      userId,
+      time,
+      date,
+    });
+    res.status(200).send({
+      success: true,
+      message: "Booking details fetched successfully",
+      bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching booking details",
+      error,
+    });
+  }
+};
+
+
+
 module.exports = {
   apply,
   getProfile,
@@ -378,4 +485,8 @@ module.exports = {
   changeTime,
   createSlot,
   scheduledSlots,
+  cancelBookings,
+  deleteSlot,
+  bookingDetails,
+  selectedBookings,
 };

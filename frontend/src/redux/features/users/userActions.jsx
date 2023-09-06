@@ -7,7 +7,7 @@ import { bookingAvailable, bookingNotAvailable } from "./userSlice";
 // Fetch selected user
 
 export const fetchSelectedUser = createAsyncThunk(
-  "user/fetchOneUser",
+  "user/fetchSelectedUser",
   async (userid, { dispatch, rejectWithValue }) => {
     if (!userid) {
       throw new Error("Invalid userId");
@@ -27,7 +27,7 @@ export const fetchSelectedUser = createAsyncThunk(
 
 // Profile Photo Upload
 export const uploadUserProfilePhoto = createAsyncThunk(
-  "user/uploadProfilePhoto",
+  "user/uploadUserProfilePhoto",
   async (file, thunkApi) => {
     try {
       const userId = thunkApi.getState().auth._id;
@@ -74,7 +74,7 @@ export const updateUserProfile = createAsyncThunk(
 
 // Featch all counselors
 export const fetchCounselorsForUsers = createAsyncThunk(
-  "user/Counselors",
+  "user/fetchCounselorsForUsers",
   async (_, { dispatch }) => {
     try {
       const res = await Api.get(endpoints.user.fetch_all_counselors);
@@ -92,7 +92,7 @@ export const fetchCounselorsForUsers = createAsyncThunk(
 
 // Fetch Selected Counselor
 export const fetchSelectedCounselorForUser = createAsyncThunk(
-  "counselorProfile/fetchCounselor",
+  "user/fetchSelectedCounselorForUser",
   async (counselorId, { dispatch }) => {
     try {
       const res = await Api.get(
@@ -112,7 +112,7 @@ export const fetchSelectedCounselorForUser = createAsyncThunk(
 
 // BOOK APPOINTMENT
 export const bookAppointment = createAsyncThunk(
-  "user/book-appointment",
+  "user/bookAppointment",
   async (values, { rejectWithValue }) => {
     console.log(values);
     try {
@@ -130,29 +130,6 @@ export const bookAppointment = createAsyncThunk(
   }
 );
 
-// CHECK BOOKING AVAILABILITY
-// export const checkAvailability = createAsyncThunk(
-//   "/user/checkAvailability",
-//   async (values, { dispatch }) => {
-//     try {
-//       const res = await Api.post(endpoints.user.check_availability, {
-//         ...values,
-//       });
-//       if (res.data.success) {
-//         toast.success(res.data.message);
-//         dispatch(bookingAvailable());
-//       } else {
-//         toast.error(res.data.message);
-//         dispatch(bookingNotAvailable());
-//       }
-//     } catch (error) {
-//       toast.error(error.response.data.message);
-//       console.log(error);
-//       throw Error;
-//     }
-//   }
-// );
-
 // FETCH SLOTS
 export const fetchSlots = createAsyncThunk(
   "/user/fetchSlots",
@@ -168,6 +145,71 @@ export const fetchSlots = createAsyncThunk(
       console.log(error);
       toast.error(err.response.data.message);
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// FETCH ALL BOOKINGS
+export const fetchAllBookings = createAsyncThunk(
+  "/user/fetchAllBookings",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.user.fetch_all_bookings);
+      if (res.data.success) {
+        return res.data.bookings;
+      } else {
+        toast.error(res.data.message);
+        return res.data;
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// FETCH SELECTED BOOKINGS
+export const fetchSelectedBookings = createAsyncThunk(
+  "/user/fetchSelectedBookings",
+  async (values, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.user.fetch_selected_bookings, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data;
+      } else {
+        toast.error(res.data.message);
+        return res.data;
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// USER CANCEL BOOKING
+export const cancelBooking = createAsyncThunk(
+  "/counselor/cancelBooking",
+  async ({ _id, counselorId, userId, time, date}, { rejectWithValue }) => {
+
+    try {
+      const res = await Api.post(endpoints.user.cancel_booking, {
+        _id, counselorId, userId, time, date
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data;
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return rejectWithValue(error);
     }
   }
 );

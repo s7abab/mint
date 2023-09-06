@@ -5,7 +5,7 @@ import endpoints from "../../../services/endpoints";
 
 // Fetch Selected Counselor
 export const fetchSelectedCounselor = createAsyncThunk(
-  "counselorProfile/fetchCounselor",
+  "counselor/fetchSelectedCounselor",
   async (counselorId, { dispatch }) => {
     try {
       const res = await Api.get(
@@ -25,7 +25,7 @@ export const fetchSelectedCounselor = createAsyncThunk(
 
 // Apply as a counselor
 export const applyAsCounselor = createAsyncThunk(
-  "counselor/apply",
+  "counselor/applyAsCounselor",
   async (
     {
       name,
@@ -61,7 +61,7 @@ export const applyAsCounselor = createAsyncThunk(
 
 // Verify OTP
 export const verifyCounselorOtp = createAsyncThunk(
-  "counselor/verify-otp",
+  "counselor/verifyCounselorOtp",
   async ({ email, otp }, { rejectWithValue }) => {
     console.log(email, otp);
     try {
@@ -87,7 +87,7 @@ export const verifyCounselorOtp = createAsyncThunk(
 
 // Resend OTP
 export const resendCounselorOtp = createAsyncThunk(
-  "counselor/resend-otp",
+  "counselor/resendCounselorOtp",
   async ({ email }, { rejectWithValue }) => {
     try {
       const res = await Api.post(endpoints.counselor.resend_OTP, { email });
@@ -104,7 +104,7 @@ export const resendCounselorOtp = createAsyncThunk(
 
 // Profile Photo Upload
 export const uploadCounselorProfilePhoto = createAsyncThunk(
-  "counselor/uploadProfilePhoto",
+  "counselor/uploadCounselorProfilePhoto",
   async (file, thunkApi) => {
     try {
       const counselorId = thunkApi.getState().auth._id; // Use userId instead of name
@@ -128,7 +128,7 @@ export const uploadCounselorProfilePhoto = createAsyncThunk(
 
 // Update profile
 export const updateCounselorProfile = createAsyncThunk(
-  "counselor/updateUserProfile",
+  "counselor/updateCounselorProfile",
   async ({ values, counselorId }, { dispatch, rejectWithValue }) => {
     try {
       console.log(values);
@@ -192,7 +192,6 @@ export const createSlot = createAsyncThunk(
 
       if (res.data.success) {
         toast.success(res.data.message);
-        dispatch(createSlot(res.data));
       } else {
         toast.error(res.data.message);
         return rejectWithValue(res.data);
@@ -209,7 +208,6 @@ export const createSlot = createAsyncThunk(
 export const fetchScheduledSlots = createAsyncThunk(
   "/counselor/fetchScheduledSlots",
   async ({ counselorId }, { rejectWithValue }) => {
-    console.log(counselorId);
     try {
       const res = await Api.post(endpoints.counselor.fetch_slots, {
         counselorId,
@@ -221,6 +219,92 @@ export const fetchScheduledSlots = createAsyncThunk(
       console.log(error);
       toast.error(err.response.data.message);
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// CANCEL BOOKING
+export const cancelBooking = createAsyncThunk(
+  "/counselor/cancelBooking",
+  async (values, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.cancel_booking, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data;
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// DELETE SLOT
+export const deleteSlot = createAsyncThunk(
+  "/counselor/deleteSlot",
+  async ({ _id, counselorId }, { rejectWithValue, dispatch }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.delete_slot, {
+        _id,
+        counselorId,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data._id;
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// FETCH ALL BOOKINGS
+export const fetchAllBookings = createAsyncThunk(
+  "/counselor/fetchAllBookings",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.fetch_all_bookings);
+      if (res.data.success) {
+        return res.data.bookings;
+      } else {
+        toast.error(res.data.message);
+        return res.data;
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// FETCH SELECTED BOOKINGS
+export const fetchSelectedBookings = createAsyncThunk(
+  "/counselor/fetchSelectedBookings",
+  async (values, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.fetch_selected_bookings, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        return res.data;
+      } else {
+        toast.error(res.data.message);
+        return res.data;
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.message);
     }
   }
 );

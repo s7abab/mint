@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { createSlot, fetchScheduledSlots } from "../../redux/features/counselor/counselorActions";
+import {
+  createSlot,
+  fetchScheduledSlots,
+} from "../../redux/features/counselor/counselorActions";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 const CreateSlot = ({ close }) => {
   const dispatch = useDispatch();
@@ -10,20 +14,33 @@ const CreateSlot = ({ close }) => {
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
 
-  const handleCreate = () => {
-    if(!date){
-        return toast.error("Select Date")
+  const handleCreate = async () => {
+    try {
+      if (!date) {
+        return toast.error("Select Date");
+      }
+      if (!time) {
+        return toast.error("Select Time");
+      }
+      await dispatch(createSlot({ date, time, counselorId }));
+      await dispatch(fetchScheduledSlots(counselorId));
+      close();
+    } catch (error) {
+      console.error("An error occurred:", error);
+      toast.error("An error occurred while creating the slot.");
     }
-    if(!time){
-        return toast.error("Select Time")
-    }
-    dispatch(createSlot({ date, time, counselorId }));
-    close()
   };
-  
+
+  const handleDate = (e) => {
+    const selectedDate = e.target.value;
+
+    const formattedDate = moment(selectedDate).format("DD-MM-YYYY");
+    setDate(formattedDate);
+  };
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
+        {console.log(date)}
         <div className="flex">
           <p className="cursor-pointer" onClick={close}>
             X
@@ -37,7 +54,7 @@ const CreateSlot = ({ close }) => {
             </label>
             <input
               id="date"
-              onChange={(e) => setDate(e.target.value)}
+              onChange={handleDate}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
               type="date"
             />
@@ -55,9 +72,7 @@ const CreateSlot = ({ close }) => {
             />
           </div>
           <div className="text-right">
-            <Button onClick={handleCreate}>
-              Create
-            </Button>
+            <Button onClick={handleCreate}>Create</Button>
           </div>
         </form>
       </div>

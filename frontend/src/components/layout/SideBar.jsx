@@ -15,7 +15,7 @@ import {
   AiOutlineMessage,
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
-import { BiUserCircle } from "react-icons/bi";
+import { BiUserCircle, BiTimeFive } from "react-icons/bi";
 
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -82,14 +82,7 @@ const Sidebar = () => {
                 Dashboard
               </ListItem>
             </Link>
-            <Link to={"/counselor/patients"}>
-              <ListItem>
-                <ListItemPrefix>
-                  <AiOutlineUser className="h-5 w-5" />
-                </ListItemPrefix>
-                My Patients
-              </ListItem>
-            </Link>
+
             <Link to={"/counselor/bookings"}>
               <ListItem>
                 <ListItemPrefix>
@@ -101,9 +94,9 @@ const Sidebar = () => {
             <Link to={"/counselor/slots"}>
               <ListItem>
                 <ListItemPrefix>
-                  <AiOutlineMessage className="h-5 w-5" />
+                  <BiTimeFive className="h-5 w-5" />
                 </ListItemPrefix>
-                Slots
+                Assign Your Time
               </ListItem>
             </Link>
             <Link to={"/counselor/messages"}>

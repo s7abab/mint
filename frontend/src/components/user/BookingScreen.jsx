@@ -3,23 +3,23 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { bookAppointment } from "../../redux/features/users/userActions";
 import { Button } from "@material-tailwind/react";
+import StripeCheckout from "react-stripe-checkout";
+import { useNavigate } from "react-router-dom";
 
-const BookingModal = ({ close }) => {
+const BookingScreen = ({ close }) => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [note, setNote] = useState("");
+
   const selectedSlot = useSelector((state) => state.user.selectedSlot);
   const user = useSelector((state) => state.auth._id);
-  const counselor = useSelector((state) => state.counselor.selectedCounselor);
+  const counselor = useSelector((state) => state.user.selectedCounselor);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // =================HANDLE BOOKING===============
-  const handleBooking = (e) => {
-    e.preventDefault();
-    // if ( ) {
-    //   toast.error("Fill all the fields");
-    //   return;
-    // }
+  const onToken = (token) => {
+    console.log(token);
     dispatch(
       bookAppointment({
         counselorId: counselor._id,
@@ -33,7 +33,9 @@ const BookingModal = ({ close }) => {
       })
     );
     close();
+    navigate("/bookings");
   };
+
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -46,7 +48,7 @@ const BookingModal = ({ close }) => {
               Fill Your Details
             </h2>
           </div>
-          <form action="" onSubmit={handleBooking}>
+          <form action="">
             <div className="mb-4">
               <label htmlFor="date" className="block text-gray-600 font-medium">
                 Name:
@@ -80,7 +82,14 @@ const BookingModal = ({ close }) => {
                 cols="40"
               />
             </div>
-            <Button type="submit">Book</Button>
+            <StripeCheckout
+              amount={counselor.fee * 100}
+              currency="INR"
+              token={onToken}
+              stripeKey="pk_test_51Nmc5fSGSHakKtEoysbBmf6bAeTmdFfzj7w8dMuLu3Qf61UIFl0UBNWsPHyfxHkJ6KgKpQmh42wEKwwNz9xpG5og008rYerFI0"
+            >
+              <Button>Pay</Button>
+            </StripeCheckout>
           </form>
         </div>
       </div>
@@ -88,4 +97,4 @@ const BookingModal = ({ close }) => {
   );
 };
 
-export default BookingModal;
+export default BookingScreen;

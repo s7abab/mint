@@ -40,7 +40,7 @@ const ViewAllCounselors = () => {
     <>
       <Layout>
         <div>
-          <div className="flex gap-2 m-2">
+          <div className="flex gap-2 m-2 ">
             <Select onChange={(e) => setCategory(e)} label="Specialization">
               <Option>All</Option>
               {categories.filter((category)=>category.active).map((category) => (
@@ -54,7 +54,7 @@ const ViewAllCounselors = () => {
               label="Search"
             />
           </div>
-          <div className="flex flex-wrap gap-2 mt-10 mx-2 justify-center">
+          <div className="flex flex-wrap gap-2 mt-10 mx-2 justify-center ">
             {filteredCounselors.map((data) => (
               <CounselorCard key={data._id} data={data} />
             ))}
