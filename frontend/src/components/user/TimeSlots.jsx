@@ -42,7 +42,7 @@ const TimeSlots = ({ counselorId }) => {
           onChange={(e) => setSelectedDay(e.target.value)}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 overflow-hidden">
         {filteredSlots.map((slot) => (
           <div
             key={slot._id}
@@ -53,7 +53,7 @@ const TimeSlots = ({ counselorId }) => {
                 ? "bg-red-200 cursor-not-allowed"
                 : slot.status === "available"
                 ? "bg-white hover:bg-indigo-100 shadow-sm transform hover:scale-105 transition-transform"
-                : "bg-gray-200 cursor-not-allowed"
+                : "bg-blue-gray-100  cursor-not-allowed"
             }`}
             onClick={() => {
               if (slot.status === "pending") {
@@ -69,7 +69,7 @@ const TimeSlots = ({ counselorId }) => {
             <p className="text-md mt-1">
               {moment(slot.date).format("DD-MM-YYYY")}
             </p>
-            {slot.status === "pending" ? (
+            {slot.status === "pending"  ? (
               <p
                 className={`text-sm mt-1 ${
                   selected === slot._id ? "text-indigo-600" : ""

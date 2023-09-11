@@ -10,8 +10,8 @@ const CounselorCard = (data) => {
   };
   return (
     <>
-      <div className="">
-        <div className="w-52">
+      <div>
+        <div className="w-52 ">
           <div className="bg-white shadow-xl rounded-lg py-3">
             <div className="photo-wrapper p-2">
               {data.data.image ? (

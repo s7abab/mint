@@ -1,49 +1,52 @@
-import React from "react";
-import Layout from "../../components/Layout"; 
+import React, { useEffect } from "react";
+import Layout from "../../components/Layout";
 import { useSelector } from "react-redux";
+import { fetchAllBookings } from "../../redux/features/counselor/counselorActions";
 
 const CounselorDashboard = () => {
-  const counselor = useSelector((state) => state.auth); 
+  const counselor = useSelector((state) => state.auth);
 
+  useEffect(()=>{
+    fetchAllBookings()
+  },[])
   return (
     <Layout>
-      <div className="min-h-screen p-4 w-screen">
-        <div className="max-w-screen-xl mx-auto">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-            Counselor Dashboard
-          </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Counselor Profile */}
-            <div className="col-span-1 lg:col-span-2 mb-6">
-              <div className="bg-white shadow-md p-4 rounded-lg">
-                <h2 className="text-xl font-semibold mb-2">Counselor Profile</h2>
-                <p className="text-gray-600">
-                  <strong>Name:</strong> {counselor.user}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Email:</strong> {counselor.email}
-                </p>
-                {/* Add more counselor profile information here */}
-              </div>
-            </div>
+      <div className="w-full p-2">
+        <h4 className="mx-4 text-3xl font-semibold my-8">Hey {counselor.user}!</h4>
 
-            {/* Appointments */}
-            <div className="col-span-1">
-              <div className="bg-white shadow-md p-4 rounded-lg">
-                <h2 className="text-xl font-semibold mb-2">Appointments</h2>
-                {/* List appointments or manage appointments here */}
-                {/* You can map through the counselor's appointments and display them */}
-              </div>
-            </div>
-
-            {/* Additional Widgets */}
-            <div className="col-span-1">
-              <div className="bg-white shadow-md p-4 rounded-lg">
-                <h2 className="text-xl font-semibold mb-2">Additional Widgets</h2>
-                {/* Add widgets or information relevant to the counselor */}
-              </div>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <p className="text-2xl font-semibold">
+              Total <br /> Bookings
+            </p>
+            <p className="text-4xl text-blue-600"></p>
           </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <p className="text-2xl font-semibold">
+              Total <br /> Users
+            </p>
+            <p className="text-4xl text-green-600"></p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <p className="text-2xl font-semibold">
+              Total <br /> Applications
+            </p>
+            <p className="text-4xl text-red-600"></p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <p className="text-2xl font-semibold">
+              Total <br /> Revenue
+            </p>
+            <p className="text-4xl text-green-600">25698</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+          <div className="bg-white p-4 rounded-lg shadow-md"></div>
+          <div className="bg-white p-4 rounded-lg shadow-md"></div>
         </div>
       </div>
     </Layout>

@@ -2,8 +2,11 @@ const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
 const moment = require("moment");
 const bookingModel = require("../models/bookingModel");
-const { connections } = require("mongoose");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+const { error } = require("console");
 
+const map = new Map()
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
   try {
@@ -117,37 +120,33 @@ const getCounselorProfile = async (req, res) => {
 
 // BOOK APPOINTMENT
 const bookAppointment = async (req, res) => {
-  const {
-    counselorId,
-    userId,
-    counselorName,
-    userName,
-    userAge,
-    note,
-    date,
-    time,
-  } = req.body;
+  const { counselorId, userId, userName, userAge, note, date, time,razorpay_order_id,amount } = req.body;
   if (
     !counselorId ||
     !userId ||
-    !counselorName ||
     !userName ||
     !userAge ||
     !note ||
     !date ||
     !time
-  ) {
-    return res.status(400).send({
-      success: false,
-      message: "Fill all the fields",
-    });
-  }
-  try {
-    // Find an existing booking based on counselorId, date, and time
-    const booking = await bookingModel.findOne({
-      counselorId,
-      date,
+    ) {
+      return res.status(400).send({
+        success: false,
+        message: "Fill all the fields",
+      });
+    }
+    try {
+      const a = map.get(req.body.authId)
+      console.log(a)
+      // Find an existing booking based on counselorId, date, and time
+      console.log(razorpay_order_id,amount)
+      if(razorpay_order_id === a.id && amount ==a.amount/100)
+      {
+        const booking = await bookingModel.findOne({
+        counselorId,
+        date,
       time,
+      status: "pending",
     });
 
     if (!booking) {
@@ -159,7 +158,6 @@ const bookAppointment = async (req, res) => {
 
     // Update the booking fields
     booking.userId = userId;
-    booking.counselorName = counselorName;
     booking.userName = userName;
     booking.userAge = userAge;
     booking.note = note;
@@ -179,6 +177,9 @@ const bookAppointment = async (req, res) => {
       success: true,
       message: "Appointment booked successfully",
     });
+  }else{
+    res.sendStatus(400)
+  }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -189,45 +190,6 @@ const bookAppointment = async (req, res) => {
     });
   }
 };
-
-// BOOKING AVAILABILITY
-// const bookingAvailability = async (req, res) => {
-//   try {
-//     const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-//     const fromTime = moment(req.body.time, "HH:mm")
-//       .subtract(1, "hours")
-//       .toISOString();
-//     const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
-//     const counselorId = req.body.counselorId;
-//     const bookings = await bookingModel.find({
-//       counselorId,
-//       date,
-//       time: {
-//         $gt: fromTime,
-//         $lt: toTime,
-//       },
-//     });
-//     if (bookings.length > 0) {
-//       return res.status(200).send({
-//         success: false,
-//         message: "Booking not available at this time",
-//       });
-//     } else {
-//       return res.status(200).send({
-//         success: true,
-//         message: "Booking available",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error),
-//       res.status(500).send({
-//         success: false,
-//         message:
-//           "An error occured while checking availability, Please try again!",
-//         error,
-//       });
-//   }
-// };
 
 // GET SLOTS
 const scheduledSlots = async (req, res) => {
@@ -248,6 +210,7 @@ const scheduledSlots = async (req, res) => {
     // Find available slots
     const slots = await bookingModel.find({
       counselorId,
+      status: { $ne: "userCancelled" },
       date: { $gte: currentDateTime },
     });
 
@@ -326,33 +289,21 @@ const selectedBookings = async (req, res) => {
 // CANCEL BOOKING
 const cancelBookings = async (req, res) => {
   try {
-    const { _id, counselorId, time, date } = req.body;
-
-    const Time = moment(time, "HH:mm").add(1, "hours").toISOString();
-    const Date = moment(date, "DD-MM-YYYY").toISOString();
-
-    const existingSlot = await bookingModel.find({
-      _id,
-      $and: [{ time: { $gt: Time } }, { date: { $gte: Date } }],
-    });
-
-    if (existingSlot.length > 0) {
-      const newTime = existingSlot[0].time;
-      const newDate = existingSlot[0].date;
-      console.log(newTime);
-
-      const newSlot = new bookingModel({
-        counselorId,
-        date: newDate,
-        time: newTime,
-        status: "pending",
-      });
-      await newSlot.save();
-    }
+    const { _id, counselorId, userId, time, date } = req.body;
 
     const slot = await bookingModel.findById(_id);
     slot.status = "userCancelled";
     await slot.save();
+
+    const Time = slot.time;
+    const Date = slot.date;
+    const newSlot = new bookingModel({
+      counselorId,
+      date: Date,
+      time: Time,
+      status: "pending",
+    });
+    await newSlot.save();
     res.status(200).send({
       success: true,
       message: "Booking cancelled successfully",
@@ -364,6 +315,61 @@ const cancelBookings = async (req, res) => {
       message: "An error occured while canceling booking",
       error,
     });
+  }
+};
+
+// PAYMENT INTEGRATION
+const orders = async (req, res) => {
+  try {
+    const intance = new Razorpay({
+      key_id: process.env.KEY_ID,
+      key_secret: process.env.KEY_SECRET,
+    });
+
+    const options = {
+      amount: req.body.amount *100,
+      currency: "INR",
+    };
+
+    intance.orders.create(options, (error, order) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).send({ message: "Something went wrong" });
+      }
+      map.set(req.body.authId,order)
+      res.status(200).send({
+        data: order,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Internal server issue",
+    });
+  }
+};
+
+// PAYMENT VERIFY
+const verifyPayment = async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,amount } =
+      req.body;
+      const a = map.get(req.body.authId)
+      console.log(req.body,a)
+
+      if(razorpay_order_id === a.id &&amount ==a.amount){
+        return res.status(200).send({message:"Payment verified successfully"});
+      }else{
+        return res.status(400).send({
+          message:"Invalid signature sent"
+        })
+      }
+  } catch (error) {
+    console.log(error),
+      res
+        .status(500)
+        .send({ success: false, message: "Internal server error" });
   }
 };
 
@@ -379,4 +385,6 @@ module.exports = {
   bookingDetails,
   selectedBookings,
   cancelBookings,
+  orders,
+  verifyPayment
 };

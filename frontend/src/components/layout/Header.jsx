@@ -9,9 +9,8 @@ import {
 } from "@material-tailwind/react";
 import { logout } from "../../redux/features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../../redux/features/auth/authActions";
 
-const Header = () => {
+const Header = ({className}) => {
   const [openNav, setOpenNav] = React.useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,7 +29,7 @@ const Header = () => {
   );
   return (
     <>
-      <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 ">
+      <Navbar className={"mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 z-50 left-[50%]"}>
         <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"

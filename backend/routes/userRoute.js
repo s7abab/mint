@@ -6,11 +6,12 @@ const {
   getCounselors,
   getCounselorProfile,
   bookAppointment,
-  bookingAvailability,
   scheduledSlots,
   bookingDetails,
   selectedBookings,
   cancelBookings,
+  orders,
+  verifyPayment,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
@@ -49,4 +50,10 @@ router.route("/selected-bookings").post(isSigned, isUser, selectedBookings);
 
 // CANCEL BOOKING
 router.route("/cancel-booking").post(isSigned, isUser, cancelBookings);
+
+// PAYMENT INTENT
+router.route("/payment").post(isSigned, isUser, orders);
+router.route("/verifyPayment").post(isSigned, isUser, verifyPayment);
+
 module.exports = router;
+

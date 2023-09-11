@@ -39,25 +39,29 @@ const ViewAllCounselors = () => {
   return (
     <>
       <Layout>
-        <div>
-          <div className="flex gap-2 m-2 ">
+        <div className="common-vh w-screen overflow-imp ">
+          <div className="sm:flex gap-2 m-4">
             <Select onChange={(e) => setCategory(e)} label="Specialization">
               <Option>All</Option>
-              {categories.filter((category)=>category.active).map((category) => (
-                <Option value={category.name} key={category._id}>
-                  {category.name}
-                </Option>
-              ))}
+              {categories
+                .filter((category) => category.active)
+                .map((category) => (
+                  <Option value={category.name} key={category._id}>
+                    {category.name}
+                  </Option>
+                ))}
             </Select>
             <Input
               onChange={(e) => setSearchQuery(e.target.value)}
               label="Search"
             />
           </div>
-          <div className="flex flex-wrap gap-2 mt-10 mx-2 justify-center ">
-            {filteredCounselors.map((data) => (
-              <CounselorCard key={data._id} data={data} />
-            ))}
+          <div className="overflow-y-scroll mb-10">
+            <div className="flex flex-wrap gap-2 mt-6 mx-2 justify-center">
+              {filteredCounselors.map((data) => (
+                <CounselorCard key={data._id} data={data} />
+              ))}
+            </div>
           </div>
         </div>
       </Layout>

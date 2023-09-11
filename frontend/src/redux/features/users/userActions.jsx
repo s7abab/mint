@@ -2,10 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../../services/axios";
 import toast from "react-hot-toast";
 import endpoints from "../../../services/endpoints";
-import { bookingAvailable, bookingNotAvailable } from "./userSlice";
 
 // Fetch selected user
-
 export const fetchSelectedUser = createAsyncThunk(
   "user/fetchSelectedUser",
   async (userid, { dispatch, rejectWithValue }) => {
@@ -114,7 +112,6 @@ export const fetchSelectedCounselorForUser = createAsyncThunk(
 export const bookAppointment = createAsyncThunk(
   "user/bookAppointment",
   async (values, { rejectWithValue }) => {
-    console.log(values);
     try {
       const res = await Api.post(endpoints.user.book_appointment, {
         ...values,
@@ -195,11 +192,14 @@ export const fetchSelectedBookings = createAsyncThunk(
 // USER CANCEL BOOKING
 export const cancelBooking = createAsyncThunk(
   "/counselor/cancelBooking",
-  async ({ _id, counselorId, userId, time, date}, { rejectWithValue }) => {
-
+  async ({ _id, counselorId, userId, time, date }, { rejectWithValue }) => {
     try {
       const res = await Api.post(endpoints.user.cancel_booking, {
-        _id, counselorId, userId, time, date
+        _id,
+        counselorId,
+        userId,
+        time,
+        date,
       });
       if (res.data.success) {
         toast.success(res.data.message);
@@ -210,6 +210,40 @@ export const cancelBooking = createAsyncThunk(
     } catch (error) {
       toast.error(error.response.data.message);
       return rejectWithValue(error);
+    }
+  }
+);
+
+// HANDLE PAYMENTS
+export const paymentIntegration = createAsyncThunk(
+  "/user/paymentIntegration",
+  async ({ counselors }, { rejectWithValue }) => {
+    try {
+      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const res = await Api.post(endpoints.user.payment_integration, {
+        headers: headers,
+        counselors,
+      });
+
+      const session = await res.data;
+      console.log(session)
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.log(result.error);
+        return rejectWithValue(result.error);
+      }
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
     }
   }
 );

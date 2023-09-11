@@ -23,6 +23,8 @@ import SlotsPage from "./pages/counselor/SlotsPage";
 import Bookings from "./pages/user/Bookings";
 import CounselorBookings from "./pages/counselor/CounselorBookings";
 import MyPatients from "./pages/counselor/MyPatients";
+import Success from "./components/payment/Success";
+import Cancel from "./components/payment/Cancel";
 
 const App = () => {
   return (
@@ -35,6 +37,8 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/apply" element={<Application />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           {/* ADMIN ROUTES */}

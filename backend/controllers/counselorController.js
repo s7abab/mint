@@ -314,6 +314,7 @@ const createSlot = async (req, res) => {
 
     const existingSlot = await bookingModel.find({
       counselorId,
+      status: { $in: ["pending", "booked"] },
       date: Date,
       time: {
         $gt: fromTime,
@@ -472,8 +473,6 @@ const selectedBookings = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   apply,

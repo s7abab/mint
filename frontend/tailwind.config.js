@@ -1,5 +1,5 @@
 const withMT = require("@material-tailwind/react/utils/withMT");
- 
+
 module.exports = withMT({
   content: [
     "./index.html",
@@ -9,6 +9,9 @@ module.exports = withMT({
   ],
   theme: {
     extend: {},
+    screens: {
+      xs: "400px",
+    },
   },
   plugins: [],
 });

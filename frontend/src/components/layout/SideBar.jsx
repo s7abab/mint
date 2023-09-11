@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   Typography,
@@ -22,14 +22,16 @@ import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const role = useSelector((state) => state.auth.role);
+  useEffect(() => {
+    let a = document.querySelectorAll("*");
+    a.forEach((x) => {
+      x.style.overflowY = "hidden";
+    });
+  }, []);
   return (
-    <>
-      <Card className="mt-2 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
-        <div className="mb-2 p-4">
-          <Typography variant="h5" color="blue-gray">
-            Sidebar
-          </Typography>
-        </div>
+    <div className="hidden-custom">
+      <Card className={"mt-2 h-[100vh]  p-4 shadow-xl shadow-blue-gray-900/5 "}>
+        <div className="mb-2 p-4"></div>
         {role === "user" && (
           <List>
             <Link to={"/dashboard"}>
@@ -184,7 +186,7 @@ const Sidebar = () => {
           </List>
         )}
       </Card>
-    </>
+    </div>
   );
 };
 

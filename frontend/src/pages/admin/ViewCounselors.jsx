@@ -3,7 +3,11 @@ import Layout from "../../components/Layout";
 import { Card, Typography } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { blockCounselor, fetchCounselorsForAdmin, fetchSelectedCounselorForAdmin } from "../../redux/features/admin/adminActions";
+import {
+  blockCounselor,
+  fetchCounselorsForAdmin,
+  fetchSelectedCounselorForAdmin,
+} from "../../redux/features/admin/adminActions";
 
 const ViewCounselors = () => {
   const dispatch = useDispatch();
@@ -24,10 +28,11 @@ const ViewCounselors = () => {
   useEffect(() => {
     dispatch(fetchCounselorsForAdmin());
   }, [dispatch]);
+
   return (
     <>
       <Layout>
-        <Card className="h-full w-full overflow-scroll mt-10">
+        <Card className="h-[87vh] w-full overflow-scroll mt-10 overflow-imp">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>

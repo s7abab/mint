@@ -5,18 +5,19 @@ import Footer from "./layout/Footer";
 import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children, sidebar }) => {
+
   return (
-    <div>
-      <Header />
-      <div className="flex">
-        {!sidebar && <Sidebar />}
-        <Toaster />
-        {children}
+    <>
+      <div >
+        <Header/>
+        <div className="flex">
+          {!sidebar && <Sidebar className='fixed top-[100px]' />}
+          <Toaster />
+          {children}
+        </div>
+      
       </div>
-      <div className="bottom-0">
-        <Footer />
-      </div>
-    </div>
+    </>
   );
 };
 

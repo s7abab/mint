@@ -1,5 +1,5 @@
 import { Card, Typography } from "@material-tailwind/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   cancelBooking,
@@ -10,6 +10,7 @@ import moment from "moment";
 import toast from "react-hot-toast";
 
 const ScheduledSlots = () => {
+  const [selectedOption, setSelectedOption] = useState("pending");
   const dispatch = useDispatch();
   const counselorId = useSelector((state) => state.auth._id);
   const slots = useSelector((state) => state.counselor.slots);
@@ -18,14 +19,12 @@ const ScheduledSlots = () => {
     dispatch(fetchScheduledSlots(counselorId));
   }, [counselorId, dispatch, slots.length]);
 
-  // ================== Handle Delete ====================
   const handleDelete = (_id, counselorId) => {
     dispatch(deleteSlot({ _id, counselorId })).then(() => {
       dispatch(fetchScheduledSlots(counselorId));
     });
   };
 
-  // ==================== Handle Cancel =====================
   const handleCancel = async (_id, counselorId) => {
     try {
       await dispatch(cancelBooking({ _id, counselorId }));
@@ -37,41 +36,45 @@ const ScheduledSlots = () => {
     }
   };
 
-  // Filter slots into different sections
   const pendingBookings = slots.filter((data) => data.status === "pending");
   const bookedSlots = slots.filter((data) => data.status === "booked");
-  const userCancelledSlots = slots.filter(
-    (data) => data.status === "userCancelled"
-  );
-  const cancelledSlots = slots.filter((data) => data.status === "cancelled" || data.status === "userCancelled");
+
+  const filteredSlots =
+    selectedOption === "pending" ? pendingBookings : bookedSlots;
 
   return (
-    <Card className="h-full w-full overflow-scroll mt-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-        <Section
-          title="Pending Bookings"
-          slots={pendingBookings}
-          onCancel={handleCancel}
-          onDelete={handleDelete}
-        />
-        <Section
-          title="Booked Slots"
-          slots={bookedSlots}
-          onCancel={handleCancel}
-          onDelete={handleDelete}
-        />
-        <Section
-          title="User Cancelled Slots"
-          slots={userCancelledSlots}
-          onCancel={handleCancel}
-          onDelete={handleDelete}
-        />
-        <Section
-          title="Cancelled Slots"
-          slots={cancelledSlots}
-          onCancel={handleCancel}
-          onDelete={handleDelete}
-        />
+    <Card className=" w-full mt-5 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
+        <div>
+          <div className="flex items-center space-x-4 mb-4">
+            <button
+              className={`${
+                selectedOption === "pending"
+                  ? "bg-black text-white"
+                  : "bg-gray-300 text-gray-700"
+              } px-4 py-2 rounded transition duration-300 ease-in-out transform hover:scale-105`}
+              onClick={() => setSelectedOption("pending")}
+            >
+              Pending
+            </button>
+            <button
+              className={`${
+                selectedOption === "booked"
+                  ? "bg-black text-white"
+                  : "bg-gray-300 text-gray-700"
+              } px-4 py-2 rounded transition duration-300 ease-in-out transform hover:scale-105`}
+              onClick={() => setSelectedOption("booked")}
+            >
+              Booked
+            </button>
+          </div>
+          <Section
+            title={selectedOption === "pending" ? "Pending Bookings" : "Booked Slots"}
+            slots={filteredSlots}
+            onCancel={handleCancel}
+            onDelete={handleDelete}
+          />
+        </div>
       </div>
     </Card>
   );
@@ -79,19 +82,19 @@ const ScheduledSlots = () => {
 
 const Section = ({ title, slots, onCancel, onDelete }) => {
   return (
-    <div className="p-4 bg-gray-50 h-80 overflow-y-scroll">
+    <div className="p-4 bg-white rounded-lg shadow-lg container-vh overflow-imp">
       <Typography variant="h6" color="blue-gray" className="font-semibold mb-2">
         {title}
       </Typography>
-      <div className="grid gap-2">
+      <div className="grid gap-4 ">
         {slots.map((data) => (
           <div
             key={data._id}
-            className={`border p-4 rounded-lg shadow-md ${
+            className={`border p-4 rounded-lg ${
               data.status === "cancelled"
-                ? "text-red-600"
+                ? "bg-red-100 text-red-600"
                 : data.status === "booked"
-                ? "text-green-600"
+                ? " text-green-600"
                 : ""
             }`}
           >
@@ -102,20 +105,22 @@ const Section = ({ title, slots, onCancel, onDelete }) => {
               Time: {moment(data.time).format("h:mm a")} -{" "}
               {moment(data.time).add(1, "hours").format("h:mm a")}
             </Typography>
-            <Typography
-              variant="small"
-              className={`font-normal cursor-pointer ${
-                data.status === "booked"
-                  ? "text-green-600"
-                  : data.status === "cancelled"
-                  ? "text-red-600"
-                  : ""
-              }`}
-            >
-              {data.status}
+            <div className="flex items-center mt-4">
+              <Typography
+                variant="small"
+                className={`font-normal mr-2 ${
+                  data.status === "booked"
+                    ? "text-green-600"
+                    : data.status === "cancelled"
+                    ? "text-red-600"
+                    : ""
+                }`}
+              >
+                {data.status}
+              </Typography>
               {data.status === "pending" && (
                 <button
-                  className="ml-2 text-red-600"
+                  className="text-red-600 hover:underline"
                   onClick={() => onDelete(data._id, data.counselorId)}
                 >
                   Delete
@@ -123,13 +128,13 @@ const Section = ({ title, slots, onCancel, onDelete }) => {
               )}
               {data.status === "booked" && (
                 <button
-                  className="ml-2 text-red-600"
+                  className="text-red-600 hover:underline"
                   onClick={() => onCancel(data._id, data.counselorId)}
                 >
                   Cancel
                 </button>
               )}
-            </Typography>
+            </div>
           </div>
         ))}
       </div>

@@ -43,24 +43,16 @@ const CounselorCounselor = () => {
     );
   };
 
-  // const handleTimeChange = (time, timeString) => {
-  //   console.log(time);
-  //   const startTime = moment(timeString[0], "HH:mm").format("HH:mm");
-  //   const endTime = moment(timeString[1], "HH:mm").format("HH:mm");
-  //   setStartTime(startTime);
-  //   setEndTime(endTime);
-  // };
-
   if (isLoading) {
     return <Loading />;
   }
   return (
     <Layout>
-      <div className="overflow-y-auto">
+      <div className=" ">
         {/* Profile Photo */}
         <div className="w-full mx-auto mt-5 p-6  rounded-lg ">
           <div className="flex justify-center">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden">
+            <div className="relative w-32 h-32 rounded-full">
               <img
                 src={`http://localhost:8080${user?.image}`}
                 alt="Profile Photo"

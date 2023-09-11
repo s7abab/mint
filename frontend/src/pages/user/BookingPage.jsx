@@ -29,7 +29,7 @@ const BookingPage = () => {
 
   return (
     <Layout>
-      <Card className="w-full md:w-2/3 lg:w-1/2 mx-auto mt-5 p-6 rounded-lg shadow-md">
+      <Card className="w-screen xs:w-2/3 lg:w-1/2 mx-auto mt-5 rounded-lg shadow-md h-[87vh] overflow-imp">
         <h1 className="text-3xl font-semibold mb-4">{counselor?.name}</h1>
         <p className="text-lg text-gray-600 mb-2">
           Specialization: {counselor?.category}

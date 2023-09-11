@@ -11,9 +11,6 @@ const bookingSchema = new mongoose.Schema(
     userId: {
       type: String,
     },
-    counselorName: {
-      type: Object,
-    },
     userName: {
       type: String,
     },
