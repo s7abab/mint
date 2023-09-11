@@ -12,6 +12,7 @@ const {
   cancelBookings,
   orders,
   verifyPayment,
+  getWalletAmount,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
 const { isUser, isSigned } = require("../middleware/authMiddleware");
@@ -54,6 +55,7 @@ router.route("/cancel-booking").post(isSigned, isUser, cancelBookings);
 // PAYMENT INTENT
 router.route("/payment").post(isSigned, isUser, orders);
 router.route("/verifyPayment").post(isSigned, isUser, verifyPayment);
+router.route("/walletAmount").get(isSigned, isUser, getWalletAmount);
 
 module.exports = router;
 

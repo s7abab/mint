@@ -6,7 +6,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { error } = require("console");
 
-const map = new Map()
+const map = new Map();
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
   try {
@@ -120,7 +120,18 @@ const getCounselorProfile = async (req, res) => {
 
 // BOOK APPOINTMENT
 const bookAppointment = async (req, res) => {
-  const { counselorId, userId, userName, userAge, note, date, time,razorpay_order_id,amount } = req.body;
+  const {
+    counselorId,
+    userId,
+    userName,
+    userAge,
+    note,
+    date,
+    time,
+    razorpay_order_id,
+    amount,
+    walletAmount,
+  } = req.body;
   if (
     !counselorId ||
     !userId ||
@@ -129,22 +140,29 @@ const bookAppointment = async (req, res) => {
     !note ||
     !date ||
     !time
-    ) {
-      return res.status(400).send({
-        success: false,
-        message: "Fill all the fields",
-      });
-    }
-    try {
-      const a = map.get(req.body.authId)
-      console.log(a)
+  ) {
+    return res.status(400).send({
+      success: false,
+      message: "Fill all the fields",
+    });
+  }
+  try {
+    if (razorpay_order_id) {
+      let razorpay = false;
+      const a = map.get(req.body.authId);
       // Find an existing booking based on counselorId, date, and time
-      console.log(razorpay_order_id,amount)
-      if(razorpay_order_id === a.id && amount ==a.amount/100)
-      {
-        const booking = await bookingModel.findOne({
-        counselorId,
-        date,
+      if (razorpay_order_id === a.id) {
+        //&& amount == a.amount / 100
+        razorpay = true;
+      }
+      if (!razorpay) {
+        throw new Error("Razorpay id is not match");
+      }
+    }
+
+    const booking = await bookingModel.findOne({
+      counselorId,
+      date,
       time,
       status: "pending",
     });
@@ -162,24 +180,33 @@ const bookAppointment = async (req, res) => {
     booking.userAge = userAge;
     booking.note = note;
     booking.status = "booked";
-
     await booking.save();
 
-    // PUSH NOTIFICATION
-    const counselor = await counselorModel.findOne({ _id: counselorId });
-    counselor.notification.push({
-      type: "New-appointment-request",
-      message: `A new appointment request from ${userName}`,
-      onClickPath: "counselor/bookings",
-    });
-    await counselor.save();
+    if (walletAmount > 0) {
+      const userData = await userModel.findByIdAndUpdate(userId, {
+        $inc: { "wallet.balance": -walletAmount },
+        $push: {
+          "wallet.transactions": `-${walletAmount} transactionId = ${booking._id}`,
+        },
+      });
+    }
+    const counselorData = await counselorModel.findById(counselorId);
+    const fee = counselorData.fee;
+    await counselorModel.findByIdAndUpdate(
+      counselorId,
+      {
+        $inc: { "wallet.balance": fee },
+        $push: {
+          "wallet.incomeTransactions": `+${fee} transactionId ${booking._id}`,
+        },
+      },
+      { new: true } //add money to wallet
+    );
+
     res.status(200).send({
       success: true,
       message: "Appointment booked successfully",
     });
-  }else{
-    res.sendStatus(400)
-  }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -304,6 +331,18 @@ const cancelBookings = async (req, res) => {
       status: "pending",
     });
     await newSlot.save();
+    //Increment money in user's wallet
+    const counselor = await counselorModel.findById(counselorId);
+    const fee = counselor.fee;
+    await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $inc: { "wallet.balance": fee },
+        $push: { "wallet.transactions": `+${fee} transactioId = ${_id}` },
+      },
+      { new: true } //add money to wallet
+    );
+
     res.status(200).send({
       success: true,
       message: "Booking cancelled successfully",
@@ -327,7 +366,7 @@ const orders = async (req, res) => {
     });
 
     const options = {
-      amount: req.body.amount *100,
+      amount: req.body.amount * 100,
       currency: "INR",
     };
 
@@ -336,7 +375,7 @@ const orders = async (req, res) => {
         console.log(error);
         return res.status(500).send({ message: "Something went wrong" });
       }
-      map.set(req.body.authId,order)
+      map.set(req.body.authId, order);
       res.status(200).send({
         data: order,
       });
@@ -353,23 +392,46 @@ const orders = async (req, res) => {
 // PAYMENT VERIFY
 const verifyPayment = async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,amount } =
-      req.body;
-      const a = map.get(req.body.authId)
-      console.log(req.body,a)
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      amount,
+    } = req.body;
+    const a = map.get(req.body.authId);
+    console.log(req.body, a);
 
-      if(razorpay_order_id === a.id &&amount ==a.amount){
-        return res.status(200).send({message:"Payment verified successfully"});
-      }else{
-        return res.status(400).send({
-          message:"Invalid signature sent"
-        })
-      }
+    if (razorpay_order_id === a.id && amount == a.amount) {
+      return res.status(200).send({ message: "Payment verified successfully" });
+    } else {
+      return res.status(400).send({
+        message: "Invalid signature sent",
+      });
+    }
   } catch (error) {
     console.log(error),
       res
         .status(500)
         .send({ success: false, message: "Internal server error" });
+  }
+};
+
+// Get wallet amount
+const getWalletAmount = async (req, res) => {
+  const { authId } = req.body;
+  try {
+    const wallet = await userModel.findById(authId);
+    res.status(200).send({
+      success: true,
+      wallet,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Erro occured while get wallet amount",
+      error,
+    });
   }
 };
 
@@ -386,5 +448,6 @@ module.exports = {
   selectedBookings,
   cancelBookings,
   orders,
-  verifyPayment
+  verifyPayment,
+  getWalletAmount,
 };

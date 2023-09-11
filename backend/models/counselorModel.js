@@ -18,6 +18,14 @@ const counselorSchema = new mongoose.Schema(
       type: Array,
     },
     fee: { type: String, required: true },
+    wallet: {
+      balance: {
+        type: Number,
+        default: 0,
+      },
+      incomeTransactions: [String],
+      withdrawTransactions: [String],
+    },
     category: { type: String, required: true },
     image: { type: String },
     feedback: [{ type: Schema.Types.ObjectId }],

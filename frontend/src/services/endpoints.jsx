@@ -48,7 +48,8 @@ const endpoints = {
     fetch_all_bookings: "/user/bookings",
     fetch_selected_bookings: "/user/selected-bookings",
     cancel_booking: "/user/cancel-booking",
-    payment_integration : "/user/create-checkout-session"
+    payment_integration : "/user/create-checkout-session",
+    fetch_wallet : "/user/walletAmount"
   },
 };
 

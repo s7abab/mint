@@ -230,7 +230,7 @@ export const paymentIntegration = createAsyncThunk(
       });
 
       const session = await res.data;
-      console.log(session)
+      console.log(session);
 
       const result = await stripe.redirectToCheckout({
         sessionId: session.id,
@@ -244,6 +244,25 @@ export const paymentIntegration = createAsyncThunk(
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Fetch wallet amount
+export const fetchWalletAmountOfUser = createAsyncThunk(
+  "/user/fetchWalletAmountOfUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.get(endpoints.user.fetch_wallet);
+      if (res.data.success) {
+        return res.data.wallet;
+      } else {
+        toast.error("Something went wrong");
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.message);
     }
   }
 );

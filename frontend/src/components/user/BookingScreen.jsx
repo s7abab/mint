@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bookAppointment,
   fetchSlots,
+  fetchWalletAmountOfUser,
 } from "../../redux/features/users/userActions";
 import { Button } from "@material-tailwind/react";
 import Api from "../../services/axios";
@@ -16,7 +17,8 @@ const BookingScreen = ({ close }) => {
   const [note, setNote] = useState("");
   const [Razorpay] = useRazorpay();
   const [orderId, setOrderId] = useState();
-
+  const [useWallet, setUseWallet] = useState(false);
+  const wallet = useSelector((state) => state.user.wallet);
   const selectedSlot = useSelector((state) => state.user.selectedSlot);
   const user = useSelector((state) => state.auth._id);
   const counselor = useSelector((state) => state.user.selectedCounselor);
@@ -24,7 +26,31 @@ const BookingScreen = ({ close }) => {
   const dispatch = useDispatch();
 
   // =================HANDLE BOOKING===============
-
+  // If full amount in wallet
+  const bookingUsingWallet = async () => {
+    try {
+      await dispatch(
+        bookAppointment({
+          counselorId: counselor._id,
+          userId: user,
+          userName: name,
+          userAge: age,
+          note: note,
+          date: selectedSlot.date,
+          time: selectedSlot.time,
+          amount: counselor.fee,
+          walletAmount: counselor.fee,
+        })
+      ).then(() => {
+        fetchSlots();
+      });
+      navigate("/bookings");
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // If wallet have money but not full
   const initPayment = (data) => {
     setOrderId(data.id);
     const options = {
@@ -47,6 +73,7 @@ const BookingScreen = ({ close }) => {
               time: selectedSlot.time,
               razorpay_order_id: data.id,
               amount: counselor.fee,
+              walletAmount: wallet.wallet.balance,
             })
           ).then(() => {
             fetchSlots();
@@ -66,20 +93,30 @@ const BookingScreen = ({ close }) => {
   };
 
   const handleBooking = async () => {
+    let amountToPay = counselor.fee;
+
     if (!name || !age || !note) {
       return toast.error("Name, Age, and Note are required");
     }
+    if (useWallet) {
+      if (wallet.wallet.balance >= counselor.fee) {
+        return bookingUsingWallet();
+      }
+      amountToPay = counselor.fee - wallet.wallet.balance;
+    }
     try {
       const { data } = await Api.post("/user/payment", {
-        amount: counselor.fee,
+        amount: amountToPay,
       });
-      console.log(data);
       initPayment(data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    dispatch(fetchWalletAmountOfUser()); //fetch wallet
+  }, [dispatch]);
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center ">
@@ -127,7 +164,25 @@ const BookingScreen = ({ close }) => {
               />
             </div>
           </form>
-          <Button onClick={handleBooking}> Pay </Button>
+          {wallet && (
+            <div className="flex gap-2 justify-center">
+              <label htmlFor="checkbox" className="text-[15px]">
+                Use wallet{" "}
+              </label>
+              <input
+                type="checkbox"
+                id="checkbox"
+                value={useWallet}
+                onChange={() => setUseWallet(!useWallet)}
+              />
+              <h1 className="bg-blue-gray-200 w-12 text-center rounded">
+                {wallet && wallet?.wallet?.balance}
+              </h1>
+            </div>
+          )}
+          <div className="flex justify-center mt-3">
+            <Button onClick={handleBooking}> Pay </Button>
+          </div>
         </div>
       </div>
     </>

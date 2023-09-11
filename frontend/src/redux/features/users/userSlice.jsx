@@ -5,6 +5,7 @@ import {
   fetchSelectedCounselorForUser,
   fetchSelectedUser,
   fetchSlots,
+  fetchWalletAmountOfUser,
 } from "./userActions";
 
 const userSlice = createSlice({
@@ -23,6 +24,7 @@ const userSlice = createSlice({
       date: null,
     },
     bookings: [],
+    wallet: {}
   },
   reducers: {
     bookingAvailable: (state, action) => {
@@ -32,7 +34,6 @@ const userSlice = createSlice({
       state.isbookingAvailable = false;
     },
     selectSlot: (state, action) => {
-      console.log("Hello");
       state.selectedSlot = action.payload;
     },
   },
@@ -108,6 +109,20 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllBookings.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // WALLET
+      .addCase(fetchWalletAmountOfUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWalletAmountOfUser.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.wallet = payload;
+        state.error = null;
+      })
+      .addCase(fetchWalletAmountOfUser.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

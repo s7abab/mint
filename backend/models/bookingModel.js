@@ -5,11 +5,13 @@ const { Schema, ObjectId } = mongoose;
 const bookingSchema = new mongoose.Schema(
   {
     counselorId: {
-      type: String,
+      type: ObjectId,
+      ref: "Counselor",
       required: true,
     },
     userId: {
-      type: String,
+      type: ObjectId,
+      ref: "User",
     },
     userName: {
       type: String,
