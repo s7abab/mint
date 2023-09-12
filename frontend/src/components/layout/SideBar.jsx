@@ -58,6 +58,14 @@ const Sidebar = () => {
                 Bookings
               </ListItem>
             </Link>
+            <Link to={"/payments"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <MdPayment className="h-5 w-5" />
+                </ListItemPrefix>
+                Payments
+              </ListItem>
+            </Link>
             <Link to={"/profile"}>
               <ListItem>
                 <ListItemPrefix>
@@ -109,7 +117,14 @@ const Sidebar = () => {
                 Messages
               </ListItem>
             </Link>
-
+            <Link to={"/counselor/payments"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <MdPayment className="h-5 w-5" />
+                </ListItemPrefix>
+                Payments
+              </ListItem>
+            </Link>
             <Link to={"/counselor/profile"}>
               <ListItem>
                 <ListItemPrefix>

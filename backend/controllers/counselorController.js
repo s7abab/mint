@@ -7,6 +7,8 @@ const {
 } = require("../utils/OTPVerification");
 const JWT = require("jsonwebtoken");
 const moment = require("moment");
+const userModel = require("../models/userModel");
+
 // Get Profile
 const getProfile = async (req, res) => {
   try {
@@ -382,6 +384,30 @@ const cancelBookings = async (req, res) => {
       success: true,
       message: "Booking cancelled successfully",
     });
+    // Decrease money from counselors wallet
+    const counselorData = await counselorModel.findById(counselorId);
+    const fee = counselorData.fee;
+    await counselorModel.findByIdAndUpdate(
+      counselorId,
+      {
+        $inc: { "wallet.balance": -fee },
+        $push: {
+          "wallet.withdrawTransactions": `-${fee} Transaction Id = ${_id}`,
+        },
+      },
+      { new: true }
+    );
+    // Increase money in users wallet
+    await userModel.findByIdAndUpdate(
+      slot.userId,
+      {
+        $inc: { "wallet.balance": fee },
+        $push: {
+          "wallet.transactions": `${fee} Transaction Id = ${_id}`,
+        },
+      },
+      { new: true } //add money to wallet
+    );
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -474,6 +500,25 @@ const selectedBookings = async (req, res) => {
   }
 };
 
+// Get wallet amount
+const getWalletAmount = async (req, res) => {
+  const { authId } = req.body;
+  try {
+    const wallet = await counselorModel.findById(authId);
+    res.status(200).send({
+      success: true,
+      wallet,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Erro occured while get wallet amount",
+      error,
+    });
+  }
+};
+
 module.exports = {
   apply,
   getProfile,
@@ -488,4 +533,5 @@ module.exports = {
   deleteSlot,
   bookingDetails,
   selectedBookings,
+  getWalletAmount,
 };

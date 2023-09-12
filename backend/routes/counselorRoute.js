@@ -13,6 +13,7 @@ const {
   deleteSlot,
   bookingDetails,
   selectedBookings,
+  getWalletAmount,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -52,4 +53,8 @@ router.route("/bookings").post(isSigned, isCounselor, bookingDetails);
 router
   .route("/selected-bookings")
   .post(isSigned, isCounselor, selectedBookings);
+
+// PAYMENTS
+router.route("/walletAmount").get(isSigned, isCounselor, getWalletAmount);
+
 module.exports = router;

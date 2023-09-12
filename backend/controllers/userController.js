@@ -186,7 +186,7 @@ const bookAppointment = async (req, res) => {
       const userData = await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
         $push: {
-          "wallet.transactions": `-${walletAmount} transactionId = ${booking._id}`,
+          "wallet.transactions": `-${walletAmount} Transaction Id ${booking._id}`,
         },
       });
     }
@@ -197,7 +197,7 @@ const bookAppointment = async (req, res) => {
       {
         $inc: { "wallet.balance": fee },
         $push: {
-          "wallet.incomeTransactions": `+${fee} transactionId ${booking._id}`,
+          "wallet.incomeTransactions": `+${fee} Transaction Id = ${booking._id}`,
         },
       },
       { new: true } //add money to wallet
@@ -338,7 +338,7 @@ const cancelBookings = async (req, res) => {
       userId,
       {
         $inc: { "wallet.balance": fee },
-        $push: { "wallet.transactions": `+${fee} transactioId = ${_id}` },
+        $push: { "wallet.transactions": `+${fee} Transaction Id = ${_id}` },
       },
       { new: true } //add money to wallet
     );

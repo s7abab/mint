@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 const HomePage = () => {
   useEffect(()=>{
     let a = document.querySelectorAll('*')
-    console.log(a)
     a.forEach(x=>{
       x.style.overflowY = 'auto';
     })

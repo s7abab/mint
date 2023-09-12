@@ -4,6 +4,7 @@ import {
   fetchAllBookings,
   fetchScheduledSlots,
   fetchSelectedCounselor,
+  fetchWalletAmountOfCounselor,
 } from "./counselorActions";
 
 const counselorSlice = createSlice({
@@ -14,6 +15,7 @@ const counselorSlice = createSlice({
     error: null,
     slots: [],
     bookings: [],
+    wallet: {},
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -58,6 +60,20 @@ const counselorSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllBookings.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // FETCH WALLET
+      .addCase(fetchWalletAmountOfCounselor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWalletAmountOfCounselor.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.wallet = payload;
+        state.error = null;
+      })
+      .addCase(fetchWalletAmountOfCounselor.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

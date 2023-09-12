@@ -35,6 +35,7 @@ const endpoints = {
     delete_slot: "counselor/delete-slot",
     fetch_all_bookings: "/counselor/bookings",
     fetch_selected_bookings: "/counselor/selected-bookings",
+    fetch_wallet : "/counselor/walletAmount"
   },
   user: {
     fetch_selected_user: "user/user/",

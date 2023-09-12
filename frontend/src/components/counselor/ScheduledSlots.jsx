@@ -28,7 +28,6 @@ const ScheduledSlots = () => {
   const handleCancel = async (_id, counselorId) => {
     try {
       await dispatch(cancelBooking({ _id, counselorId }));
-      toast.success("Booking cancelled successfully");
       await dispatch(fetchScheduledSlots(counselorId));
     } catch (error) {
       toast.error(error.message);

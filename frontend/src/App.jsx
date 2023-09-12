@@ -23,8 +23,7 @@ import SlotsPage from "./pages/counselor/SlotsPage";
 import Bookings from "./pages/user/Bookings";
 import CounselorBookings from "./pages/counselor/CounselorBookings";
 import MyPatients from "./pages/counselor/MyPatients";
-import Success from "./components/payment/Success";
-import Cancel from "./components/payment/Cancel";
+import PaymentPage from "./pages/PaymentPage";
 
 const App = () => {
   return (
@@ -32,13 +31,10 @@ const App = () => {
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path="/" element={<HomePage />} />
-
           {/* AUTH ROUTES */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/apply" element={<Application />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/cancel" element={<Cancel />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           {/* ADMIN ROUTES */}
@@ -56,6 +52,7 @@ const App = () => {
           />
           <Route path="/admin/users" element={<ViewUsers />} />
           <Route path="/admin/users/:userId" element={<UserProfile />} />
+          <Route path="/admin/payments" element={<PaymentPage />} />  
 
           {/* USER ROUTES */}
           <Route path="/dashboard" element={<UserDashboard />} />
@@ -70,6 +67,7 @@ const App = () => {
             element={<BookingPage />}
           />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/payments" element={<PaymentPage />} />
 
           {/* COUNSELOR ROUTES */}
           <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
@@ -77,6 +75,7 @@ const App = () => {
           <Route path="/counselor/slots" element={<SlotsPage />} />
           <Route path="/counselor/patients" element={<MyPatients />} />
           <Route path="/counselor/profile" element={<CounselorCounselor />} />
+          <Route path="/counselor/payments" element={<PaymentPage />} />
         </Route>
       </Routes>
     </>

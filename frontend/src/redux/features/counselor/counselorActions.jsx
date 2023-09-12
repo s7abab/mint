@@ -308,3 +308,22 @@ export const fetchSelectedBookings = createAsyncThunk(
     }
   }
 );
+
+// Fetch wallet amount
+export const fetchWalletAmountOfCounselor = createAsyncThunk(
+  "/counselor/fetchWalletAmountOfCounselor",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.get(endpoints.counselor.fetch_wallet);
+      if (res.data.success) {
+        return res.data.wallet;
+      } else {
+        toast.error("Something went wrong");
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.message);
+    }
+  }
+);
