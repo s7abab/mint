@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Global } from "../../socket/Socket";
 import Layout from "../../components/Layout";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +12,7 @@ import {
 
 const CounselorBookings = () => {
   const counselorId = useSelector((state) => state.auth._id);
+  const user = useSelector((state) => state.auth.user);
   const bookings = useSelector((state) => state.counselor.bookings);
   const dispatch = useDispatch();
 
@@ -36,7 +39,10 @@ const CounselorBookings = () => {
   const shouldShowCancelButton = (bookingTime, bookingDate) => {
     // You can implement your logic here to determine whether to show the cancel button.
     // Example: Check if the booking time and date are in the future.
-    const bookingDateTime = moment(bookingDate + " " + bookingTime, "DD-MM-YYYY HH:mm");
+    const bookingDateTime = moment(
+      bookingDate + " " + bookingTime,
+      "DD-MM-YYYY HH:mm"
+    );
     return bookingDateTime.isAfter(moment());
   };
 
@@ -46,6 +52,35 @@ const CounselorBookings = () => {
       dispatch(fetchAllBookings());
     });
   };
+
+  //=================== VIDEO CALL START =========================/
+  const navigate = useNavigate();
+  const { socket } = useContext(Global);
+  const [email, setEmail] = useState("");
+  const [room, setRoom] = useState("123");
+
+  const handleSubmitForm = useCallback(
+    (e, roomId) => {
+      e.preventDefault();
+      socket.emit("room:join", { email: user, room: roomId });
+    },
+    [email, room, socket]
+  );
+
+  const handleJoinRoom = useCallback((data) => {
+    const { email, room } = data;
+    navigate(`/room/${room}`);
+  }, []);
+
+  useEffect(() => {
+    socket.on("room:join", handleJoinRoom);
+
+    return () => {
+      socket.off("room:join", handleJoinRoom);
+    };
+  }, [socket, handleJoinRoom]);
+
+  //=================== VIDEO CALL START =========================/
 
   return (
     <Layout>
@@ -127,6 +162,13 @@ const CounselorBookings = () => {
                           Cancel Booking
                         </button>
                       )}
+
+                      <button
+                        className="bg-green-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-green-600"
+                        onClick={(e) => handleSubmitForm(e, booking._id)}
+                      >
+                        Start session
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -135,7 +177,9 @@ const CounselorBookings = () => {
 
             {selectedOption === "completed" && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Completed Bookings</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Completed Bookings
+                </h2>
                 <div className="mb-6 common-vh overflow-imp">
                   {completedBookings.map((booking) => (
                     <div
@@ -189,7 +233,9 @@ const CounselorBookings = () => {
                       </p>
                       <p className="text-gray-600">
                         <strong>Cancelled By:</strong>{" "}
-                        {booking.status === "cancelled" ? "You" : booking.userName}
+                        {booking.status === "cancelled"
+                          ? "You"
+                          : booking.userName}
                       </p>
                     </div>
                   ))}

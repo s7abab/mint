@@ -5,7 +5,6 @@ import  { Global } from "../socket/Socket"
 const SocketHome = () => {
   const navigate = useNavigate();
   const {socket} = useContext(Global)
-  console.log(socket)
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("123");
 
