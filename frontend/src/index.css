@@ -2,14 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.overflow-imp {
-  overflow-y: scroll !important;
-}
 
 @media (max-width: 765px) {
   .hidden-custom {
     display: none;
   }
+}
+
+/* .overflow-imp {
+  overflow-y: scroll !important;
 }
 
 .common-vh {
@@ -18,4 +19,4 @@
 
 .container-vh {
   height: 62vh;
-}
+} */

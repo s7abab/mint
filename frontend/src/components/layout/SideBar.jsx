@@ -22,15 +22,15 @@ import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const role = useSelector((state) => state.auth.role);
-  useEffect(() => {
-    let a = document.querySelectorAll("*");
-    a.forEach((x) => {
-      x.style.overflowY = "hidden";
-    });
-  }, []);
+  // useEffect(() => {
+  //   let a = document.querySelectorAll("*");
+  //   a.forEach((x) => {
+  //     x.style.overflowY = "hidden";
+  //   });
+  // }, []);
   return (
-    <div className="hidden-custom">
-      <Card className={"mt-2 h-[100vh]  p-4 shadow-xl shadow-blue-gray-900/5 "}>
+    <div className="hidden-custom ">
+      <Card className={"mt-2 h-[100vh]  p-4 shadow-xl shadow-blue-gray-900/5 sticky top-0 pt-10"}>
         <div className="mb-2 p-4"></div>
         {role === "user" && (
           <List>

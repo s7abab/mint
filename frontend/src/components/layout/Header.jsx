@@ -29,7 +29,7 @@ const Header = ({className}) => {
   );
   return (
     <>
-      <Navbar className={"mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 z-50 left-[50%]"}>
+      <Navbar className={"mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 z-50 sticky left-16 top-0"}>
         <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"

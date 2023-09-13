@@ -4,7 +4,9 @@ const colors = require("colors");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const path = require("path")
+const path = require("path");
+const http = require("http");
+const { socketConnect } = require("./socketServer");
 
 //.env Config
 dotenv.config();
@@ -13,9 +15,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
+// Socket
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 // Middlewares
-app.use("/images", express.static(path.join(__dirname, "../backend/public/images")));
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "../backend/public/images"))
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.json());
@@ -40,10 +52,46 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: message });
 });
 
+// =====================================SOCKET=========================================
+const emailToSocketIdMap = new Map();
+const socketidToEmailMap = new Map();
+
+io.on("connection", (socket) => {
+  console.log(`Socket Connected`, socket.id);
+
+  socket.on("room:join", (data) => {
+    const { email, room } = data;
+    emailToSocketIdMap.set(email, socket.id);
+    socketidToEmailMap.set(socket.id, email);
+    io.to(room).emit("user:joined", { email, id: socket.id });
+    socket.join(room);
+    io.to(socket.id).emit("room:join", data);
+  });
+
+  socket.on("user:call", ({ to, offer }) => {
+    io.to(to).emit("incomming:call", { from: socket.id, offer });
+  });
+
+  socket.on("call:accepted", ({ to, ans }) => {
+    io.to(to).emit("call:accepted", { from: socket.id, ans });
+  });
+
+  socket.on("peer:nego:needed", ({ to, offer }) => {
+    console.log("peer:nego:needed", offer);
+    io.to(to).emit("peer:nego:needed", { from: socket.id, offer });
+  });
+
+  socket.on("peer:nego:done", ({ to, ans }) => {
+    console.log("peer:nego:done", ans);
+    io.to(to).emit("peer:nego:final", { from: socket.id, ans });
+  });
+});
+// =====================================SOCKET=========================================
+
 //Port
 const PORT = process.env.PORT || 8080;
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server Running on ${process.env.PORT}`.bgBlue.white);
 });

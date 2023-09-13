@@ -7,13 +7,13 @@ import Section3 from "../components/homePage/Section3";
 import { useSelector } from "react-redux";
 
 const HomePage = () => {
-  useEffect(()=>{
-    let a = document.querySelectorAll('*')
-    a.forEach(x=>{
-      x.style.overflowY = 'auto';
-    })
+  // useEffect(()=>{
+  //   let a = document.querySelectorAll('*')
+  //   a.forEach(x=>{
+  //     x.style.overflowY = 'auto';
+  //   })
 
-  },[])
+  // },[])
   
   return (
     <>

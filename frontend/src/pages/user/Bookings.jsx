@@ -114,6 +114,8 @@ const Bookings = () => {
                         <strong>Time:</strong>{" "}
                         {moment(booking.time).format("hh:mm a")}
                       </p>
+                      <div className=" flex flex-col">
+
                       {shouldShowCancelButton(booking.time, booking.date) && (
                         <button
                           className="bg-red-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-red-600"
@@ -129,6 +131,23 @@ const Bookings = () => {
                           Cancel Booking
                         </button>
                       )}
+                      {shouldShowCancelButton(booking.time, booking.date) && (
+                        <button
+                          className="bg-green-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-green-600"
+                          onClick={() =>
+                            handleCancelBooking(
+                              booking._id,
+                              booking.counselorId,
+                              booking.time,
+                              booking.date
+                            )
+                          }
+                        >
+                          Start Session
+                        </button>
+                      )}
+                      </div>
+
                     </div>
                   ))}
                 </div>

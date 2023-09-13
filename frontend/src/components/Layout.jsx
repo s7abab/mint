@@ -11,7 +11,7 @@ const Layout = ({ children, sidebar }) => {
       <div >
         <Header/>
         <div className="flex">
-          {!sidebar && <Sidebar className='fixed top-[100px]' />}
+          {!sidebar && <Sidebar />}
           <Toaster />
           {children}
         </div>

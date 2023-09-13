@@ -39,8 +39,8 @@ const ViewAllCounselors = () => {
   return (
     <>
       <Layout>
-        <div className="common-vh w-screen overflow-imp ">
-          <div className="sm:flex gap-2 m-4">
+        <div className="">
+          <div className="sm:flex gap-2 m-4 sticky top-20 bg-white">
             <Select onChange={(e) => setCategory(e)} label="Specialization">
               <Option>All</Option>
               {categories
@@ -56,8 +56,8 @@ const ViewAllCounselors = () => {
               label="Search"
             />
           </div>
-          <div className="overflow-y-scroll mb-10">
-            <div className="flex flex-wrap gap-2 mt-6 mx-2 justify-center">
+          <div className="">
+            <div className="flex flex-wrap gap-2 mt-6 mx-2 justify-center ">
               {filteredCounselors.map((data) => (
                 <CounselorCard key={data._id} data={data} />
               ))}
