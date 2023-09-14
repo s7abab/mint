@@ -7,7 +7,7 @@ import {
 } from "../../redux/features/users/userActions";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import  { Global } from "../../socket/Socket"
+import { Global } from "../../socket/Socket";
 
 const Bookings = () => {
   const userId = useSelector((state) => state.auth._id);
@@ -36,10 +36,21 @@ const Bookings = () => {
   );
 
   const shouldShowCancelButton = (bookingTime, bookingDate) => {
-    const Time = moment(time, "HH:mm").add(1, "hours").toISOString();
     const Date = moment(date, "DD-MM-YYYY").toISOString();
 
-    return !(bookingTime < Time && bookingDate <= Date);
+    const Time = moment(time, "HH:mm").format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
+
+    const minuteDiff = moment(bTime, "HH:mm").diff(
+      moment(Time, "HH:mm"),
+      "minutes"
+    );
+    if (bookingDate > Date) {
+      return true;
+    }
+    if (minuteDiff > 60) {
+      return true;
+    }
   };
 
   const handleCancelBooking = (_id, counselorId, bookingTime, bookingDate) => {
@@ -54,32 +65,32 @@ const Bookings = () => {
 
   //=================== VIDEO CALL START =========================/
   const navigate = useNavigate();
-  const {socket} = useContext(Global)
+  const { socket } = useContext(Global);
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("123");
 
   const handleSubmitForm = useCallback(
-    (e,roomId) => {
+    (e, roomId) => {
       e.preventDefault();
-      socket.emit("room:join", { email:user, room:roomId });
+      socket.emit("room:join", { email: user, room: roomId });
     },
     [email, room, socket]
   );
 
-  const handleJoinRoom = useCallback((data)=>{
-    const {email, room} = data
-    navigate(`/room/${room}`)
-  },[])
+  const handleJoinRoom = useCallback((data) => {
+    const { email, room } = data;
+    navigate(`/room/${room}`);
+  }, []);
 
   useEffect(() => {
     socket.on("room:join", handleJoinRoom);
 
-    return ()=>{
-        socket.off("room:join", handleJoinRoom)
-    }
+    return () => {
+      socket.off("room:join", handleJoinRoom);
+    };
   }, [socket, handleJoinRoom]);
 
-//=================== VIDEO CALL START =========================/
+  //=================== VIDEO CALL START =========================/
 
   return (
     <Layout>
@@ -165,7 +176,7 @@ const Bookings = () => {
                         {shouldShowCancelButton(booking.time, booking.date) && (
                           <button
                             className="bg-green-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-green-600"
-                            onClick={(e)=>handleSubmitForm(e,booking._id)}
+                            onClick={(e) => handleSubmitForm(e, booking._id)}
                           >
                             Start Session
                           </button>

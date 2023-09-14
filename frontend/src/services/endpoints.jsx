@@ -35,7 +35,9 @@ const endpoints = {
     delete_slot: "counselor/delete-slot",
     fetch_all_bookings: "/counselor/bookings",
     fetch_selected_bookings: "/counselor/selected-bookings",
-    fetch_wallet : "/counselor/walletAmount"
+    fetch_wallet: "/counselor/walletAmount",
+    changeBankDetails: "/counselor/changeBankDetails",
+    fetchBankDetails: "/counselor/bankAc",
   },
   user: {
     fetch_selected_user: "user/user/",
@@ -49,8 +51,8 @@ const endpoints = {
     fetch_all_bookings: "/user/bookings",
     fetch_selected_bookings: "/user/selected-bookings",
     cancel_booking: "/user/cancel-booking",
-    payment_integration : "/user/create-checkout-session",
-    fetch_wallet : "/user/walletAmount"
+    payment_integration: "/user/create-checkout-session",
+    fetch_wallet: "/user/walletAmount",
   },
 };
 

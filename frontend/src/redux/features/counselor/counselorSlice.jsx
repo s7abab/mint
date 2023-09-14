@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  deleteSlot,
   fetchAllBookings,
+  fetchBankDetails,
   fetchScheduledSlots,
   fetchSelectedCounselor,
   fetchWalletAmountOfCounselor,
@@ -14,8 +14,9 @@ const counselorSlice = createSlice({
     loading: false,
     error: null,
     slots: [],
-    bookings: [],
     wallet: {},
+    bookings: [],
+    bankAC: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -74,6 +75,20 @@ const counselorSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchWalletAmountOfCounselor.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // FETCH BANK DETAILS
+      .addCase(fetchBankDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBankDetails.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.bankAC = payload;
+        state.error = null;
+      })
+      .addCase(fetchBankDetails.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

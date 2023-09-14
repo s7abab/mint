@@ -17,14 +17,12 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserDashboard from "./pages/user/UserDashboard";
 import CounselorDashboard from "./pages/counselor/CounselorDashboard";
 import PublicRoute from "./routes/PublicRoute";
-import BookingSettings from "./components/counselorProfile/BookingSettings";
 import BookingPage from "./pages/user/BookingPage";
 import SlotsPage from "./pages/counselor/SlotsPage";
 import Bookings from "./pages/user/Bookings";
 import CounselorBookings from "./pages/counselor/CounselorBookings";
 import MyPatients from "./pages/counselor/MyPatients";
 import PaymentPage from "./pages/PaymentPage";
-import VideoCall from "./pages/VideoCall";
 import SocketHome from "./pages/SocketHome";
 import RoomPage from "./pages/RoomPage";
 import { Global } from "./socket/Socket";
@@ -38,7 +36,6 @@ const App = () => {
         <Routes>
           <Route element={<PublicRoute />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/video" element={<VideoCall />} />
             <Route path="/socket" element={<SocketHome />} />
             <Route path="/room/:roomId" element={<RoomPage />} />
             {/* AUTH ROUTES */}

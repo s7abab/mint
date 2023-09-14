@@ -327,3 +327,40 @@ export const fetchWalletAmountOfCounselor = createAsyncThunk(
     }
   }
 );
+
+// CHANGE BANK DETAILS
+export const changeBankDetails = createAsyncThunk(
+  "/counselor/changeBankDetails",
+  async (values, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.changeBankDetails, {
+        ...values,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.error);
+    }
+  }
+);
+
+// FETCH BANK DETAILS
+export const fetchBankDetails = createAsyncThunk(
+  "/counselor/fetchBankDetails",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.fetchBankDetails);
+      if (res.data.success) {
+        return res.data.bankAc;
+      } else {
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.error);
+      rejectWithValue(error.response.data.error);
+    }
+  }
+);

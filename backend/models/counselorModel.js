@@ -26,6 +26,11 @@ const counselorSchema = new mongoose.Schema(
       incomeTransactions: [String],
       withdrawTransactions: [String],
     },
+    bankAC: {
+      acNo: String,
+      ifsc: String,
+      name: String,
+    },
     category: { type: String, required: true },
     image: { type: String },
     feedback: [{ type: Schema.Types.ObjectId }],

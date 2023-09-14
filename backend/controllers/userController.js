@@ -5,6 +5,7 @@ const bookingModel = require("../models/bookingModel");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { error } = require("console");
+const { default: mongoose } = require("mongoose");
 
 const map = new Map();
 // GET ONE USER
@@ -266,7 +267,37 @@ const bookingDetails = async (req, res) => {
         message: "Something went wrong",
       });
     }
-    const bookings = await bookingModel.find({ userId: authId });
+    const userId = new mongoose.Types.ObjectId(authId);
+    const bookings = await bookingModel.aggregate([
+      {
+        $match: { userId }
+      },
+      {
+        $lookup:{
+          from:"counselors",
+          localField:"counselorId",
+          foreignField:"_id",
+          as:"counselorData"
+        }
+      },
+      {
+        $unwind:"$counselorData"
+      },
+      {
+        $project:{
+          counselorId:1,
+          userId:1,
+          counselorName:"$counselorData.name",
+          userName:1,
+          date:1,
+          time:1,
+          status:1,
+
+        }
+      }
+    ]);
+
+    console.log(bookings);
     res.status(200).send({
       success: true,
       message: "Booking details fetched successfully",

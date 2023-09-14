@@ -7,7 +7,6 @@ import {
 } from "../../redux/features/counselor/counselorActions";
 import Layout from "../Layout";
 import { Form, Col, Input, Row } from "antd";
-import moment from "moment";
 import { Button } from "@material-tailwind/react";
 import { Loading } from "../Loading";
 
@@ -17,8 +16,6 @@ const CounselorCounselor = () => {
   const user = useSelector((state) => state?.counselor?.selectedCounselor);
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [startTime, setStartTime] = useState(user ? user.timings[0] : "00:00");
-  const [endTime, setEndTime] = useState(user ? user.timings[1] : "00:00");
 
   useEffect(() => {
     if (counselorId !== null) {
@@ -35,8 +32,7 @@ const CounselorCounselor = () => {
     dispatch(
       updateCounselorProfile({
         values: {
-          ...values,
-          timings: [startTime, endTime],
+          ...values
         },
         counselorId: counselorId,
       })

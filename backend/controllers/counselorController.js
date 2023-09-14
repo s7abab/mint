@@ -13,7 +13,17 @@ const userModel = require("../models/userModel");
 const getProfile = async (req, res) => {
   try {
     const { counselorId } = req.params;
-    const counselors = await counselorModel.findById(counselorId);
+    const counselors = await counselorModel.findById(counselorId, {
+      _id: 1,
+      name: 1,
+      email: 1,
+      role: 1,
+      address: 1,
+      experience: 1,
+      fee: 1,
+      category: 1,
+      image: 1,
+    });
     res.status(200).send({
       success: true,
       counselors,
@@ -504,7 +514,7 @@ const selectedBookings = async (req, res) => {
 const getWalletAmount = async (req, res) => {
   const { authId } = req.body;
   try {
-    const wallet = await counselorModel.findById(authId);
+    const wallet = await counselorModel.findById(authId, { wallet: 1, _id: 0 });
     res.status(200).send({
       success: true,
       wallet,
@@ -514,6 +524,52 @@ const getWalletAmount = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Erro occured while get wallet amount",
+      error,
+    });
+  }
+};
+
+// Change bank ac details
+const changeBankDetails = async (req, res) => {
+  const { acNo, ifsc, name, authId } = req.body;
+  console.log(req.body);
+  try {
+    await counselorModel.findByIdAndUpdate(authId, {
+      $set: {
+        "bankAC.acNo": acNo,
+        "bankAC.ifsc": ifsc,
+        "bankAC.name": name,
+      },
+    });
+    res.status(200).send({
+      success: true,
+      message: "New Bank Details Added",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+    });
+  }
+};
+
+// Fetch bank details
+const fethBankDetails = async (req, res) => {
+  try {
+    const bankAc = await counselorModel.findById(req.body.authId, {
+      bankAC: 1,
+      _id: 0,
+    });
+    res.status(200).send({
+      success: true,
+      message: "Bank Details Fetched",
+      bankAc,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
       error,
     });
   }
@@ -534,4 +590,6 @@ module.exports = {
   bookingDetails,
   selectedBookings,
   getWalletAmount,
+  changeBankDetails,
+  fethBankDetails,
 };
