@@ -14,6 +14,8 @@ const endpoints = {
     fetch_selected_counselor: "/admin/counselor/",
     fetch_all_users: "/admin/users",
     fetch_selected_user: "admin/user/",
+    fetch_withdrawal_req: "admin/withdrawals",
+    settlement: "/admin/withdrawals",
   },
   category: {
     fetch_categories_admin: "/admin/category",
@@ -38,6 +40,8 @@ const endpoints = {
     fetch_wallet: "/counselor/walletAmount",
     changeBankDetails: "/counselor/changeBankDetails",
     fetchBankDetails: "/counselor/bankAc",
+    withdrawReq: "/counselor/withdrawReq",
+    session_completed: "/counselor/session-completed",
   },
   user: {
     fetch_selected_user: "user/user/",

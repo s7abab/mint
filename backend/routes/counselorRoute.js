@@ -16,6 +16,8 @@ const {
   getWalletAmount,
   changeBankDetails,
   fethBankDetails,
+  withdrawalReq,
+  sessionCompleted,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -46,6 +48,9 @@ router.route("/create-slot").post(isSigned, isCounselor, createSlot);
 router.route("/scheduled-slots").post(isSigned, isCounselor, scheduledSlots);
 router.route("/cancel-booking").post(isSigned, isCounselor, cancelBookings);
 router.route("/delete-slot").post(isSigned, isCounselor, deleteSlot);
+router
+  .route("/session-completed")
+  .post(isSigned, isCounselor, sessionCompleted);
 
 // GET BOOKINGS DETAILS
 router.route("/bookings").post(isSigned, isCounselor, bookingDetails);
@@ -55,9 +60,12 @@ router
 
 // PAYMENTS
 router.route("/walletAmount").get(isSigned, isCounselor, getWalletAmount);
+router.route("/withdrawReq").post(isSigned, isCounselor, withdrawalReq);
 
 // BANK AC DETAILS
-router.route("/changeBankDetails").post(isSigned, isCounselor, changeBankDetails);
-router.route("/bankAc").post(isSigned, isCounselor, fethBankDetails)
+router
+  .route("/changeBankDetails")
+  .post(isSigned, isCounselor, changeBankDetails);
+router.route("/bankAc").post(isSigned, isCounselor, fethBankDetails);
 
 module.exports = router;

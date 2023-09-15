@@ -13,6 +13,8 @@ const {
   blockUsers,
   getCounselorProfile,
   getSelectedUser,
+  getWithdrawals,
+  settlement,
 } = require("../controllers/adminController");
 const { isAdmin, isSigned } = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -48,5 +50,7 @@ router
   .get(isSigned, isAdmin, getUsers)
   .post(isSigned, isAdmin, blockUsers);
 router.route("/user/:userId").get(isSigned, isAdmin, getSelectedUser);
+// Withdrawals
+router.route("/withdrawals").get(isSigned, isAdmin, getWithdrawals).post(settlement)
 
 module.exports = router;

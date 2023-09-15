@@ -8,7 +8,9 @@ import {
   cancelBooking,
   fetchAllBookings,
   fetchScheduledSlots,
+  sessionCompleted,
 } from "../../redux/features/counselor/counselorActions";
+import { Button } from "@material-tailwind/react";
 
 const CounselorBookings = () => {
   const counselorId = useSelector((state) => state.auth._id);
@@ -24,7 +26,7 @@ const CounselorBookings = () => {
 
   const time = moment().format("HH:mm");
   const date = moment().format("DD-MM-YYYY");
-
+  const isoTime = moment().toISOString();
   const upcomingBookings = bookings.filter(
     (booking) => booking.status === "booked"
   );
@@ -35,17 +37,34 @@ const CounselorBookings = () => {
     (booking) =>
       booking.status === "cancelled" || booking.status === "userCancelled"
   );
-
-  const shouldShowCancelButton = (bookingTime, bookingDate) => {
-    // You can implement your logic here to determine whether to show the cancel button.
-    // Example: Check if the booking time and date are in the future.
-    const bookingDateTime = moment(
-      bookingDate + " " + bookingTime,
-      "DD-MM-YYYY HH:mm"
+  // SHOW SESSION START BUTTON
+  const showSessionStartButton = (bookingTime, bookingDate) => {
+    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const Time = moment(time, "HH:mm").format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
+    const minuteDiff = moment(bTime, "HH:mm").diff(
+      moment(Time, "HH:mm"),
+      "minutes"
     );
-    return bookingDateTime.isAfter(moment());
+    if (bookingDate === Date && minuteDiff < 60) {
+      return true;
+    }
   };
-
+  // SHOW SESSION COMPLETED BUTTON
+  const showCompletedButton = (bookingTime, bookingDate) => {
+    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const Time = moment(time, "HH:mm").format("HH:mm");
+    const bTime = moment(bookingTime).add(1, "hours").format("HH:mm");
+    if (bookingDate <= Date && bTime < Time) {
+      return true;
+    }
+  };
+  // =============== Handle Session Completed ===============
+  const handleSessionCompleted = (bookingId) => {
+    dispatch(sessionCompleted(bookingId)).then(() => {
+      dispatch(fetchAllBookings());
+    });
+  };
   // ==================== Handle Cancel =====================
   const handleCancelBooking = (_id, counselorId, time, date) => {
     dispatch(cancelBooking({ _id, counselorId })).then(() => {
@@ -145,30 +164,41 @@ const CounselorBookings = () => {
                       </p>
                       <p className="text-gray-600">
                         <strong>Time:</strong>{" "}
-                        {moment(booking.time, "HH:mm").format("hh:mm a")}
+                        {moment(booking.time).format("hh:mm a")}
                       </p>
-                      {shouldShowCancelButton(booking.time, booking.date) && (
-                        <button
-                          className="bg-red-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-red-600"
-                          onClick={() =>
-                            handleCancelBooking(
-                              booking._id,
-                              booking.counselorId,
-                              booking.time,
-                              booking.date
-                            )
-                          }
-                        >
-                          Cancel Booking
-                        </button>
-                      )}
 
-                      <button
-                        className="bg-green-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-green-600"
-                        onClick={(e) => handleSubmitForm(e, booking._id)}
+                      <Button
+                        className="bg-red-800"
+                        size="sm"
+                        onClick={() =>
+                          handleCancelBooking(
+                            booking._id,
+                            booking.counselorId,
+                            booking.time,
+                            booking.date
+                          )
+                        }
                       >
-                        Start session
-                      </button>
+                        Cancel Booking
+                      </Button>
+                      {showSessionStartButton(booking.time, booking.date) && (
+                        <Button
+                          className="mx-4"
+                          size="sm"
+                          onClick={(e) => handleSubmitForm(e, booking._id)}
+                        >
+                          Start session
+                        </Button>
+                      )}
+                      {showCompletedButton(booking.time, booking.date) && (
+                        <Button
+                          className="bg-green-700"
+                          size="sm"
+                          onClick={()=>handleSessionCompleted(booking._id)}
+                        >
+                          Session completed ✓
+                        </Button>
+                      )}
                     </div>
                   ))}
                 </div>

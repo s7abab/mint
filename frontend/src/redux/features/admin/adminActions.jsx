@@ -142,3 +142,40 @@ export const fetchSelectedUserForAdmin = createAsyncThunk(
     }
   }
 );
+// Fetch withdrawal req
+export const fetchWithdrawals = createAsyncThunk(
+  "admin/fetchWithdrawals",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.get(endpoints.admin.fetch_withdrawal_req);
+      if (res.data.success) {
+        return res.data.withdrawalReq;
+      } else {
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast(error.response.data.message);
+      rejectWithValue(error.response.data.message);
+    }
+  }
+);
+// DO SETTLEMENT
+export const settlement = createAsyncThunk(
+  "admin/settlement",
+  async (counselorId, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.admin.settlement, {
+        counselorId,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message)
+      } else {
+        toast.error("Something went wrong")
+      }
+    } catch (error) {
+      console.log(error);
+      toast(error.response.data.message);
+    }
+  }
+);

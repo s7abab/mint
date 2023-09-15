@@ -10,7 +10,6 @@ const addCategory = async (req, res) => {
   try {
     const { name } = req.body;
 
-    // Define a regex pattern for the category name
     const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
 
     if (!name) {
@@ -21,8 +20,9 @@ const addCategory = async (req, res) => {
       return res.status(400).send({ message: "Invalid category name" });
     }
 
-    // Check if a category with the same name (case-insensitive) already exists
-    const existingCategory = await categoryModal.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+    const existingCategory = await categoryModal.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
 
     if (existingCategory) {
       return res.status(200).send({
@@ -49,34 +49,35 @@ const addCategory = async (req, res) => {
   }
 };
 
-
 //edit category
 const editCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
     const { name } = req.body;
 
-     // Define a regex pattern for the category name
-     const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
+    // Define a regex pattern for the category name
+    const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
 
-     if (!name) {
-       return res.status(400).send({ message: "Fill the field" });
-     }
- 
-     if (!nameRegex.test(name)) {
-       return res.status(400).send({ message: "Invalid category name" });
-     }
- 
-     // Check if a category with the same name (case-insensitive) already exists
-     const existingCategory = await categoryModal.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
- 
-     if (existingCategory) {
-       return res.status(200).send({
-         success: false,
-         message: "Category already added",
-       });
-     }
-     
+    if (!name) {
+      return res.status(400).send({ message: "Fill the field" });
+    }
+
+    if (!nameRegex.test(name)) {
+      return res.status(400).send({ message: "Invalid category name" });
+    }
+
+    // Check if a category with the same name (case-insensitive) already exists
+    const existingCategory = await categoryModal.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (existingCategory) {
+      return res.status(200).send({
+        success: false,
+        message: "Category already added",
+      });
+    }
+
     const updatedCategory = await categoryModal.findByIdAndUpdate(
       categoryId,
       { name },
@@ -340,6 +341,50 @@ const getSelectedUser = async (req, res) => {
     });
   }
 };
+//FETCH WITHDRAWAL REQ
+const getWithdrawals = async (req, res) => {
+  try {
+    const withdrawalReq = await counselorModel.find(
+      { isWithdraw: true },
+      { name: 1, wallet: 1, bankAC: 1, isWithdraw: 1 }
+    );
+    res.status(200).send({
+      success: true,
+      withdrawalReq,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getSelectedUser Api",
+      error,
+    });
+  }
+};
+// SETTLEMENT
+const settlement = async (req, res) => {
+  try {
+    const { counselorId } = req.body;
+    const counselor = await counselorModel.findById({ _id: counselorId });
+    const amount = counselor.wallet.balance;
+    counselor.wallet.balance = 0;
+    counselor.isWithdraw = false;
+    counselor.wallet.withdrawTransactions.push(amount);
+    await counselor.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Amount settled successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occurred while settling amount",
+      error,
+    });
+  }
+};
 
 module.exports = {
   addCategory,
@@ -354,5 +399,7 @@ module.exports = {
   blockCounselor,
   getUsers,
   blockUsers,
-  getSelectedUser
+  getSelectedUser,
+  getWithdrawals,
+  settlement,
 };

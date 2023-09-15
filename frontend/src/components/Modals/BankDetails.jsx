@@ -19,6 +19,9 @@ const BankDetails = ({ close }) => {
     if (acNo !== racNo) {
       return toast.error("Ac no not match");
     }
+    if (!acNo || !ifsc || !name || !racNo) {
+      return toast.error("Please fill the fields");
+    }
     try {
       await dispatch(changeBankDetails({ acNo, ifsc, name }));
       await dispatch(fetchBankDetails());

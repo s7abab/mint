@@ -402,7 +402,7 @@ const cancelBookings = async (req, res) => {
       {
         $inc: { "wallet.balance": -fee },
         $push: {
-          "wallet.withdrawTransactions": `-${fee} Transaction Id = ${_id}`,
+          "wallet.incomeTransactions": `-${fee} TXID : ${_id}`,
         },
       },
       { new: true }
@@ -413,7 +413,7 @@ const cancelBookings = async (req, res) => {
       {
         $inc: { "wallet.balance": fee },
         $push: {
-          "wallet.transactions": `${fee} Transaction Id = ${_id}`,
+          "wallet.transactions": `${fee} TXID : ${_id}`,
         },
       },
       { new: true } //add money to wallet
@@ -575,6 +575,67 @@ const fethBankDetails = async (req, res) => {
   }
 };
 
+// Withdrawal req wallet money
+const withdrawalReq = async (req, res) => {
+  try {
+    const { authId } = req.body;
+    await counselorModel.findByIdAndUpdate(authId, {
+      isWithdraw: true,
+    });
+    res.status(200).send({
+      success: true,
+      message: "Withdrawal requested successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in withdrawal req",
+      error,
+    });
+  }
+};
+
+// Make session completed
+const sessionCompleted = async (req, res) => {
+  const { bookingId, authId } = req.body;
+  try {
+    await bookingModel.findByIdAndUpdate(
+      { _id: bookingId },
+      {
+        status: "completed",
+      },
+      {
+        new: true,
+      }
+    );
+
+    const counselorData = await counselorModel.findById(authId);
+    const fee = counselorData.fee;
+    await counselorModel.findByIdAndUpdate(
+      authId,
+      {
+        $inc: { "wallet.balance": fee },
+        $push: {
+          "wallet.incomeTransactions": `+${fee} TXID : ${bookingId}`,
+        },
+      },
+      { new: true } //add money to wallet
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Session completed",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+    });
+  }
+};
+
 module.exports = {
   apply,
   getProfile,
@@ -592,4 +653,6 @@ module.exports = {
   getWalletAmount,
   changeBankDetails,
   fethBankDetails,
+  withdrawalReq,
+  sessionCompleted,
 };

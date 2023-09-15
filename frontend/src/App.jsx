@@ -27,6 +27,7 @@ import SocketHome from "./pages/SocketHome";
 import RoomPage from "./pages/RoomPage";
 import { Global } from "./socket/Socket";
 import io from "socket.io-client";
+import PaymentsAdmin from "./pages/admin/PaymentsAdmin";
 
 const socket = io.connect("http://localhost:8080");
 const App = () => {
@@ -59,7 +60,7 @@ const App = () => {
             />
             <Route path="/admin/users" element={<ViewUsers />} />
             <Route path="/admin/users/:userId" element={<UserProfile />} />
-            <Route path="/admin/payments" element={<PaymentPage />} />
+            <Route path="/admin/payments" element={<PaymentsAdmin />} />
 
             {/* USER ROUTES */}
             <Route path="/dashboard" element={<UserDashboard />} />

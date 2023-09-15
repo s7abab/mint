@@ -364,3 +364,39 @@ export const fetchBankDetails = createAsyncThunk(
     }
   }
 );
+
+// WITHDRAW REQ
+export const withdrawReq = createAsyncThunk(
+  "/counselor/withdrawReq",
+  async (_, { thunkApi }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.withdrawReq);
+      if (res.data.success) {
+        toast.success(res.data.message);
+      } else {
+        toast.err(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+);
+
+// SESSION COMPLETED
+export const sessionCompleted = createAsyncThunk(
+  "/counselor/sessionCompleted",
+  async (bookingId, { thunkApi }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.session_completed, {
+        bookingId,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+);

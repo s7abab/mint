@@ -31,6 +31,7 @@ const counselorSchema = new mongoose.Schema(
       ifsc: String,
       name: String,
     },
+    isWithdraw: { type: Boolean, default: false },
     category: { type: String, required: true },
     image: { type: String },
     feedback: [{ type: Schema.Types.ObjectId }],

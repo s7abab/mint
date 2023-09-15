@@ -5,6 +5,7 @@ import {
   fetchCounselorsForAdmin,
   fetchSelectedCounselorForAdmin,
   fetchSelectedUserForAdmin,
+  fetchWithdrawals,
 } from "./adminActions";
 
 const adminSlice = createSlice({
@@ -15,6 +16,7 @@ const adminSlice = createSlice({
     selectedCounselor: null,
     selectedUser: null,
     status: null,
+    withdrawalReq: [],
     loading: false,
     error: null,
   },
@@ -89,6 +91,19 @@ const adminSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchSelectedUserForAdmin.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // Fetch withdrawalReq
+      .addCase(fetchWithdrawals.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWithdrawals.fulfilled, (state, { payload }) => {
+        state.withdrawalReq = payload;
+        state.loading = false;
+      })
+      .addCase(fetchWithdrawals.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

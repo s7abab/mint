@@ -119,7 +119,7 @@ const RoomPage = () => {
   ]);
 
   return (
-    <div className="h-screen bg-gray-900 w-screen flex flex-col items-center justify-center relative">
+    <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
       <div className="absolute top-5 left-5 z-50">
         <h4 className="bg-white p-2 rounded-lg">
           {remoteSocketId ? "Connected" : "No one in the room"}
@@ -163,7 +163,7 @@ const RoomPage = () => {
           />
         )}
       </div>
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-800 p-4 text-white flex justify-center">
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
         <BsCameraVideo className="text-3xl mr-4" onClick={sendStreams} />
         <AiOutlineAudioMuted className="text-3xl mr-4" />
         <FcEndCall className="text-4xl" />

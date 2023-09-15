@@ -175,34 +175,25 @@ const bookAppointment = async (req, res) => {
       });
     }
 
+    const counselor = await counselorModel.findById(counselorId);
+
     // Update the booking fields
     booking.userId = userId;
     booking.userName = userName;
     booking.userAge = userAge;
     booking.note = note;
     booking.status = "booked";
+    booking.fee = counselor.fee;
     await booking.save();
 
     if (walletAmount > 0) {
       const userData = await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
         $push: {
-          "wallet.transactions": `-${walletAmount} Transaction Id ${booking._id}`,
+          "wallet.transactions": `-${walletAmount} TXID : ${booking._id}`,
         },
       });
     }
-    const counselorData = await counselorModel.findById(counselorId);
-    const fee = counselorData.fee;
-    await counselorModel.findByIdAndUpdate(
-      counselorId,
-      {
-        $inc: { "wallet.balance": fee },
-        $push: {
-          "wallet.incomeTransactions": `+${fee} Transaction Id = ${booking._id}`,
-        },
-      },
-      { new: true } //add money to wallet
-    );
 
     res.status(200).send({
       success: true,
@@ -238,7 +229,7 @@ const scheduledSlots = async (req, res) => {
     // Find available slots
     const slots = await bookingModel.find({
       counselorId,
-      status: { $ne: "userCancelled" },
+      status: { $nin: ["userCancelled", "cancelled"] },
       date: { $gte: currentDateTime },
     });
 
@@ -270,31 +261,30 @@ const bookingDetails = async (req, res) => {
     const userId = new mongoose.Types.ObjectId(authId);
     const bookings = await bookingModel.aggregate([
       {
-        $match: { userId }
+        $match: { userId },
       },
       {
-        $lookup:{
-          from:"counselors",
-          localField:"counselorId",
-          foreignField:"_id",
-          as:"counselorData"
-        }
+        $lookup: {
+          from: "counselors",
+          localField: "counselorId",
+          foreignField: "_id",
+          as: "counselorData",
+        },
       },
       {
-        $unwind:"$counselorData"
+        $unwind: "$counselorData",
       },
       {
-        $project:{
-          counselorId:1,
-          userId:1,
-          counselorName:"$counselorData.name",
-          userName:1,
-          date:1,
-          time:1,
-          status:1,
-
-        }
-      }
+        $project: {
+          counselorId: 1,
+          userId: 1,
+          counselorName: "$counselorData.name",
+          userName: 1,
+          date: 1,
+          time: 1,
+          status: 1,
+        },
+      },
     ]);
 
     console.log(bookings);
@@ -369,7 +359,15 @@ const cancelBookings = async (req, res) => {
       userId,
       {
         $inc: { "wallet.balance": fee },
-        $push: { "wallet.transactions": `+${fee} Transaction Id = ${_id}` },
+        $push: { "wallet.transactions": `+${fee} TXID : ${_id}` },
+      },
+      { new: true } //add money to wallet
+    );
+    await counselorModel.findByIdAndUpdate(
+      counselorId,
+      {
+        $inc: { "wallet.balance": -fee },
+        $push: { "wallet.incomeTransactions": `-${fee} TXID : ${_id}` },
       },
       { new: true } //add money to wallet
     );

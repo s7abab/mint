@@ -8,6 +8,7 @@ import {
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { Global } from "../../socket/Socket";
+import { Button } from "@material-tailwind/react";
 
 const Bookings = () => {
   const userId = useSelector((state) => state.auth._id);
@@ -35,12 +36,12 @@ const Bookings = () => {
       booking.status === "cancelled" || booking.status === "userCancelled"
   );
 
+  const isoTime = moment().toISOString();
+    // Cancel only possible atleast 1 hr before
   const shouldShowCancelButton = (bookingTime, bookingDate) => {
     const Date = moment(date, "DD-MM-YYYY").toISOString();
-
     const Time = moment(time, "HH:mm").format("HH:mm");
     const bTime = moment(bookingTime).format("HH:mm");
-
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
@@ -49,6 +50,19 @@ const Bookings = () => {
       return true;
     }
     if (minuteDiff > 60) {
+      return true;
+    }
+  };
+    // Show session start button
+  const showSessionStartButton = (bookingTime, bookingDate) => {
+    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const Time = moment(time, "HH:mm").format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
+    const minuteDiff = moment(bTime, "HH:mm").diff(
+      moment(Time, "HH:mm"),
+      "minutes"
+    );
+    if (bookingDate === Date && minuteDiff < 60) {
       return true;
     }
   };
@@ -173,7 +187,7 @@ const Bookings = () => {
                             Cancel Booking
                           </button>
                         )}
-                        {shouldShowCancelButton(booking.time, booking.date) && (
+                        {showSessionStartButton (booking.time, booking.date)  && (
                           <button
                             className="bg-green-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-green-600"
                             onClick={(e) => handleSubmitForm(e, booking._id)}
