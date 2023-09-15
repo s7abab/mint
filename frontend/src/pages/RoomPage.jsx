@@ -2,9 +2,11 @@ import React, { useEffect, useCallback, useState, useContext } from "react";
 import ReactPlayer from "react-player";
 import peer from "../services/peer";
 import { Global } from "../socket/Socket";
-import { AiOutlineAudioMuted, AiOutlinePhone } from "react-icons/ai";
+import { AiOutlineAudioMuted } from "react-icons/ai";
 import { FcEndCall } from "react-icons/fc";
 import { BsCameraVideo } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const RoomPage = () => {
   const { socket } = useContext(Global);
@@ -13,6 +15,10 @@ const RoomPage = () => {
   const [remoteStream, setRemoteStream] = useState();
   const [call, setCall] = useState(false);
   const [streamBtn, setStreamBtn] = useState(false);
+  const [isAudioMuted, setIsAudioMuted] = useState(true);
+  const [isCameraOff, setIsCameraOff] = useState(true);
+  const role = useSelector((state) => state.auth.role);
+  const navigate = useNavigate();
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
@@ -87,6 +93,44 @@ const RoomPage = () => {
     setCall(true);
   }, []);
 
+  const handleHangUp = () => {
+    if (myStream) {
+      myStream.getTracks().forEach((track) => track.stop());
+    }
+    setMyStream(null);
+    setRemoteStream(null);
+    setStreamBtn(false);
+    setCall(false);
+    socket.emit("hangup");
+    if (role === "user") {
+      navigate("/bookings");
+    } else if (role === "counselor") {
+      navigate("/counselor/bookings");
+    }
+  };
+
+  // Function to toggle audio mute
+  const toggleAudioMute = () => {
+    if (myStream) {
+      const audioTrack = myStream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !isAudioMuted;
+        setIsAudioMuted(!isAudioMuted);
+      }
+    }
+  };
+
+  // Function to toggle camera off
+  const toggleCamera = () => {
+    if (myStream) {
+      const videoTrack = myStream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !isCameraOff;
+        setIsCameraOff(!isCameraOff);
+      }
+    }
+  };
+
   useEffect(() => {
     peer.peer.addEventListener("track", async (ev) => {
       const remoteStream = ev.streams;
@@ -122,7 +166,7 @@ const RoomPage = () => {
     <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
       <div className="absolute top-5 left-5 z-50">
         <h4 className="bg-white p-2 rounded-lg">
-          {remoteSocketId ? "Connected" : "No one in the room"}
+          {remoteSocketId && "Connected"}
         </h4>
         {myStream && !streamBtn && (
           <button
@@ -132,7 +176,7 @@ const RoomPage = () => {
             Send Stream
           </button>
         )}
-        {remoteSocketId && !call && (
+        {remoteSocketId && !myStream && !call && (
           <button
             className="bg-red-500 text-white p-2 rounded-lg mt-2"
             onClick={handleCallUser}
@@ -164,9 +208,32 @@ const RoomPage = () => {
         )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
-        <BsCameraVideo className="text-3xl mr-4" onClick={sendStreams} />
-        <AiOutlineAudioMuted className="text-3xl mr-4" />
-        <FcEndCall className="text-4xl" />
+        {isCameraOff ? (
+          <BsCameraVideo
+            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleCamera}
+          />
+        ) : (
+          <BsCameraVideo
+            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleCamera}
+          />
+        )}
+        {isAudioMuted ? (
+          <AiOutlineAudioMuted
+            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleAudioMute}
+          />
+        ) : (
+          <AiOutlineAudioMuted
+            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleAudioMute}
+          />
+        )}
+        <FcEndCall
+          className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-blue-500 hover:text-white cursor-pointer"
+          onClick={handleHangUp}
+        />
       </div>
     </div>
   );

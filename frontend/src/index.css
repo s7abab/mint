@@ -2,21 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @media (max-width: 765px) {
   .hidden-custom {
     display: none;
   }
 }
 
-/* .overflow-imp {
-  overflow-y: scroll !important;
+/* Section1.css */
+.bg-green-opacity {
+  background: linear-gradient(135deg, rgba(23, 189, 23, 0.050),rgba(133, 0, 163, 0.050) ); 
 }
 
-.common-vh {
-  height: 92vh;
-}
 
-.container-vh {
-  height: 62vh;
-} */

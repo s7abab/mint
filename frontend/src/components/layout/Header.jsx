@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Navbar,
@@ -6,15 +6,40 @@ import {
   Typography,
   Button,
   IconButton,
+  List,
+  ListItem,
+  ListItemPrefix,
+  ListItemSuffix,
+  Chip,
+  Card,
 } from "@material-tailwind/react";
+import {
+  PresentationChartBarIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+  InboxIcon,
+  PowerIcon,
+} from "@heroicons/react/24/solid";
+import {
+  AiFillAppstore,
+  AiOutlineForm,
+  AiOutlineUser,
+  AiOutlineBook,
+  AiOutlineMessage,
+} from "react-icons/ai";
+import { MdPayment, MdOutlineCategory } from "react-icons/md";
+import { BiUserCircle, BiTimeFive } from "react-icons/bi";
+
 import { logout } from "../../redux/features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
-const Header = ({className}) => {
+const Header = ({ className }) => {
   const [openNav, setOpenNav] = React.useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const role = useSelector((state) => state.auth.role);
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
@@ -29,8 +54,12 @@ const Header = ({className}) => {
   );
   return (
     <>
-      <Navbar className={"mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 z-50 sticky left-16 top-0"}>
-        <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
+      <Navbar
+        className={
+          "mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 z-50 sticky left-16 top-0 bg-green-opacity"
+        }
+      >
+        <div className="container flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"
             href="#"
@@ -41,19 +70,7 @@ const Header = ({className}) => {
           </Typography>
           <div className="hidden lg:block">{navList}</div>
 
-          {token ? (
-            <Button
-              variant="gradient"
-              size="sm"
-              className="hidden lg:inline-block"
-              onClick={() => {
-                dispatch(logout());
-                navigate("/");
-              }}
-            >
-              <span>Logout</span>
-            </Button>
-          ) : (
+          {!token && (
             <Button
               variant="gradient"
               size="sm"
@@ -103,22 +120,9 @@ const Header = ({className}) => {
           </IconButton>
         </div>
         <Collapse open={openNav}>
-          <div className="container mx-auto">
+          <div className="">
             {navList}
-            {token ? (
-              <Button
-                onClick={() => {
-                  dispatch(logout());
-                  navigate("/");
-                }}
-                variant="gradient"
-                size="sm"
-                fullWidth
-                className="mb-2"
-              >
-                <span>Logout </span>
-              </Button>
-            ) : (
+            {!token && (
               <Button
                 onClick={() => navigate("/login")}
                 variant="gradient"
@@ -126,8 +130,196 @@ const Header = ({className}) => {
                 fullWidth
                 className="mb-2"
               >
-                <span>Login </span>
+                <span>Login</span>
               </Button>
+            )}
+            {role === "user" && (
+              <Card className="w-full shadow-blue-gray-900/5">
+                <List>
+                  <Link to={"/dashboard"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <PresentationChartBarIcon className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Dashboard
+                    </ListItem>
+                  </Link>
+                  <Link to={"/counselors"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <AiOutlineUser className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Counselors
+                    </ListItem>
+                  </Link>
+                  <Link to={"/bookings"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <AiOutlineBook className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Bookings
+                    </ListItem>
+                  </Link>
+                  <Link to={"/payments"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <MdPayment className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Payments
+                    </ListItem>
+                  </Link>
+                  <Link to={"/profile"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <BiUserCircle className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Profile
+                    </ListItem>
+                  </Link>
+                  <ListItem
+                    onClick={() => {
+                      dispatch(logout());
+                      toast.success("Logout successfully");
+                      navigate("/");
+                    }}
+                  >
+                    <ListItemPrefix>
+                      <PowerIcon className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Log Out
+                  </ListItem>
+                </List>
+              </Card>
+            )}
+            {role === "counselor" && (
+              <List>
+                <Link to={"/counselor/dashboard"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiFillAppstore className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Dashboard
+                  </ListItem>
+                </Link>
+
+                <Link to={"/counselor/bookings"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineBook className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Bookings
+                  </ListItem>
+                </Link>
+                <Link to={"/counselor/slots"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <BiTimeFive className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Assign Your Time
+                  </ListItem>
+                </Link>
+                <Link to={"/counselor/messages"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineMessage className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Messages
+                  </ListItem>
+                </Link>
+                <Link to={"/counselor/payments"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <MdPayment className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Payments
+                  </ListItem>
+                </Link>
+                <Link to={"/counselor/profile"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <BiUserCircle className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Profile
+                  </ListItem>
+                </Link>
+                <ListItem
+                  onClick={() => {
+                    dispatch(logout());
+                    toast.success("Logout successfully");
+                    navigate("/");
+                  }}
+                >
+                  <ListItemPrefix>
+                    <PowerIcon className="h-5 w-5" />
+                  </ListItemPrefix>
+                  Log Out
+                </ListItem>
+              </List>
+            )}
+            {role === "admin" && (
+              <List>
+                <Link to={"/admin/dashboard"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiFillAppstore className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Dashboard
+                  </ListItem>
+                </Link>
+
+                <Link to={"/admin/applications"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineForm className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Applications
+                  </ListItem>
+                </Link>
+                <Link to={"/admin/counselors"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineUser className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Counselors
+                  </ListItem>
+                </Link>
+                <Link to={"/admin/users"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <UserCircleIcon className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Users
+                  </ListItem>
+                </Link>
+                <Link to={"/admin/payments"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <MdPayment className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Payments
+                  </ListItem>
+                </Link>
+                <Link to={"/admin/category"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <MdOutlineCategory className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Category
+                  </ListItem>
+                </Link>
+                <ListItem
+                  onClick={() => {
+                    dispatch(logout());
+                    toast.success("Logout successfully");
+                    navigate("/");
+                  }}
+                >
+                  <ListItemPrefix>
+                    <PowerIcon className="h-5 w-5" />
+                  </ListItemPrefix>
+                  Log Out
+                </ListItem>
+              </List>
             )}
           </div>
         </Collapse>

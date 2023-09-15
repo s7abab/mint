@@ -16,16 +16,23 @@ import {
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
 import { BiUserCircle, BiTimeFive } from "react-icons/bi";
-
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { logout } from "../../redux/features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const role = useSelector((state) => state.auth.role);
-  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   return (
     <div className="hidden-custom ">
-      <Card className={"mt-2 h-[100vh]  p-4 shadow-xl shadow-blue-gray-900/5 sticky top-0 pt-10"}>
+      <Card
+        className={
+          "mt-2 h-[100vh]  p-4 shadow-xl shadow-blue-gray-900/5 sticky top-0 pt-10"
+        }
+      >
         <div className="mb-2 p-4"></div>
         {role === "user" && (
           <List>
@@ -69,7 +76,13 @@ const Sidebar = () => {
                 Profile
               </ListItem>
             </Link>
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                dispatch(logout());
+                toast.success("Logout successfully");
+                navigate("/");
+              }}
+            >
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>
@@ -128,7 +141,13 @@ const Sidebar = () => {
                 Profile
               </ListItem>
             </Link>
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                dispatch(logout());
+                toast.success("Logout successfully");
+                navigate("/");
+              }}
+            >
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>
@@ -187,7 +206,13 @@ const Sidebar = () => {
                 Category
               </ListItem>
             </Link>
-            <ListItem>
+            <ListItem
+              onClick={() => {
+                dispatch(logout());
+                toast.success("Logout successfully");
+                navigate("/");
+              }}
+            >
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>

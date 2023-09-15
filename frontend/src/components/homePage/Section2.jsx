@@ -1,29 +1,32 @@
 import React from "react";
 
 const Section2 = () => {
-    const cardData = [
-        {
-          title: "Mindful Breathing",
-          description:
-            "Practice deep breathing to calm your mind and reduce stress.",
-          image: "path-to-image1.jpg",
-        },
-        {
-          title: "Guided Meditation",
-          description:
-            "Listen to soothing guided meditation sessions for relaxation.",
-          image: "path-to-image2.jpg",
-        },
-        {
-          title: "Nature Walk Visualization",
-          description:
-            "Imagine taking a calming walk through a peaceful natural setting.",
-          image: "path-to-image3.jpg",
-        },
-      ];
+  const cardData = [
+    {
+      title: "Mindful Breathing",
+      description:
+        "Practice deep breathing to calm your mind and reduce stress.",
+      image: "path-to-image1.jpg",
+    },
+    {
+      title: "Guided Meditation",
+      description:
+        "Listen to soothing guided meditation sessions for relaxation.",
+      image: "path-to-image2.jpg",
+    },
+    {
+      title: "Nature Walk Visualization",
+      description:
+        "Imagine taking a calming walk through a peaceful natural setting.",
+      image: "path-to-image3.jpg",
+    },
+  ];
   return (
     <>
-      <div className="py-16">
+      <div className="py-16 bg-green-opacity">
+        <div className="flex justify-center mb-10">
+          <div className="h-2 w-72  bg-green-500"></div>
+        </div>
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">
             Top Counselors in India – MINt
