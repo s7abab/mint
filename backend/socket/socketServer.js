@@ -1,8 +1,18 @@
+const { Server } = require("socket.io");
+
 const emailToSocketIdMap = new Map();
 const socketidToEmailMap = new Map();
 
-module.exports = {
-  socketConnect: (socket) => {
+function initializeSocket(server) {
+  const io = new Server(server, {
+    cors: {
+      origin: process.env.CLIENT_URL,
+    },
+  });
+  const emailToSocketIdMap = new Map();
+  const socketidToEmailMap = new Map();
+
+  io.on("connection", (socket) => {
     console.log(`Socket Connected`, socket.id);
 
     socket.on("room:join", (data) => {
@@ -31,5 +41,8 @@ module.exports = {
       console.log("peer:nego:done", ans);
       io.to(to).emit("peer:nego:final", { from: socket.id, ans });
     });
-  },
-};
+  });
+
+}
+
+module.exports = initializeSocket;

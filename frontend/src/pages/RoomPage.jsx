@@ -1,15 +1,14 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import ReactPlayer from "react-player";
 import peer from "../services/peer";
-import { Global } from "../socket/Socket";
 import { AiOutlineAudioMuted } from "react-icons/ai";
 import { FcEndCall } from "react-icons/fc";
 import { BsCameraVideo } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import socket from "../services/socket"
 
 const RoomPage = () => {
-  const { socket } = useContext(Global);
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
@@ -108,7 +107,6 @@ const RoomPage = () => {
       navigate("/counselor/bookings");
     }
   };
-
   // Function to toggle audio mute
   const toggleAudioMute = () => {
     if (myStream) {
@@ -119,7 +117,6 @@ const RoomPage = () => {
       }
     }
   };
-
   // Function to toggle camera off
   const toggleCamera = () => {
     if (myStream) {

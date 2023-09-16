@@ -23,21 +23,15 @@ import Bookings from "./pages/user/Bookings";
 import CounselorBookings from "./pages/counselor/CounselorBookings";
 import MyPatients from "./pages/counselor/MyPatients";
 import PaymentPage from "./pages/PaymentPage";
-import SocketHome from "./pages/SocketHome";
 import RoomPage from "./pages/RoomPage";
-import { Global } from "./socket/Socket";
-import io from "socket.io-client";
 import PaymentsAdmin from "./pages/admin/PaymentsAdmin";
 
-const socket = io.connect("http://localhost:8080");
 const App = () => {
   return (
     <>
-      <Global.Provider value={{ socket }}>
         <Routes>
           <Route element={<PublicRoute />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/socket" element={<SocketHome />} />
             <Route path="/room/:roomId" element={<RoomPage />} />
             {/* AUTH ROUTES */}
             <Route path="/login" element={<LoginPage />} />
@@ -61,7 +55,6 @@ const App = () => {
             <Route path="/admin/users" element={<ViewUsers />} />
             <Route path="/admin/users/:userId" element={<UserProfile />} />
             <Route path="/admin/payments" element={<PaymentsAdmin />} />
-
             {/* USER ROUTES */}
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/bookings" element={<Bookings />} />
@@ -89,7 +82,6 @@ const App = () => {
             <Route path="/counselor/payments" element={<PaymentPage />} />
           </Route>
         </Routes>
-      </Global.Provider>
     </>
   );
 };

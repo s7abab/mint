@@ -1,16 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Global } from "../../socket/Socket";
 import Layout from "../../components/Layout";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import {
   cancelBooking,
   fetchAllBookings,
-  fetchScheduledSlots,
   sessionCompleted,
 } from "../../redux/features/counselor/counselorActions";
 import { Button } from "@material-tailwind/react";
+import socket from "../../services/socket"
 
 const CounselorBookings = () => {
   const counselorId = useSelector((state) => state.auth._id);
@@ -74,7 +73,7 @@ const CounselorBookings = () => {
 
   //=================== VIDEO CALL START =========================/
   const navigate = useNavigate();
-  const { socket } = useContext(Global);
+  // const { socket } = useContext(Global);
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("123");
 

@@ -7,8 +7,7 @@ import {
 } from "../../redux/features/users/userActions";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { Global } from "../../socket/Socket";
-import { Button } from "@material-tailwind/react";
+import socket from "../../services/socket"
 
 const Bookings = () => {
   const userId = useSelector((state) => state.auth._id);
@@ -79,7 +78,6 @@ const Bookings = () => {
 
   //=================== VIDEO CALL START =========================/
   const navigate = useNavigate();
-  const { socket } = useContext(Global);
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("123");
 
