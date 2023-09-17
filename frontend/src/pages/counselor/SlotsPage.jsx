@@ -13,7 +13,7 @@ const SlotsPage = () => {
     <>
       <Layout>
         <div className="w-screen">
-          <Button className="mt-10 mx-5" size="sm" onClick={handleClick}>
+          <Button className="mt-10 mx-2" onClick={handleClick}>
             Create Time Slot
           </Button>
           {isModal && <CreateSlot close={handleClick} />}

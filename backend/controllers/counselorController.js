@@ -50,7 +50,6 @@ const apply = async (req, res) => {
       experience,
       fee,
     } = req.body;
-    //Validation
     if (
       !name ||
       !email ||
@@ -80,7 +79,6 @@ const apply = async (req, res) => {
         message: "Apllication alredy sent",
       });
     }
-
     // Not verified counselor
     const notVerifiedUser = await counselorModel.findOne({
       email,
@@ -127,20 +125,6 @@ const apply = async (req, res) => {
     // Send OTP
     sendOTPEmail(email, counselor.otp);
     console.log(counselor.otp);
-    // Notification
-    // const admin = await userModel.findOne({ role: "admin" });
-    // const notification = admin.notification;
-    // notification.push({
-    //   type: "apply-counselor-request",
-    //   name: `${counselor.name}  has applied for a counselor account`,
-    //   data: {
-    //     counselorId: counselor._id,
-    //     name: counselor.name,
-    //     onClickPath: "/admin/counselors",
-    //   },
-    // });
-    // await userModel.findByIdAndUpdate(admin._id, { notification });
-
     res.status(200).send({
       success: true,
       message: "OTP send successfully",
@@ -394,26 +378,18 @@ const cancelBookings = async (req, res) => {
       success: true,
       message: "Booking cancelled successfully",
     });
-    // Decrease money from counselors wallet
-    const counselorData = await counselorModel.findById(counselorId);
-    const fee = counselorData.fee;
-    await counselorModel.findByIdAndUpdate(
-      counselorId,
-      {
-        $inc: { "wallet.balance": -fee },
-        $push: {
-          "wallet.incomeTransactions": `-${fee} TXID : ${_id}`,
-        },
-      },
-      { new: true }
-    );
     // Increase money in users wallet
+    const date = moment().format("DD-MM-YYYY");
     await userModel.findByIdAndUpdate(
       slot.userId,
       {
-        $inc: { "wallet.balance": fee },
+        $inc: { "wallet.balance": slot.fee },
         $push: {
-          "wallet.transactions": `${fee} TXID : ${_id}`,
+          "wallet.transactions": {
+            amount: slot.fee,
+            date: date,
+            bookingId: _id,
+          },
         },
       },
       { new: true } //add money to wallet
@@ -600,8 +576,8 @@ const withdrawalReq = async (req, res) => {
 const sessionCompleted = async (req, res) => {
   const { bookingId, authId } = req.body;
   try {
-    await bookingModel.findByIdAndUpdate(
-      { _id: bookingId },
+    await bookingModel.updateOne(
+      { _id: bookingId, counselorId: authId },
       {
         status: "completed",
       },
@@ -609,15 +585,20 @@ const sessionCompleted = async (req, res) => {
         new: true,
       }
     );
-
+    const date = moment().format("DD:MM:YYYY");
     const counselorData = await counselorModel.findById(authId);
     const fee = counselorData.fee;
+    const profit = fee * 0.8;
     await counselorModel.findByIdAndUpdate(
       authId,
       {
-        $inc: { "wallet.balance": fee },
+        $inc: { "wallet.balance": profit },
         $push: {
-          "wallet.incomeTransactions": `+${fee} TXID : ${bookingId}`,
+          "wallet.incomeTransactions": {
+            amount: profit,
+            date: date,
+            bookingId: bookingId,
+          },
         },
       },
       { new: true } //add money to wallet

@@ -5,32 +5,27 @@ const {
   sendRejectionEmail,
   sendApprovalEmail,
 } = require("../utils/OTPVerification");
+const moment = require("moment")
 
 const addCategory = async (req, res) => {
   try {
     const { name } = req.body;
-
     const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
-
     if (!name) {
       return res.status(400).send({ message: "Fill the field" });
     }
-
     if (!nameRegex.test(name)) {
       return res.status(400).send({ message: "Invalid category name" });
     }
-
     const existingCategory = await categoryModal.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
     });
-
     if (existingCategory) {
       return res.status(200).send({
         success: false,
         message: "Category already added",
       });
     }
-
     // Save the category with the original case
     const category = new categoryModal({ name });
     await category.save();
@@ -48,36 +43,29 @@ const addCategory = async (req, res) => {
     });
   }
 };
-
-//edit category
+// edit category
 const editCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
     const { name } = req.body;
-
     // Define a regex pattern for the category name
     const nameRegex = /^[A-Za-z0-9\s]+$/; // This pattern allows letters, numbers, and spaces
-
     if (!name) {
       return res.status(400).send({ message: "Fill the field" });
     }
-
     if (!nameRegex.test(name)) {
       return res.status(400).send({ message: "Invalid category name" });
     }
-
     // Check if a category with the same name (case-insensitive) already exists
     const existingCategory = await categoryModal.findOne({
       name: { $regex: new RegExp(`^${name}$`, "i") },
     });
-
     if (existingCategory) {
       return res.status(200).send({
         success: false,
         message: "Category already added",
       });
     }
-
     const updatedCategory = await categoryModal.findByIdAndUpdate(
       categoryId,
       { name },
@@ -93,7 +81,6 @@ const editCategory = async (req, res) => {
       .send({ success: false, message: "Could not update category", error });
   }
 };
-
 //unlist category
 const unlistCategory = async (req, res) => {
   try {
@@ -111,7 +98,6 @@ const unlistCategory = async (req, res) => {
         message: "Category not found",
       });
     }
-
     res.status(200).send({
       success: true,
       message: "Category unlisted",
@@ -125,7 +111,6 @@ const unlistCategory = async (req, res) => {
     });
   }
 };
-
 //get all categories
 const getCategories = async (req, res) => {
   try {
@@ -142,7 +127,6 @@ const getCategories = async (req, res) => {
     });
   }
 };
-
 //get one category
 const getCategoryById = async (req, res) => {
   try {
@@ -155,7 +139,6 @@ const getCategoryById = async (req, res) => {
         message: "Category not found",
       });
     }
-
     res.status(200).send({
       success: true,
       category: category,
@@ -168,9 +151,7 @@ const getCategoryById = async (req, res) => {
     });
   }
 };
-
 // Get applications
-
 const getApplications = async (req, res) => {
   try {
     const applications = await counselorModel.find({ status: "pending" });
@@ -187,7 +168,6 @@ const getApplications = async (req, res) => {
     });
   }
 };
-
 // Change status of counselor
 const changeStatus = async (req, res) => {
   try {
@@ -217,7 +197,6 @@ const changeStatus = async (req, res) => {
     });
   }
 };
-
 // Get all counselors
 const getCounselors = async (req, res) => {
   try {
@@ -239,7 +218,6 @@ const getCounselors = async (req, res) => {
     });
   }
 };
-
 // Get specific counselor
 const getCounselorProfile = async (req, res) => {
   try {
@@ -257,7 +235,6 @@ const getCounselorProfile = async (req, res) => {
     });
   }
 };
-
 const blockCounselor = async (req, res) => {
   try {
     const { counselorId, value } = req.body;
@@ -279,7 +256,6 @@ const blockCounselor = async (req, res) => {
     });
   }
 };
-
 // Get all users
 const getUsers = async (req, res) => {
   try {
@@ -298,9 +274,7 @@ const getUsers = async (req, res) => {
     });
   }
 };
-
 // BLOCK USER
-
 const blockUsers = async (req, res) => {
   try {
     const { userId, value } = req.body;
@@ -322,7 +296,6 @@ const blockUsers = async (req, res) => {
     });
   }
 };
-
 // GET ONE USER
 const getSelectedUser = async (req, res) => {
   try {
@@ -365,11 +338,12 @@ const getWithdrawals = async (req, res) => {
 const settlement = async (req, res) => {
   try {
     const { counselorId } = req.body;
+    const date = moment().format("DD-MM-YYYY")
     const counselor = await counselorModel.findById({ _id: counselorId });
     const amount = counselor.wallet.balance;
     counselor.wallet.balance = 0;
     counselor.isWithdraw = false;
-    counselor.wallet.withdrawTransactions.push(amount);
+    counselor.wallet.withdrawTransactions.push({ amount: amount, date: date,  });
     await counselor.save();
 
     res.status(200).send({

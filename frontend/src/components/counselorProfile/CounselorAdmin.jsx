@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { Loading } from "../Loading";
 import { useNavigate } from "react-router-dom";
 import Api from "../../services/axios";
+import { Button, Typography } from "@material-tailwind/react";
 
 const CounselorAdmin = () => {
   const dispatch = useDispatch();
@@ -41,12 +42,12 @@ const CounselorAdmin = () => {
       <div className="w-full">
         <div className="bg-white  shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <Typography className="text-lg leading-6 font-medium text-gray-900">
               Counselor Application
-            </h3>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            </Typography>
+            <Typography className="mt-1 max-w-2xl text-sm text-gray-500">
               Details and informations about Counselor.
-            </p>
+            </Typography>
           </div>
           <div className="border-t border-gray-200">
             <dl>
@@ -97,18 +98,18 @@ const CounselorAdmin = () => {
             </dl>
           </div>
           <div className="flex justify-center gap-8 mt-5 mb-5">
-            <button
-              className="bg-green-600 w-24 rounded-md"
+            <Button
+              className="bg-green-900 w-25 rounded-md"
               onClick={() => statusHandler(counselorId, "active")}
             >
               Approve
-            </button>
-            <button
-              className="bg-red-600 w-24 rounded-md"
+            </Button>
+            <Button
+            className="bg-red-900 w-25 rounded-md"
               onClick={() => statusHandler(counselorId, "rejected")}
             >
               Reject
-            </button>
+            </Button>
           </div>
         </div>
       </div>

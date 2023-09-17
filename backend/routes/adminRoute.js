@@ -24,23 +24,20 @@ router
   .route("/category")
   .post(isSigned, isAdmin, addCategory)
   .get(getCategories);
-
 router
   .route("/category/:categoryId")
   .put(isSigned, isAdmin, editCategory)
   .patch(isSigned, isAdmin, unlistCategory)
   .get(getCategoryById);
 
-// Applications
+// CounselorsApplications
 router.route("/applications").get(isSigned, isAdmin, getApplications);
-// Change status of counselor
 router.route("/status/:counselorId").post(isSigned, isAdmin, changeStatus);
 // Get all counselors
 router
   .route("/counselors")
   .get(isSigned, isAdmin, getCounselors)
   .post(isSigned, isAdmin, blockCounselor);
-// Get specific counselor
 router
   .route("/counselor/:counselorId")
   .get(isSigned, isAdmin, getCounselorProfile);

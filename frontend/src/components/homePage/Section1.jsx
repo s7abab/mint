@@ -20,14 +20,13 @@ const Section1 = () => {
         <p className="text-lg mb-8">Your Online Mental Counseling Companion</p>
         {user ? (
           <Button
-            className="bg-green-500"
-            size="lg"
+           
             onClick={() => navigate("/login")}
           >
             Dashboard
           </Button>
         ) : (
-          <Button className="bg-green-500" size="lg" onClick={handleGetStarted}>
+          <Button onClick={handleGetStarted}>
             Get Started
           </Button>
         )}

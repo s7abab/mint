@@ -1,4 +1,4 @@
-import { Card, Typography } from "@material-tailwind/react";
+import { Button, Card, Typography } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -43,29 +43,29 @@ const ScheduledSlots = () => {
 
   return (
     <Card className=" w-full mt-5 ">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-2">
         <div>
           <div className="flex items-center space-x-4 mb-4">
-            <button
+            <Button
               className={`${
                 selectedOption === "pending"
                   ? "bg-black text-white"
                   : "bg-gray-300 text-gray-700"
-              } px-4 py-2 rounded transition duration-300 ease-in-out transform hover:scale-105`}
+              }`}
               onClick={() => setSelectedOption("pending")}
             >
               Pending
-            </button>
-            <button
+            </Button>
+            <Button
               className={`${
                 selectedOption === "booked"
                   ? "bg-black text-white"
                   : "bg-gray-300 text-gray-700"
-              } px-4 py-2 rounded transition duration-300 ease-in-out transform hover:scale-105`}
+              } `}
               onClick={() => setSelectedOption("booked")}
             >
               Booked
-            </button>
+            </Button>
           </div>
           <Section
             title={selectedOption === "pending" ? "Pending Bookings" : "Booked Slots"}
@@ -81,7 +81,7 @@ const ScheduledSlots = () => {
 
 const Section = ({ title, slots, onCancel, onDelete }) => {
   return (
-    <div className="p-4 bg-white rounded-lg shadow-lg container-vh overflow-imp">
+    <div className="p-2 bg-white rounded-lg shadow-lg h-screen w-screen">
       <Typography variant="h6" color="blue-gray" className="font-semibold mb-2">
         {title}
       </Typography>

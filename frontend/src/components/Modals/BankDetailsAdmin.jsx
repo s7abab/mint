@@ -16,8 +16,8 @@ const BankDetailsAdmin = ({ close, confirm }) => {
           <div className="flex-col ml-5">
             <div className="mt-4 font-bold text-lg">Name: {withdrawalReq[0].bankAC.name}</div>
             <div className="mt-3 font-bold text-lg">Ifsc: {withdrawalReq[0].bankAC.ifsc}</div>
-            <div className="mt-3 font-bold text-lg">Ac No: {withdrawalReq[0].bankAC.acNo}</div>
-            <Button onClick={confirm} size="sm" className="mt-4 bg-green-800">Settle</Button>
+            <div className="mt-3 font-bold text-lg mb-5">Ac No: {withdrawalReq[0].bankAC.acNo}</div>
+            <Button onClick={confirm}>Settle</Button>
           </div>
         </div>
       </div>

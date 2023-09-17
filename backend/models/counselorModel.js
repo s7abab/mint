@@ -23,8 +23,8 @@ const counselorSchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-      incomeTransactions: [String],
-      withdrawTransactions: [String],
+      incomeTransactions: [Object],
+      withdrawTransactions: [Object],
     },
     bankAC: {
       acNo: String,
@@ -36,14 +36,6 @@ const counselorSchema = new mongoose.Schema(
     image: { type: String },
     feedback: [{ type: Schema.Types.ObjectId }],
     report: [{ type: Schema.Types.ObjectId }],
-    notification: {
-      type: Array,
-      default: [],
-    },
-    seennotification: {
-      type: Array,
-      default: [],
-    },
     status: {
       type: String,
       enum: ["pending", "active", " rejected"],

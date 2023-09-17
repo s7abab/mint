@@ -3,8 +3,6 @@ const userModel = require("../models/userModel");
 const moment = require("moment");
 const bookingModel = require("../models/bookingModel");
 const Razorpay = require("razorpay");
-const crypto = require("crypto");
-const { error } = require("console");
 const { default: mongoose } = require("mongoose");
 
 const map = new Map();
@@ -44,7 +42,6 @@ const uploadProfile = async (req, res) => {
         image,
       });
     }
-    // Rest of your code
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -78,7 +75,6 @@ const updateProfile = async (req, res) => {
     });
   }
 };
-
 // Get all counselors
 const getCounselors = async (req, res) => {
   try {
@@ -100,7 +96,6 @@ const getCounselors = async (req, res) => {
     });
   }
 };
-
 // Get specific counselor
 const getCounselorProfile = async (req, res) => {
   try {
@@ -118,7 +113,6 @@ const getCounselorProfile = async (req, res) => {
     });
   }
 };
-
 // BOOK APPOINTMENT
 const bookAppointment = async (req, res) => {
   const {
@@ -176,7 +170,6 @@ const bookAppointment = async (req, res) => {
     }
 
     const counselor = await counselorModel.findById(counselorId);
-
     // Update the booking fields
     booking.userId = userId;
     booking.userName = userName;
@@ -186,15 +179,15 @@ const bookAppointment = async (req, res) => {
     booking.fee = counselor.fee;
     await booking.save();
 
+    const Date = moment().format("DD-MM-YYYY");
     if (walletAmount > 0) {
       const userData = await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
         $push: {
-          "wallet.transactions": `-${walletAmount} TXID : ${booking._id}`,
+          "wallet.transactions": { amount: -counselor.fee, date: Date, bookingId: booking._id },
         },
       });
     }
-
     res.status(200).send({
       success: true,
       message: "Appointment booked successfully",
@@ -209,7 +202,6 @@ const bookAppointment = async (req, res) => {
     });
   }
 };
-
 // GET SLOTS
 const scheduledSlots = async (req, res) => {
   try {
@@ -218,21 +210,18 @@ const scheduledSlots = async (req, res) => {
     const currentDateTime = moment(currentDate)
       .subtract(1, "days")
       .toISOString();
-
     // Find and delete expired slots
     await bookingModel.deleteMany({
       counselorId,
       date: { $lte: currentDateTime },
       status: "pending",
     });
-
     // Find available slots
     const slots = await bookingModel.find({
       counselorId,
       status: { $nin: ["userCancelled", "cancelled"] },
       date: { $gte: currentDateTime },
     });
-
     res.status(200).json({
       success: true,
       message: "Slots fetched successfully",
@@ -243,11 +232,10 @@ const scheduledSlots = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "An error occurred while retrieving slots",
-      error: error.message, // Send only the error message for security reasons
+      error: error.message,
     });
   }
 };
-
 // GET ALL BOOKINGS DETAILS
 const bookingDetails = async (req, res) => {
   try {
@@ -286,8 +274,6 @@ const bookingDetails = async (req, res) => {
         },
       },
     ]);
-
-    console.log(bookings);
     res.status(200).send({
       success: true,
       message: "Booking details fetched successfully",
@@ -302,7 +288,6 @@ const bookingDetails = async (req, res) => {
     });
   }
 };
-
 // GET SPECIFIC BOOKING DETAILS
 const selectedBookings = async (req, res) => {
   try {
@@ -333,13 +318,16 @@ const selectedBookings = async (req, res) => {
     });
   }
 };
-
 // CANCEL BOOKING
 const cancelBookings = async (req, res) => {
   try {
-    const { _id, counselorId, userId, time, date } = req.body;
+    const { _id, counselorId, userId } = req.body;
 
-    const slot = await bookingModel.findById(_id);
+    const slot = await bookingModel.findOne({
+      _id: _id,
+      userId: userId,
+      counselorId: counselorId,
+    });
     slot.status = "userCancelled";
     await slot.save();
 
@@ -353,25 +341,19 @@ const cancelBookings = async (req, res) => {
     });
     await newSlot.save();
     //Increment money in user's wallet
+    const date = moment().format("DD:MM:YYYY");
     const counselor = await counselorModel.findById(counselorId);
     const fee = counselor.fee;
     await userModel.findByIdAndUpdate(
       userId,
       {
         $inc: { "wallet.balance": fee },
-        $push: { "wallet.transactions": `+${fee} TXID : ${_id}` },
+        $push: {
+          "wallet.transactions": { amount: fee, date: date, bookingId: _id },
+        },
       },
-      { new: true } //add money to wallet
+      { new: true }
     );
-    await counselorModel.findByIdAndUpdate(
-      counselorId,
-      {
-        $inc: { "wallet.balance": -fee },
-        $push: { "wallet.incomeTransactions": `-${fee} TXID : ${_id}` },
-      },
-      { new: true } //add money to wallet
-    );
-
     res.status(200).send({
       success: true,
       message: "Booking cancelled successfully",
@@ -385,7 +367,6 @@ const cancelBookings = async (req, res) => {
     });
   }
 };
-
 // PAYMENT INTEGRATION
 const orders = async (req, res) => {
   try {
@@ -417,7 +398,6 @@ const orders = async (req, res) => {
     });
   }
 };
-
 // PAYMENT VERIFY
 const verifyPayment = async (req, res) => {
   try {
@@ -444,7 +424,6 @@ const verifyPayment = async (req, res) => {
         .send({ success: false, message: "Internal server error" });
   }
 };
-
 // Get wallet amount
 const getWalletAmount = async (req, res) => {
   const { authId } = req.body;
@@ -463,7 +442,6 @@ const getWalletAmount = async (req, res) => {
     });
   }
 };
-
 module.exports = {
   getSelectedUser,
   uploadProfile,

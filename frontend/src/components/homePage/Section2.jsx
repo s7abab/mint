@@ -25,7 +25,7 @@ const Section2 = () => {
     <>
       <div className="py-16 bg-green-opacity">
         <div className="flex justify-center mb-10">
-          <div className="h-2 w-72  bg-green-500"></div>
+          <div className="h-2 w-72  bg-gray-900"></div>
         </div>
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">

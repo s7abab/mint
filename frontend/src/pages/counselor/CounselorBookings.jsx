@@ -8,8 +8,14 @@ import {
   fetchAllBookings,
   sessionCompleted,
 } from "../../redux/features/counselor/counselorActions";
-import { Button } from "@material-tailwind/react";
-import socket from "../../services/socket"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Typography,
+} from "@material-tailwind/react";
+import socket from "../../services/socket";
 
 const CounselorBookings = () => {
   const counselorId = useSelector((state) => state.auth._id);
@@ -25,7 +31,6 @@ const CounselorBookings = () => {
 
   const time = moment().format("HH:mm");
   const date = moment().format("DD-MM-YYYY");
-  const isoTime = moment().toISOString();
   const upcomingBookings = bookings.filter(
     (booking) => booking.status === "booked"
   );
@@ -102,103 +107,101 @@ const CounselorBookings = () => {
 
   return (
     <Layout>
-      <div className="p-4 w-screen">
+      <div className="p-2 w-screen">
         <div className="max-w-7xl mx-auto ">
-          <h1 className="text-3xl font-semibold mb-6">Your Bookings</h1>
-
           <div className="mb-4 flex space-x-4">
-            <button
+            <Button
               className={`${
                 selectedOption === "upcoming"
                   ? "bg-black text-white"
                   : "bg-gray-300 text-gray-600"
-              } py-2 px-4 rounded-lg flex-1`}
+              } rounded-lg flex-1`}
               onClick={() => setSelectedOption("upcoming")}
             >
               Upcoming
-            </button>
-            <button
+            </Button>
+            <Button
               className={`${
                 selectedOption === "completed"
                   ? "bg-black text-white"
                   : "bg-gray-300 text-gray-600"
-              } py-2 px-4 rounded-lg flex-1`}
+              } rounded-lg flex-1`}
               onClick={() => setSelectedOption("completed")}
             >
               Completed
-            </button>
-            <button
+            </Button>
+            <Button
               className={`${
                 selectedOption === "canceled"
                   ? "bg-black text-white"
                   : "bg-gray-300 text-gray-600"
-              } py-2 px-4 rounded-lg flex-1`}
+              } rounded-lg flex-1`}
               onClick={() => setSelectedOption("canceled")}
             >
               Canceled
-            </button>
+            </Button>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-2">
             {selectedOption === "upcoming" && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  Upcoming Sessions
-                </h2>
-                <div className="mb-6 common-vh overflow-imp">
+                <div className="h-screen">
                   {upcomingBookings.map((booking) => (
-                    <div
+                    <Card
                       key={booking._id}
-                      className="bg-white shadow-md p-4 rounded-lg mb-4"
+                      className="bg-white shadow-md rounded-lg"
                     >
-                      <h3 className="text-lg font-semibold">
-                        Counseling Session with {booking.userName}
-                      </h3>
-                      <p className="text-gray-600">
-                        <strong>Booking id:</strong> {booking._id}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Date:</strong>{" "}
-                        {moment(booking.date).format("DD-MM-YYYY")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Time:</strong>{" "}
-                        {moment(booking.time).format("hh:mm a")}
-                      </p>
-
-                      <Button
-                        className="bg-red-800"
-                        size="sm"
-                        onClick={() =>
-                          handleCancelBooking(
-                            booking._id,
-                            booking.counselorId,
-                            booking.time,
-                            booking.date
-                          )
-                        }
-                      >
-                        Cancel Booking
-                      </Button>
-                      {showSessionStartButton(booking.time, booking.date) && (
+                      <CardBody>
+                        <Typography className="text-lg font-semibold">
+                          Counseling Session with {booking.userName}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Booking id:</strong> {booking._id}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Date:</strong>{" "}
+                          {moment(booking.date).format("DD-MM-YYYY")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Time:</strong>{" "}
+                          {moment(booking.time).format("hh:mm a")}
+                        </Typography>
+                      </CardBody>
+                      <CardFooter>
                         <Button
-                          className="mx-4"
+                          className="bg-red-900"
                           size="sm"
-                          onClick={(e) => handleSubmitForm(e, booking._id)}
+                          onClick={() =>
+                            handleCancelBooking(
+                              booking._id,
+                              booking.counselorId,
+                              booking.time,
+                              booking.date
+                            )
+                          }
                         >
-                          Start session
+                          Cancel Booking
                         </Button>
-                      )}
-                      {showCompletedButton(booking.time, booking.date) && (
-                        <Button
-                          className="bg-green-700"
-                          size="sm"
-                          onClick={()=>handleSessionCompleted(booking._id)}
-                        >
-                          Session completed ✓
-                        </Button>
-                      )}
-                    </div>
+                        {showSessionStartButton(booking.time, booking.date) && (
+                          <Button
+                            className="mx-4"
+                            size="sm"
+                            onClick={(e) => handleSubmitForm(e, booking._id)}
+                          >
+                            Join session
+                          </Button>
+                        )}
+                        {showCompletedButton(booking.time, booking.date) && (
+                          <Button
+                            className="bg-green-900 m-1"
+                            size="sm"
+                            onClick={() => handleSessionCompleted(booking._id)}
+                          >
+                            Session completed ✓
+                          </Button>
+                        )}
+                      </CardFooter>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -206,30 +209,29 @@ const CounselorBookings = () => {
 
             {selectedOption === "completed" && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  Completed Bookings
-                </h2>
-                <div className="mb-6 common-vh overflow-imp">
+                <div className="h-screen">
                   {completedBookings.map((booking) => (
-                    <div
+                    <Card
                       key={booking._id}
                       className="bg-green-100 shadow-md p-4 rounded-lg mb-4"
                     >
-                      <p className="text-gray-600">
-                        <strong>Booking id:</strong> {booking._id}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Counselor:</strong> {booking.counselorName}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Date:</strong>{" "}
-                        {moment(booking.date).format("DD-MM-YYYY")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Time:</strong>{" "}
-                        {moment(booking.time, "HH:mm").format("hh:mm a")}
-                      </p>
-                    </div>
+                      <CardBody>
+                        <Typography className="text-gray-600">
+                          <strong>Booking id:</strong> {booking._id}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Counselor:</strong> {booking.counselorName}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Date:</strong>{" "}
+                          {moment(booking.date).format("DD-MM-YYYY")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Time:</strong>{" "}
+                          {moment(booking.time, "HH:mm").format("hh:mm a")}
+                        </Typography>
+                      </CardBody>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -237,36 +239,35 @@ const CounselorBookings = () => {
 
             {selectedOption === "canceled" && (
               <div className="">
-                <h2 className="text-xl font-semibold mb-4">
-                  Canceled Bookings
-                </h2>
-                <div className="mb-6 common-vh overflow-imp">
+                <div className="h-screen">
                   {canceledBookings.map((booking) => (
-                    <div
+                    <Card
                       key={booking._id}
                       className="bg-gray-300 shadow-md p-4 rounded-lg mb-4"
                     >
-                      <p className="text-gray-600">
-                        <strong>Booking id:</strong> {booking._id}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Counselor:</strong> {booking.counselorName}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Date:</strong>{" "}
-                        {moment(booking.date).format("DD-MM-YYYY")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Time:</strong>{" "}
-                        {moment(booking.time, "HH:mm").format("hh:mm a")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Cancelled By:</strong>{" "}
-                        {booking.status === "cancelled"
-                          ? "You"
-                          : booking.userName}
-                      </p>
-                    </div>
+                      <CardBody>
+                        <Typography className="text-gray-600">
+                          <strong>Booking id:</strong> {booking._id}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Counselor:</strong> {booking.counselorName}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Date:</strong>{" "}
+                          {moment(booking.date).format("DD-MM-YYYY")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Time:</strong>{" "}
+                          {moment(booking.time, "HH:mm").format("hh:mm a")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Cancelled By:</strong>{" "}
+                          {booking.status === "cancelled"
+                            ? "You"
+                            : booking.userName}
+                        </Typography>
+                      </CardBody>
+                    </Card>
                   ))}
                 </div>
               </div>

@@ -4,11 +4,6 @@ const userModel = require("../models/userModel");
 const JWT = require("jsonwebtoken");
 const { sendOTPEmail } = require("../utils/OTPVerification");
 
-//test
-const test = async (req, res) => {
-  res.send("Test Page");
-};
-
 //Register Controller
 const register = async (req, res) => {
   try {
@@ -56,7 +51,6 @@ const register = async (req, res) => {
         ).toString();
         notVerifiedUser.otpExpiry = Date.now() + 60 * 1000;
         await notVerifiedUser.save();
-
         // Send new OTP
         sendOTPEmail(email, notVerifiedUser.otp);
         return res.status(200).send({
@@ -294,4 +288,4 @@ const currentUser = async (req, res) => {
   }
 };
 
-module.exports = { login, register, test, currentUser, verifyOtp, resendOtp };
+module.exports = { login, register, currentUser, verifyOtp, resendOtp };

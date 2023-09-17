@@ -20,7 +20,7 @@ const UserSchema = new Schema(
         type: Number,
         default: 0,
       },
-      transactions: [String],
+      transactions: [Object],
     },
     otp: { type: String },
     otpExpiry: {
