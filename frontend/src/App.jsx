@@ -1,87 +1,267 @@
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import LoginPage from "../src/pages/auth/LoginPage";
-import RegisterPage from "../src/pages/auth/RegisterPage";
-import ApplicationsPage from "./pages/admin/ApplicationsPage";
-import CategoryPage from "./pages/admin/CategoryPage";
-import Application from "./pages/counselor/Application";
-import ViewCounselors from "./pages/admin/ViewCounselors";
-import ViewAllCounselors from "./pages/user/ViewAllCounselors";
-import UserProfile from "./pages/user/UserProfile";
-import CounselorProfile from "./pages/counselor/CounselorProfile";
-import CounselorCounselor from "./components/counselorProfile/CounselorCounselor";
-import ViewUsers from "./pages/admin/ViewUsers";
-import CounselorProfileAdmin from "./components/counselorProfile/CounselorProfileAdmin";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import UserDashboard from "./pages/user/UserDashboard";
-import CounselorDashboard from "./pages/counselor/CounselorDashboard";
 import PublicRoute from "./routes/PublicRoute";
-import BookingPage from "./pages/user/BookingPage";
-import SlotsPage from "./pages/counselor/SlotsPage";
-import Bookings from "./pages/user/Bookings";
-import CounselorBookings from "./pages/counselor/CounselorBookings";
-import MyPatients from "./pages/counselor/MyPatients";
-import PaymentPage from "./pages/PaymentPage";
-import RoomPage from "./pages/RoomPage";
-import PaymentsAdmin from "./pages/admin/PaymentsAdmin";
+import { Loading } from "./components/Loading";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("../src/pages/auth/LoginPage"));
+const RegisterPage = lazy(() => import("../src/pages/auth/RegisterPage"));
+const ApplicationsPage = lazy(() => import("./pages/admin/ApplicationsPage"));
+const CategoryPage = lazy(() => import("./pages/admin/CategoryPage"));
+const Application = lazy(() => import("./pages/counselor/Application"));
+const ViewCounselors = lazy(() => import("./pages/admin/ViewCounselors"));
+const ViewAllCounselors = lazy(() => import("./pages/user/ViewAllCounselors"));
+const UserProfile = lazy(() => import("./pages/user/UserProfile"));
+const CounselorProfile = lazy(() =>
+  import("./pages/counselor/CounselorProfile")
+);
+const CounselorCounselor = lazy(() =>
+  import("./components/counselorProfile/CounselorCounselor")
+);
+const ViewUsers = lazy(() => import("./pages/admin/ViewUsers"));
+const CounselorProfileAdmin = lazy(() =>
+  import("./components/counselorProfile/CounselorProfileAdmin")
+);
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const UserDashboard = lazy(() => import("./pages/user/UserDashboard"));
+const CounselorDashboard = lazy(() =>
+  import("./pages/counselor/CounselorDashboard")
+);
+const BookingPage = lazy(() => import("./pages/user/BookingPage"));
+const SlotsPage = lazy(() => import("./pages/counselor/SlotsPage"));
+const Bookings = lazy(() => import("./pages/user/Bookings"));
+const CounselorBookings = lazy(() =>
+  import("./pages/counselor/CounselorBookings")
+);
+const MyPatients = lazy(() => import("./pages/counselor/MyPatients"));
+const PaymentPage = lazy(() => import("./pages/PaymentPage"));
+const RoomPage = lazy(() => import("./pages/RoomPage"));
+const PaymentsAdmin = lazy(() => import("./pages/admin/PaymentsAdmin"));
 
 const App = () => {
   return (
     <>
-        <Routes>
-          <Route element={<PublicRoute />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/room/:roomId" element={<RoomPage />} />
-            {/* AUTH ROUTES */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/apply" element={<Application />} />
-          </Route>
-          <Route element={<ProtectedRoute />}>
-            {/* ADMIN ROUTES */}
-            <Route path="/admin/category" element={<CategoryPage />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/applications" element={<ApplicationsPage />} />
-            <Route
-              path="/admin/applications/:counselorId"
-              element={<CounselorProfile />}
-            />
-            <Route path="/admin/counselors" element={<ViewCounselors />} />
-            <Route
-              path="/admin/counselors/:counselorId"
-              element={<CounselorProfileAdmin />}
-            />
-            <Route path="/admin/users" element={<ViewUsers />} />
-            <Route path="/admin/users/:userId" element={<UserProfile />} />
-            <Route path="/admin/payments" element={<PaymentsAdmin />} />
-            {/* USER ROUTES */}
-            <Route path="/dashboard" element={<UserDashboard />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/counselors" element={<ViewAllCounselors />} />
-            <Route
-              path="/counselors/:counselorId"
-              element={<CounselorProfile />}
-            />
-            <Route
-              path="counselors/book-appointment/:counselorId"
-              element={<BookingPage />}
-            />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/payments" element={<PaymentPage />} />
-
-            {/* COUNSELOR ROUTES */}
-            <Route
-              path="/counselor/dashboard"
-              element={<CounselorDashboard />}
-            />
-            <Route path="/counselor/bookings" element={<CounselorBookings />} />
-            <Route path="/counselor/slots" element={<SlotsPage />} />
-            <Route path="/counselor/patients" element={<MyPatients />} />
-            <Route path="/counselor/profile" element={<CounselorCounselor />} />
-            <Route path="/counselor/payments" element={<PaymentPage />} />
-          </Route>
-        </Routes>
+      <Routes>
+        <Route element={<PublicRoute />}>
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={<Loading />}>
+                {" "}
+                <HomePage />{" "}
+              </Suspense>
+            }
+          />
+          {/* AUTH ROUTES */}
+          <Route
+            path="/login"
+            element={
+              <Suspense fallback={<Loading />}>
+                <LoginPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Suspense fallback={<Loading />}>
+                <RegisterPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/apply"
+            element={
+              <Suspense fallback={<Loading />}>
+                <Application />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/room/:roomId" element={<RoomPage />} />
+          {/* ADMIN ROUTES */}
+          <Route
+            path="/admin/category"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CategoryPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <Suspense fallback={<Loading />}>
+                <AdminDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/applications"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ApplicationsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/applications/:counselorId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorProfile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/counselors"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ViewCounselors />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/counselors/:counselorId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorProfileAdmin />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ViewUsers />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/users/:userId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <UserProfile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/payments"
+            element={
+              <Suspense fallback={<Loading />}>
+                <PaymentsAdmin />
+              </Suspense>
+            }
+          />
+          {/* USER ROUTES */}
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense fallback={<Loading />}>
+                <UserDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/bookings"
+            element={
+              <Suspense fallback={<Loading />}>
+                <Bookings />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselors"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ViewAllCounselors />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselors/:counselorId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorProfile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="counselors/book-appointment/:counselorId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <BookingPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Suspense fallback={<Loading />}>
+                <UserProfile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <Suspense fallback={<Loading />}>
+                <PaymentPage />
+              </Suspense>
+            }
+          />
+          {/* COUNSELOR ROUTES */}
+          <Route
+            path="/counselor/dashboard"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/bookings"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorBookings />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/slots"
+            element={
+              <Suspense fallback={<Loading />}>
+                <SlotsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/patients"
+            element={
+              <Suspense fallback={<Loading />}>
+                <MyPatients />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/profile"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CounselorCounselor />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/payments"
+            element={
+              <Suspense fallback={<Loading />}>
+                <PaymentPage />
+              </Suspense>
+            }
+          />
+        </Route>
+      </Routes>
     </>
   );
 };

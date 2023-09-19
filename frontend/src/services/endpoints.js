@@ -57,6 +57,8 @@ const endpoints = {
     cancel_booking: "/user/cancel-booking",
     payment_integration: "/user/create-checkout-session",
     fetch_wallet: "/user/walletAmount",
+    search_counselor: "/user/search-counselors",
+    add_feedback: "/user/feedback",
   },
 };
 

@@ -34,8 +34,6 @@ const counselorSchema = new mongoose.Schema(
     isWithdraw: { type: Boolean, default: false },
     category: { type: String, required: true },
     image: { type: String },
-    feedback: [{ type: Schema.Types.ObjectId }],
-    report: [{ type: Schema.Types.ObjectId }],
     status: {
       type: String,
       enum: ["pending", "active", " rejected"],

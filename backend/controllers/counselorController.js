@@ -617,6 +617,44 @@ const sessionCompleted = async (req, res) => {
   }
 };
 
+// Bookings for chart
+// const { authId } = req.body;
+
+// try {
+//   const bookings = await bookingModel.aggregate([
+//     {
+//       $match: {
+//         counselorId: authId,
+//         status: { $in: ["completed", "cancelled"] }, 
+//       },
+//     },
+//     {
+//       $group: {
+//         _id: "$status", 
+//         count: { $sum: 1 }, 
+//       },
+//     },
+//   ]);
+
+//   const result = {
+//     completed: 0,
+//     cancelled: 0,
+//   };
+
+//   bookings.forEach((item) => {
+//     if (item._id === "completed") {
+//       result.completed = item.count;
+//     } else if (item._id === "cancelled") {
+//       result.cancelled = item.count;
+//     }
+//   });
+
+//   res.status(200).json(result);
+// } catch (error) {
+//   res.status(500).json({ error: "An error occurred" });
+// }
+
+
 module.exports = {
   apply,
   getProfile,

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,9 +8,19 @@ import {
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import socket from "../../services/socket";
-import { Button, Card, CardBody, CardFooter, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Typography,
+} from "@material-tailwind/react";
+import FeedbackModal from "../../components/Modals/FeedbackModal";
 
 const Bookings = () => {
+  const [modal, setModal] = useState(false);
+  const [selectedBookId, setselectedBookId] = useState("");
+  const [selelectedBooking, setSelectedBooking] = useState("");
   const userId = useSelector((state) => state.auth._id);
   const user = useSelector((state) => state.auth.user);
   const bookings = useSelector((state) => state.user.bookings);
@@ -62,7 +72,7 @@ const Bookings = () => {
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (bookingDate === Date && minuteDiff < 60) {
+    if (bookingDate === Date && minuteDiff < 1) {
       return true;
     }
   };
@@ -77,6 +87,9 @@ const Bookings = () => {
     }
   };
 
+  const handleModalClose = () => {
+    setModal(!modal);
+  };
   //=================== VIDEO CALL START =========================/
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -149,7 +162,7 @@ const Bookings = () => {
                   {upcomingBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-white shadow-md p-2 rounded-lg "
+                      className="bg-white shadow-md p-2 rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-lg font-semibold">
@@ -202,25 +215,37 @@ const Bookings = () => {
               <div>
                 <div className="mb-6 h-screen">
                   {completedBookings.map((booking) => (
-                    <div
+                    <Card
                       key={booking._id}
-                      className="bg-green-100 shadow-md p-4 rounded-lg mb-4"
+                      className="shadow-md p-4 rounded-lg mb-4"
                     >
-                      <p className="text-gray-600">
-                        <strong>Booking id:</strong> {booking._id}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Counselor:</strong> {booking.counselorName}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Date:</strong>{" "}
-                        {moment(booking.date).format("DD-MM-YYYY")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Time:</strong>{" "}
-                        {moment(booking.time).format("hh:mm a")}
-                      </p>
-                    </div>
+                      <CardBody>
+                        <Typography className="text-gray-600">
+                          <strong>Booking id:</strong> {booking._id}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Counselor:</strong> {booking.counselorName}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Date:</strong>{" "}
+                          {moment(booking.date).format("DD-MM-YYYY")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Time:</strong>{" "}
+                          {moment(booking.time).format("hh:mm a")}
+                        </Typography>
+                      </CardBody>
+                      <CardFooter>
+                        <Button
+                          size="sm"
+                          onClick={(e) => {
+                            handleModalClose(e), setselectedBookId(booking._id),setSelectedBooking(booking.feedback)
+                          }}
+                        >
+                          Leave Feedback
+                        </Button>
+                      </CardFooter>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -230,25 +255,27 @@ const Bookings = () => {
               <div className="">
                 <div className="mb-6 h-screen">
                   {canceledBookings.map((booking) => (
-                    <div
+                    <Card
                       key={booking._id}
-                      className="bg-gray-300 shadow-md p-4 rounded-lg mb-4"
+                      className=" shadow-md p-4 rounded-lg mb-4"
                     >
-                      <p className="text-gray-600">
-                        <strong>Booking id:</strong> {booking._id}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Counselor:</strong> {booking.counselorName}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Date:</strong>{" "}
-                        {moment(booking.date).format("DD-MM-YYYY")}
-                      </p>
-                      <p className="text-gray-600">
-                        <strong>Time:</strong>{" "}
-                        {moment(booking.time).format("hh:mm a")}
-                      </p>
-                    </div>
+                      <CardBody>
+                        <Typography className="text-gray-600">
+                          <strong>Booking id:</strong> {booking._id}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Counselor:</strong> {booking.counselorName}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Date:</strong>{" "}
+                          {moment(booking.date).format("DD-MM-YYYY")}
+                        </Typography>
+                        <Typography className="text-gray-600">
+                          <strong>Time:</strong>{" "}
+                          {moment(booking.time).format("hh:mm a")}
+                        </Typography>
+                      </CardBody>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -256,6 +283,9 @@ const Bookings = () => {
           </div>
         </div>
       </div>
+      {modal && (
+        <FeedbackModal close={handleModalClose} bookingId={selectedBookId} selectedBook={selelectedBooking} />
+      )}
     </Layout>
   );
 };

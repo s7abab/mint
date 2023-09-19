@@ -6,6 +6,7 @@ import {
   fetchSelectedUser,
   fetchSlots,
   fetchWalletAmountOfUser,
+  searchCounselor,
 } from "./userActions";
 
 const userSlice = createSlice({
@@ -14,6 +15,8 @@ const userSlice = createSlice({
     users: [],
     selectedUser: null,
     counselors: [],
+    searchCounselors: [],
+    totalPages: 1,
     selectedCounselor: null,
     loading: false,
     error: null,
@@ -24,7 +27,7 @@ const userSlice = createSlice({
       date: null,
     },
     bookings: [],
-    wallet: {}
+    wallet: {},
   },
   reducers: {
     bookingAvailable: (state, action) => {
@@ -39,7 +42,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       // Fetch selected user
       .addCase(fetchSelectedUser.pending, (state) => {
         state.loading = true;
@@ -63,6 +65,20 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchCounselorsForUsers.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // Search counselors
+      .addCase(searchCounselor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchCounselor.fulfilled, (state, { payload }) => {
+        state.searchCounselors = payload.counselors;
+        state.totalPages = payload.totalPages;
+        state.loading = false;
+      })
+      .addCase(searchCounselor.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       })
@@ -129,6 +145,9 @@ const userSlice = createSlice({
   },
 });
 
-export const { bookingAvailable, bookingNotAvailable, selectSlot } =
-  userSlice.actions;
+export const {
+  bookingAvailable,
+  bookingNotAvailable,
+  selectSlot,
+} = userSlice.actions;
 export default userSlice;

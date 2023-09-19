@@ -77,11 +77,15 @@ const updateProfile = async (req, res) => {
 };
 // Get all counselors
 const getCounselors = async (req, res) => {
+  const { page, perPage } = req.query;
   try {
-    const counselors = await counselorModel.find(
-      { status: "active" },
-      { name: 1, experience: 1, fee: 1, category: 1, image: 1 }
-    );
+    const counselors = await counselorModel
+      .find(
+        { status: "active" },
+        { name: 1, experience: 1, fee: 1, category: 1, image: 1 }
+      )
+      .skip((page - 1) * perPage)
+      .limit(perPage);
     res.status(200).send({
       success: true,
       message: "Counselors featched",
@@ -96,6 +100,50 @@ const getCounselors = async (req, res) => {
     });
   }
 };
+// Search Counselors
+const searchCounselors = async (req, res) => {
+  const { search, page, category } = req.query;
+  const pageSize = 8;
+  const currentPage = parseInt(page) || 1;
+  try {
+    const query = {
+      status: "active",
+    };
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    const totalCount = await counselorModel.countDocuments(query);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    const counselors = await counselorModel
+      .find(query, { name: 1, experience: 1, fee: 1, category: 1, image: 1 })
+      .skip((currentPage - 1) * pageSize)
+      .limit(pageSize);
+
+    res.status(200).send({
+      success: true,
+      message: "Counselors fetched",
+      totalPages,
+      currentPage,
+      counselors,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in get all counselors Api",
+      error,
+    });
+  }
+};
+
 // Get specific counselor
 const getCounselorProfile = async (req, res) => {
   try {
@@ -184,7 +232,11 @@ const bookAppointment = async (req, res) => {
       const userData = await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
         $push: {
-          "wallet.transactions": { amount: -counselor.fee, date: Date, bookingId: booking._id },
+          "wallet.transactions": {
+            amount: -counselor.fee,
+            date: Date,
+            bookingId: booking._id,
+          },
         },
       });
     }
@@ -271,6 +323,7 @@ const bookingDetails = async (req, res) => {
           date: 1,
           time: 1,
           status: 1,
+          feedback: 1,
         },
       },
     ]);
@@ -442,6 +495,37 @@ const getWalletAmount = async (req, res) => {
     });
   }
 };
+
+const addFeedback = async (req, res) => {
+  const { bookingId, feedback, rating } = req.body;
+  try {
+    console.log(req.body);
+    await bookingModel.findByIdAndUpdate(
+      bookingId,
+      {
+        $set: {
+          feedback: {
+            feedback,
+            rating,
+          },
+        },
+      },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: "Feedback Added",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while adding feedback",
+      error,
+    });
+  }
+};
+
 module.exports = {
   getSelectedUser,
   uploadProfile,
@@ -457,4 +541,6 @@ module.exports = {
   orders,
   verifyPayment,
   getWalletAmount,
+  searchCounselors,
+  addFeedback,
 };

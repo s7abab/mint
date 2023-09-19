@@ -50,7 +50,7 @@ const CounselorBookings = () => {
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (bookingDate === Date && minuteDiff < 60) {
+    if (bookingDate === Date && minuteDiff < 0) {
       return true;
     }
   };
@@ -149,7 +149,7 @@ const CounselorBookings = () => {
                   {upcomingBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-white shadow-md rounded-lg"
+                      className="bg-white shadow-md rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-lg font-semibold">
@@ -213,7 +213,7 @@ const CounselorBookings = () => {
                   {completedBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-green-100 shadow-md p-4 rounded-lg mb-4"
+                      className="bg-green-100 shadow-md p-4 rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-gray-600">
@@ -243,7 +243,7 @@ const CounselorBookings = () => {
                   {canceledBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-gray-300 shadow-md p-4 rounded-lg mb-4"
+                      className="bg-gray-300 shadow-md p-4 rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-gray-600">

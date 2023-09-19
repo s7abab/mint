@@ -13,7 +13,8 @@ function initializeSocket(server) {
   const socketidToEmailMap = new Map();
 
   io.on("connection", (socket) => {
-    console.log(`Socket Connected`, socket.id);
+    console.log(`Socket Connected`, socket.handshake.query._id);
+    emailToSocketIdMap.set(socket.handshake.query._id,socket.id)
 
     socket.on("room:join", (data) => {
       const { email, room } = data;

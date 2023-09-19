@@ -73,15 +73,37 @@ export const updateUserProfile = createAsyncThunk(
 // Featch all counselors
 export const fetchCounselorsForUsers = createAsyncThunk(
   "user/fetchCounselorsForUsers",
-  async (_, { dispatch }) => {
+  async ({ currentPage }, { dispatch }) => {
+    const perPage = 8;
     try {
-      const res = await Api.get(endpoints.user.fetch_all_counselors);
+      const res = await Api.get(
+        `${endpoints.user.fetch_all_counselors}?page=${currentPage}&perPage=${perPage}`
+      );
       if (res.data.success) {
         return res.data.counselors;
       }
       return [];
     } catch (error) {
-      toast.error("An error occurred.");
+      toast.error(error.message);
+      console.log("Error in fetching counselors", error);
+      throw error;
+    }
+  }
+);
+// Search counselors
+export const searchCounselor = createAsyncThunk(
+  "user/searchCounselor",
+  async ({ search, page, category }, { dispatch }) => {
+    try {
+      const res = await Api.get(
+        `${endpoints.user.search_counselor}?search=${search}&page=${page}&category=${category}`
+      );
+      if (res.data.success) {
+        return res.data;
+      }
+      return [];
+    } catch (error) {
+      toast.error(error.message);
       console.log("Error in fetching counselors", error);
       throw error;
     }
@@ -247,7 +269,6 @@ export const paymentIntegration = createAsyncThunk(
     }
   }
 );
-
 // Fetch wallet amount
 export const fetchWalletAmountOfUser = createAsyncThunk(
   "/user/fetchWalletAmountOfUser",
@@ -256,6 +277,28 @@ export const fetchWalletAmountOfUser = createAsyncThunk(
       const res = await Api.get(endpoints.user.fetch_wallet);
       if (res.data.success) {
         return res.data.wallet;
+      } else {
+        toast.error("Something went wrong");
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.message);
+    }
+  }
+);
+// Add feedback
+export const addFeedback = createAsyncThunk(
+  "/user/addFeedback",
+  async ({ bookingId, feedback, rating }, { rejectWithValue }) => {
+    try {
+      const res = await Api.post(endpoints.user.add_feedback, {
+        bookingId,
+        feedback,
+        rating,
+      });
+      if (res.data.success) {
+        toast(res.data.message);
       } else {
         toast.error("Something went wrong");
         rejectWithValue(res.data);

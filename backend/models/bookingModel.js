@@ -40,6 +40,14 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    feedback: {
+      feedback: {
+        type: String,
+      },
+      rating: {
+        type: String,
+      },
+    },
   },
   { timestamps: true }
 );
