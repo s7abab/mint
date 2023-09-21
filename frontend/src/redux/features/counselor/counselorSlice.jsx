@@ -4,6 +4,7 @@ import {
   fetchBankDetails,
   fetchScheduledSlots,
   fetchSelectedCounselor,
+  fetchSelectedUser,
   fetchWalletAmountOfCounselor,
 } from "./counselorActions";
 
@@ -17,6 +18,7 @@ const counselorSlice = createSlice({
     wallet: {},
     bookings: [],
     bankAC: [],
+    selectedUser: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -89,6 +91,22 @@ const counselorSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchBankDetails.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // FETCH USER
+      .addCase(fetchSelectedUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSelectedUser.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (!state.selectedUser.some((item) => item.name === payload.name)) {
+          state.selectedUser = [...state.selectedUser, payload];
+        }
+        state.error = null;
+      })
+      .addCase(fetchSelectedUser.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

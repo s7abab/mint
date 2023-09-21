@@ -24,9 +24,9 @@ const CounselorPayments = () => {
         </div>
       </div>
       <div className="m-2">
-        {wallet?.transactions?.map((data) => (
+        {wallet?.transactions?.map((data, index) => (
           <div
-            key={data.bookingId}
+            key={index}
             className="bg-white rounded-lg shadow-lg p-4 m-2"
           >
             <div

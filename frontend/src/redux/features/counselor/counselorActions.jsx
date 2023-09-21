@@ -400,3 +400,22 @@ export const sessionCompleted = createAsyncThunk(
     }
   }
 );
+
+// GET A USER
+export const fetchSelectedUser = createAsyncThunk(
+  "/counselor/getSelectedUser",
+  async (userId, { thunkApi }) => {
+    try {
+      const res = await Api.post(endpoints.counselor.get_selected_user, {
+        userId,
+      });
+      if (res.data.success) {
+        console.log(res.data.other)
+        return res.data.other
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+);

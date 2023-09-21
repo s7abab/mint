@@ -8,6 +8,7 @@ const {
 const JWT = require("jsonwebtoken");
 const moment = require("moment");
 const userModel = require("../models/userModel");
+const mongoose = require("mongoose")
 
 // Get Profile
 const getProfile = async (req, res) => {
@@ -617,44 +618,54 @@ const sessionCompleted = async (req, res) => {
   }
 };
 
-// Bookings for chart
-// const { authId } = req.body;
+const getSelectedUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await userModel.findById(userId);
+    const { password, ...other } = user._doc;
+    res.status(200).send({
+      success: true,
+      other,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+    });
+  }
+};
 
-// try {
-//   const bookings = await bookingModel.aggregate([
-//     {
-//       $match: {
-//         counselorId: authId,
-//         status: { $in: ["completed", "cancelled"] }, 
-//       },
-//     },
-//     {
-//       $group: {
-//         _id: "$status", 
-//         count: { $sum: 1 }, 
-//       },
-//     },
-//   ]);
-
-//   const result = {
-//     completed: 0,
-//     cancelled: 0,
-//   };
-
-//   bookings.forEach((item) => {
-//     if (item._id === "completed") {
-//       result.completed = item.count;
-//     } else if (item._id === "cancelled") {
-//       result.cancelled = item.count;
-//     }
-//   });
-
-//   res.status(200).json(result);
-// } catch (error) {
-//   res.status(500).json({ error: "An error occurred" });
-// }
-
-
+const getConnections = async (req, res) => {
+  try {
+    const authId=new mongoose.Types.ObjectId(req.body.authId)
+    const connections = await counselorModel.aggregate([
+      { $match: { _id: authId }},
+      {
+        $lookup:{
+          from:'users',
+          localField:"connections",
+          foreignField: "_id",
+          as: "connectionsData"
+        }
+      },
+      {$unwind:'$connectionsData'},
+      {$project:{name:'$connectionsData.name',image:'$connectionsData.image',_id:0, receiverId:`$connectionsData._id`}}
+    ]);
+    res.status(200).send({
+      success: true,
+      message: "Connections fethced succussfully",
+      connections,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching connections",
+      error,
+    });
+  }
+};
 module.exports = {
   apply,
   getProfile,
@@ -674,4 +685,6 @@ module.exports = {
   fethBankDetails,
   withdrawalReq,
   sessionCompleted,
+  getSelectedUser,
+  getConnections,
 };

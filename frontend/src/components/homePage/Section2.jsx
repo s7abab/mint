@@ -35,7 +35,7 @@ const Section2 = () => {
             {cardData.map((card, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <img
-                  src={card.image}
+                  // src={card.image}
                   alt={card.title}
                   className="h-32 object-cover mb-4 rounded-lg"
                 />

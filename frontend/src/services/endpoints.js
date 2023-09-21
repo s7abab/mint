@@ -42,6 +42,7 @@ const endpoints = {
     fetchBankDetails: "/counselor/bankAc",
     withdrawReq: "/counselor/withdrawReq",
     session_completed: "/counselor/session-completed",
+    get_selected_user: "/counselor/get-user",
   },
   user: {
     fetch_selected_user: "user/user/",
@@ -59,6 +60,15 @@ const endpoints = {
     fetch_wallet: "/user/walletAmount",
     search_counselor: "/user/search-counselors",
     add_feedback: "/user/feedback",
+  },
+  chat: {
+    new_conversation: "/conversation/new-conversation",
+    counselor_connections: "/counselor/connections",
+    user_connections: "/user/connections",
+    get_conversation:"/conversation/get",
+    post_message: "/message/post-message",
+    get_opposite_messages: "/message/get-opposite-message/",
+    get_messages: "/message/get-message/",
   },
 };
 

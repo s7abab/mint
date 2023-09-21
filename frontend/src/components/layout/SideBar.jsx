@@ -60,6 +60,14 @@ const Sidebar = () => {
                 Bookings
               </ListItem>
             </Link>
+            <Link to={"/messages"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineMessage className="h-5 w-5" />
+                </ListItemPrefix>
+                Messages
+              </ListItem>
+            </Link>
             <Link to={"/payments"}>
               <ListItem>
                 <ListItemPrefix>

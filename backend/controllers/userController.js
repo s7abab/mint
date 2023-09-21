@@ -217,7 +217,11 @@ const bookAppointment = async (req, res) => {
       });
     }
 
-    const counselor = await counselorModel.findById(counselorId);
+    const counselor = await counselorModel.findByIdAndUpdate(counselorId, {
+      $addToSet: {
+        connections: userId,
+      },
+    });
     // Update the booking fields
     booking.userId = userId;
     booking.userName = userName;
@@ -231,12 +235,13 @@ const bookAppointment = async (req, res) => {
     if (walletAmount > 0) {
       const userData = await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
-        $push: {
+        $addToSet: {
           "wallet.transactions": {
             amount: -counselor.fee,
             date: Date,
             bookingId: booking._id,
           },
+          connections: counselorId,
         },
       });
     }
@@ -499,7 +504,6 @@ const getWalletAmount = async (req, res) => {
 const addFeedback = async (req, res) => {
   const { bookingId, feedback, rating } = req.body;
   try {
-    console.log(req.body);
     await bookingModel.findByIdAndUpdate(
       bookingId,
       {
@@ -526,6 +530,37 @@ const addFeedback = async (req, res) => {
   }
 };
 
+const getConnections = async (req, res) => {
+  try {
+    const authId=new mongoose.Types.ObjectId(req.body.authId)
+    const connections = await userModel.aggregate([
+      { $match: { _id: authId }},
+      {
+        $lookup:{
+          from:'counselors',
+          localField:"connections",
+          foreignField: "_id",
+          as: "connectionsData"
+        }
+      },
+      {$unwind:'$connectionsData'},
+      {$project:{name:'$connectionsData.name',image:'$connectionsData.image',_id:0, receiverId:`$connectionsData._id`}}
+    ]);
+    res.status(200).send({
+      success: true,
+      message: "Connections fethced succussfully",
+      connections,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "An error occured while fetching connections",
+      error,
+    });
+  }
+};
+
 module.exports = {
   getSelectedUser,
   uploadProfile,
@@ -543,4 +578,5 @@ module.exports = {
   getWalletAmount,
   searchCounselors,
   addFeedback,
+  getConnections,
 };

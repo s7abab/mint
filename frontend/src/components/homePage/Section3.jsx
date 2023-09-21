@@ -24,7 +24,7 @@ const Section3 = () => {
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <img
-                  src={testimonial.image}
+                  // src={testimonial.image}
                   alt={testimonial.name}
                   className="h-20 w-20 object-cover rounded-full mx-auto mb-4"
                 />

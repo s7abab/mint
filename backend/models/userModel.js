@@ -28,6 +28,7 @@ const UserSchema = new Schema(
     },
     isVerified: { type: Boolean, default: false, required: true },
     isBlocked: { type: Boolean, default: false },
+    connections: { type:[ObjectId], default: [] },
     notification: {
       type: Array,
       default: [],

@@ -164,7 +164,7 @@ const Bookings = () => {
                       key={booking._id}
                       className="bg-white shadow-md p-2 rounded-lg m-2"
                     >
-                      <CardBody>
+                      <CardBody key={booking._id}>
                         <Typography className="text-lg font-semibold">
                           Counseling Session with {booking.counselorName}
                         </Typography>

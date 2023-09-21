@@ -38,6 +38,8 @@ const MyPatients = lazy(() => import("./pages/counselor/MyPatients"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const RoomPage = lazy(() => import("./pages/RoomPage"));
 const PaymentsAdmin = lazy(() => import("./pages/admin/PaymentsAdmin"));
+const MessagePage = lazy(() => import("./pages/MessagePage"));
+const ChatScreen = lazy(() => import("./pages/ChatScreen"));
 
 const App = () => {
   return (
@@ -211,6 +213,22 @@ const App = () => {
               </Suspense>
             }
           />
+          <Route
+            path="/messages"
+            element={
+              <Suspense fallback={<Loading />}>
+                <MessagePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/messages/:id"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ChatScreen />
+              </Suspense>
+            }
+          />
           {/* COUNSELOR ROUTES */}
           <Route
             path="/counselor/dashboard"
@@ -257,6 +275,22 @@ const App = () => {
             element={
               <Suspense fallback={<Loading />}>
                 <PaymentPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/messages"
+            element={
+              <Suspense fallback={<Loading />}>
+                <MessagePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/counselor/messages/:id"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ChatScreen />
               </Suspense>
             }
           />

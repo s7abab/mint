@@ -18,6 +18,8 @@ const {
   fethBankDetails,
   withdrawalReq,
   sessionCompleted,
+  getSelectedUser,
+  getConnections,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
@@ -67,5 +69,9 @@ router
   .route("/changeBankDetails")
   .post(isSigned, isCounselor, changeBankDetails);
 router.route("/bankAc").post(isSigned, isCounselor, fethBankDetails);
+// GET SELECTED USER
+router.route("/get-user").post(getSelectedUser);
+router.route("/connections").get(isSigned, isCounselor, getConnections);
+
 
 module.exports = router;

@@ -35,6 +35,8 @@ app.use("/auth", require("./routes/authRoute"));
 app.use("/counselor", require("./routes/counselorRoute"));
 app.use("/admin", require("./routes/adminRoute"));
 app.use("/user", require("./routes/userRoute"));
+app.use("/conversation", require("./routes/conversationRoute"));
+app.use("/message", require("./routes/messageRoute"));
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -15,12 +15,10 @@ const {
   getWalletAmount,
   searchCounselors,
   addFeedback,
+  getConnections,
 } = require("../controllers/userController");
 const upload = require("../middleware/uploadImage");
-const {
-  isUser,
-  isSigned,
-} = require("../middleware/authMiddleware");
+const { isUser, isSigned } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // SELECTED USER DATA
@@ -51,5 +49,6 @@ router.route("/verifyPayment").post(isSigned, isUser, verifyPayment);
 router.route("/walletAmount").get(isSigned, isUser, getWalletAmount);
 // FEEDBACK
 router.route("/feedback").post(isSigned, isUser, addFeedback);
+router.route("/connections").get(isSigned, isUser, getConnections);
 
 module.exports = router;
