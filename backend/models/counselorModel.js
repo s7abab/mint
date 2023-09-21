@@ -45,7 +45,7 @@ const counselorSchema = new mongoose.Schema(
       type: Date,
     },
     isBlocked: { type: Boolean, default: false },
-    connections: {type:[ObjectId], default:[]},
+    connections: { type: [ObjectId], default: [] },
   },
   { timestamps: true }
 );

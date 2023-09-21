@@ -1,8 +1,9 @@
+const conversationModel = require("../models/conversationModel");
 const messageModel = require("../models/messageModel");
 
 const postMessage = async (req, res) => {
   const date = new Date();
-  const { authId, conversationId, message } = req.body;
+  const { authId, conversationId, message, receiverId } = req.body;
   try {
     const newMessage = new messageModel({
       senderId: authId,
@@ -11,6 +12,7 @@ const postMessage = async (req, res) => {
       date,
     });
     await newMessage.save();
+
     res.status(200).send({
       success: true,
       message: "New message added",
@@ -56,7 +58,7 @@ const getMessage = async (req, res) => {
       {
         conversationId,
       },
-      { senderId:1,message: 1, date: 1 }
+      { senderId: 1, message: 1, date: 1 }
     );
     res.status(200).send({
       success: true,

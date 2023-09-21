@@ -24,7 +24,6 @@ const newConversation = async (req, res) => {
 // get conversation
 const getConversation = async (req, res) => {
   const { receiver, sender } = req.body;
-  console.log(receiver, sender)
   try {
     const conversation = await conversationModel.find({
       members: { $all: [receiver, sender] },

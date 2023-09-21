@@ -18,7 +18,11 @@ const initialState = {
 const messageSlice = createSlice({
   name: "messages",
   initialState,
-  reducers: {},
+  reducers: {
+    setMessages: (state, { payload }) => {
+      state.messages = [...state.messages,payload];
+    },
+  },
   extraReducers: (builder) => {
     builder
       // cousnelor connections
@@ -94,4 +98,5 @@ const messageSlice = createSlice({
   },
 });
 
+export const { setMessages } = messageSlice.actions;
 export default messageSlice;

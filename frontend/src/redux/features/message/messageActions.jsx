@@ -101,15 +101,14 @@ export const fetchMessages = createAsyncThunk(
 //post new message
 export const postMessage = createAsyncThunk(
   "/message/postMessage",
-  async ({ message, conversationId }, { rejectWithValue }) => {
-    console.log("Hello");
+  async ({ message, conversationId, receiverId }, { rejectWithValue }) => {
     try {
       const res = await Api.post(endpoints.chat.post_message, {
         message,
         conversationId,
+        receiverId
       });
       if (res.data.success) {
-        console.log("Message added");
       } else {
         rejectWithValue(res.data);
       }
