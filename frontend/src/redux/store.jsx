@@ -5,6 +5,7 @@ import counselorSlice from "./features/counselor/counselorSlice";
 import userSlice from "./features/users/userSlice";
 import adminSlice from "./features/admin/adminSlice";
 import messageSlice from "../redux/features/message/messageSlice";
+import dashboardSlice from "./features/dashboard/dashboardSlice";
 
 export default configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export default configureStore({
     user: userSlice.reducer,
     admin: adminSlice.reducer,
     message: messageSlice.reducer,
+    dashboard: dashboardSlice.reducer,
   },
 });

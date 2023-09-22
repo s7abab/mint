@@ -8,7 +8,7 @@ const {
 const JWT = require("jsonwebtoken");
 const moment = require("moment");
 const userModel = require("../models/userModel");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 // Get Profile
 const getProfile = async (req, res) => {
@@ -638,19 +638,26 @@ const getSelectedUser = async (req, res) => {
 
 const getConnections = async (req, res) => {
   try {
-    const authId=new mongoose.Types.ObjectId(req.body.authId)
+    const authId = new mongoose.Types.ObjectId(req.body.authId);
     const connections = await counselorModel.aggregate([
-      { $match: { _id: authId }},
+      { $match: { _id: authId } },
       {
-        $lookup:{
-          from:'users',
-          localField:"connections",
+        $lookup: {
+          from: "users",
+          localField: "connections",
           foreignField: "_id",
-          as: "connectionsData"
-        }
+          as: "connectionsData",
+        },
       },
-      {$unwind:'$connectionsData'},
-      {$project:{name:'$connectionsData.name',image:'$connectionsData.image',_id:0, receiverId:`$connectionsData._id`}}
+      { $unwind: "$connectionsData" },
+      {
+        $project: {
+          name: "$connectionsData.name",
+          image: "$connectionsData.image",
+          _id: 0,
+          receiverId: `$connectionsData._id`,
+        },
+      },
     ]);
     res.status(200).send({
       success: true,
@@ -666,6 +673,115 @@ const getConnections = async (req, res) => {
     });
   }
 };
+// data for chart
+const bookingsData = async (req, res) => {
+  const counselorId = new mongoose.Types.ObjectId(req.body.authId);
+  try {
+    const bookings = await bookingModel.aggregate([
+      { $match: { counselorId } },
+      {
+        $group: {
+          _id: null,
+          totalBookings: { $sum: 1 },
+          cancelledBookings: {
+            $sum: {
+              $cond: [{ $eq: ["$status", "cancelled"] }, 1, 0],
+            },
+          },
+          userCancelledBookings: {
+            $sum: {
+              $cond: [{ $eq: ["$status", "userCancelled"] }, 1, 0],
+            },
+          },
+          completedBookings: {
+            $sum: {
+              $cond: [{ $eq: ["$status", "completed"] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]);
+    if (bookings.length > 0) {
+      const bookingsData = bookings[0];
+      res.status(200).send({
+        success: true,
+        bookingsData,
+      });
+    } else {
+      res.status(200).send({
+        totalBookings: 0,
+        cancelledBookings: 0,
+        userCancelledBookings: 0,
+        completedBookings: 0,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in fetching bookings for chart",
+      error,
+    });
+  }
+};
+
+const profitData = async (req, res) => {
+  try {
+    const { authId } = req.body;
+    const monthlyProfits = await bookingModel.aggregate([
+      {
+        $match: {
+          counselorId: authId,
+          status: "completed",
+        },
+      },
+      {
+        $project: {
+          fee: 1,
+          date: {
+            $dateFromString: {
+              dateString: "$date",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            // year: { $year: "$date" },
+            month: { $month: "$date" },
+          },
+          totalFee: { $sum: "$fee" }, // Calculate the total fee for the month
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+    // Calculate profit as 80% of totalFee for each month
+    const monthlyProfitsWithProfit = monthlyProfits.map((monthProfit) => ({
+      ...monthProfit,
+      profit: monthProfit.totalFee * 0.8,
+    }));
+
+    res.status(200).send({
+      success: true,
+      message: "Profits for chart fetched successfully",
+      monthlyProfits: monthlyProfitsWithProfit,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error occurred while calculating monthly profits",
+      error,
+    });
+  }
+};
+
 module.exports = {
   apply,
   getProfile,
@@ -687,4 +803,6 @@ module.exports = {
   sessionCompleted,
   getSelectedUser,
   getConnections,
+  bookingsData,
+  profitData,
 };

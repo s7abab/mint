@@ -15,6 +15,9 @@ const {
   getSelectedUser,
   getWithdrawals,
   settlement,
+  totalUsers,
+  totalCounselors,
+  profitData,
 } = require("../controllers/adminController");
 const { isAdmin, isSigned } = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -48,6 +51,13 @@ router
   .post(isSigned, isAdmin, blockUsers);
 router.route("/user/:userId").get(isSigned, isAdmin, getSelectedUser);
 // Withdrawals
-router.route("/withdrawals").get(isSigned, isAdmin, getWithdrawals).post(settlement)
+router
+  .route("/withdrawals")
+  .get(isSigned, isAdmin, getWithdrawals)
+  .post(settlement);
+// Charts
+router.route("/profit-data").get(isSigned, isAdmin, profitData);
+router.route("/total-users").get(isSigned, isAdmin, totalUsers);
+router.route("/total-counselors").get(isSigned, isAdmin, totalCounselors);
 
 module.exports = router;

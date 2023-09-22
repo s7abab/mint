@@ -20,9 +20,11 @@ const {
   sessionCompleted,
   getSelectedUser,
   getConnections,
+  bookingsData,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
+const { profitData } = require("../controllers/adminController");
 
 const router = express.Router();
 
@@ -69,9 +71,11 @@ router
   .route("/changeBankDetails")
   .post(isSigned, isCounselor, changeBankDetails);
 router.route("/bankAc").post(isSigned, isCounselor, fethBankDetails);
-// GET SELECTED USER
-router.route("/get-user").post(getSelectedUser);
-router.route("/connections").get(isSigned, isCounselor, getConnections);
 
+// GET SELECTED USER
+router.route("/get-user").post(isSigned, isCounselor, getSelectedUser);
+router.route("/connections").get(isSigned, isCounselor, getConnections);
+router.route("/bookings-data").get(isSigned, isCounselor, bookingsData);
+router.route("/profit-data").get(isSigned, isCounselor, profitData);
 
 module.exports = router;

@@ -37,7 +37,6 @@ const counselorSlice = createSlice({
         state.loading = false;
         state.error = error.message;
       })
-
       // SCHEDULED SLOTS
       .addCase(fetchScheduledSlots.pending, (state) => {
         state.loading = true;

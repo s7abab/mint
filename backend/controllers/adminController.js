@@ -1,11 +1,12 @@
 const categoryModal = require("../models/categoryModel");
 const counselorModel = require("../models/counselorModel");
 const userModel = require("../models/userModel");
+const bookingModel = require("../models/bookingModel");
 const {
   sendRejectionEmail,
   sendApprovalEmail,
 } = require("../utils/OTPVerification");
-const moment = require("moment")
+const moment = require("moment");
 
 const addCategory = async (req, res) => {
   try {
@@ -338,12 +339,12 @@ const getWithdrawals = async (req, res) => {
 const settlement = async (req, res) => {
   try {
     const { counselorId } = req.body;
-    const date = moment().format("DD-MM-YYYY")
+    const date = moment().format("DD-MM-YYYY");
     const counselor = await counselorModel.findById({ _id: counselorId });
     const amount = counselor.wallet.balance;
     counselor.wallet.balance = 0;
     counselor.isWithdraw = false;
-    counselor.wallet.withdrawTransactions.push({ amount: amount, date: date,  });
+    counselor.wallet.withdrawTransactions.push({ amount: amount, date: date });
     await counselor.save();
 
     res.status(200).send({
@@ -355,6 +356,154 @@ const settlement = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "An error occurred while settling amount",
+      error,
+    });
+  }
+};
+// profit chart
+const profitData = async (req, res) => {
+  try {
+    const monthlyProfits = await bookingModel.aggregate([
+      {
+        $match: {
+          status: "completed",
+        },
+      },
+      {
+        $project: {
+          fee: 1,
+          date: {
+            $dateFromString: {
+              dateString: "$date",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            // year: { $year: "$date" },
+            month: { $month: "$date" },
+          },
+          totalFee: { $sum: "$fee" }, // Calculate the total fee for the month
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+    // Calculate profit as 80% of totalFee for each month
+    const monthlyProfitsWithProfit = monthlyProfits.map((monthProfit) => ({
+      ...monthProfit,
+      profit: monthProfit.totalFee * 0.2,
+    }));
+    res.status(200).send({
+      success: true,
+      message: "Profits for chart fetched successfully",
+      monthlyProfits: monthlyProfitsWithProfit,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error occurred while calculating monthly profits",
+      error,
+    });
+  }
+};
+// total users chart
+const totalUsers = async (req, res) => {
+  try {
+    const totalUsers = await userModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalUsers: { $sum: 1 },
+          totalActiveUsers: {
+            $sum: {
+              $cond: [{ $eq: ["$isBlocked", false] }, 1, 0],
+            },
+          },
+          totalBlockedUsers: {
+            $sum: {
+              $cond: [{ $eq: ["$isBlocked", true] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]);
+
+    if (totalUsers.length > 0) {
+      const usersData = totalUsers[0];
+      res.status(200).send({
+        success: true,
+        usersData,
+      });
+    } else {
+      res.status(200).send({
+        success: true,
+        message: "Total users fethched successfully",
+        totalUsers: 0,
+        totalActiveUsers: 0,
+        totalBlockedUsers: 0,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message:
+        "We're unable to fetch user statistics right now. Please try again later.",
+      error,
+    });
+  }
+};
+// total counselors chart
+const totalCounselors = async (req, res) => {
+  try {
+    const totalCounselors = await counselorModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalCounselors: { $sum: 1 },
+          totalActiveCounselors: {
+            $sum: {
+              $cond: [{ $eq: ["$isBlocked", false] }, 1, 0],
+            },
+          },
+          totalBlockedCounselors: {
+            $sum: {
+              $cond: [{ $eq: ["$isBlocked", true] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]);
+
+    if (totalUsers.length > 0) {
+      const counselorsData = totalCounselors[0];
+      res.status(200).send({
+        success: true,
+        counselorsData,
+      });
+    } else {
+      res.status(200).send({
+        success: true,
+        message: "Total users fethched successfully",
+        totalCounselors: 0,
+        totalActiveCounselors: 0,
+        totalBlockedCounselors: 0,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message:
+        "We're unable to fetch user statistics right now. Please try again later.",
       error,
     });
   }
@@ -376,4 +525,7 @@ module.exports = {
   getSelectedUser,
   getWithdrawals,
   settlement,
+  profitData,
+  totalUsers,
+  totalCounselors,
 };

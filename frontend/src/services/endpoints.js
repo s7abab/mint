@@ -16,6 +16,9 @@ const endpoints = {
     fetch_selected_user: "admin/user/",
     fetch_withdrawal_req: "admin/withdrawals",
     settlement: "/admin/withdrawals",
+    get_profit_data: "/admin/profit-data",
+    get_total_users: "/admin//total-users",
+    get_total_counselors: "/admin/total-counselors",
   },
   category: {
     fetch_categories_admin: "/admin/category",
@@ -43,6 +46,8 @@ const endpoints = {
     withdrawReq: "/counselor/withdrawReq",
     session_completed: "/counselor/session-completed",
     get_selected_user: "/counselor/get-user",
+    get_profit_data: "/counselor/profit-data",
+    get_booking_data: "counselor/bookings-data",
   },
   user: {
     fetch_selected_user: "user/user/",
@@ -65,7 +70,7 @@ const endpoints = {
     new_conversation: "/conversation/new-conversation",
     counselor_connections: "/counselor/connections",
     user_connections: "/user/connections",
-    get_conversation:"/conversation/get",
+    get_conversation: "/conversation/get",
     post_message: "/message/post-message",
     get_opposite_messages: "/message/get-opposite-message/",
     get_messages: "/message/get-message/",
