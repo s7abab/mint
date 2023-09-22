@@ -21,7 +21,6 @@ const ChatScreen = () => {
   const { messages, loading } = useSelector((state) => state.message);
   const [message, setMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const scroll = useRef();
 
   useEffect(() => {
@@ -53,6 +52,10 @@ const ChatScreen = () => {
         date: Date.now(),
       });
     });
+
+    return () => {
+      socket.current.off("getMessage");
+    };
   }, []);
 
   useEffect(() => {
@@ -60,11 +63,6 @@ const ChatScreen = () => {
       id === arrivalMessage.senderId &&
       dispatch(setMessages(arrivalMessage));
   }, [arrivalMessage, conversation]);
-
-  useEffect(() => {
-    socket.current.emit("addUser", _id);
-    socket.current.on("getUsers", (users) => {});
-  }, [_id]);
 
   // send message
   const handleSendMessage = (e) => {
@@ -89,32 +87,13 @@ const ChatScreen = () => {
         dispatch(fetchMessages({ conversationId: conversation[0]._id }));
       });
   };
-  // Function to handle file selection
-  const handleFileSelect = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-  // Function to send a selected file
-  const handleSendFile = () => {
-    if (!selectedFile) return;
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    socket.emit("sendFile", {
-      senderId: _id,
-      receiverId: id,
-      file: formData,
-    });
-    // Clear the selected file
-    setSelectedFile(null);
-  };
 
   return (
     <div className="flex h-screen w-screen">
       {loading && <Loading />}
       <div className="flex-1 flex flex-col">
         <Header />
-        <div className="flex-1 p-4 overflow-y-auto bg-gray-100">
+        <div className="flex-1 p-4 overflow-y-auto bg-gray-100 ">
           <div className="message-container space-y-2">
             {messages.map((data, index) => (
               <div ref={scroll}>

@@ -134,7 +134,6 @@ const Header = ({ className }) => {
               </Button>
             )}
             {role === "user" && (
-              <Card className="w-full shadow-blue-gray-900/5">
                 <List>
                   <Link to={"/dashboard"}>
                     <ListItem>
@@ -158,6 +157,14 @@ const Header = ({ className }) => {
                         <AiOutlineBook className="h-5 w-5" />
                       </ListItemPrefix>
                       Bookings
+                    </ListItem>
+                  </Link>
+                  <Link to={"/messages"}>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <AiOutlineMessage className="h-5 w-5" />
+                      </ListItemPrefix>
+                      Messages
                     </ListItem>
                   </Link>
                   <Link to={"/payments"}>
@@ -189,7 +196,6 @@ const Header = ({ className }) => {
                     Log Out
                   </ListItem>
                 </List>
-              </Card>
             )}
             {role === "counselor" && (
               <List>

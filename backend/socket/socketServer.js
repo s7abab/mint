@@ -34,11 +34,16 @@ function initializeSocket(server) {
     // send and get messages
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
       const user = getUser(receiverId);
+      console.log(user)
       if (user) {
         io.to(user.socketId).emit("getMessage", {
           senderId,
           text,
-        });
+        })
+        io.to(user.socketId).emit("getNotification", {
+          senderId,
+          notification:"new message"
+        })
       }
     });
     // for web rtc

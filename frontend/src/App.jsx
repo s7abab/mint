@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
@@ -40,8 +40,22 @@ const RoomPage = lazy(() => import("./pages/RoomPage"));
 const PaymentsAdmin = lazy(() => import("./pages/admin/PaymentsAdmin"));
 const MessagePage = lazy(() => import("./pages/MessagePage"));
 const ChatScreen = lazy(() => import("./pages/ChatScreen"));
-
+import socket from "./services/socket";
+import { useSelector } from "react-redux";
 const App = () => {
+  // socket connecting globally
+  const {_id} = useSelector(state=>state.auth)
+  useEffect(() => {
+    socket.current = socket;
+    socket.current.emit("addUser", _id);
+    socket.current.on("getUsers", (users) => {});
+
+    return () => {
+      socket.current.off("getUsers");
+    };
+    
+  }, [_id]);
+
   return (
     <>
       <Routes>

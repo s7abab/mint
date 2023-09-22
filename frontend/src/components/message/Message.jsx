@@ -19,7 +19,7 @@ const Message = ({ data, isMe }) => {
 
   return (
     <div
-      className={`max-w-md p-3 rounded-lg shadow-md my-2 ${
+      className={`w-28 overflow-hidden md:w-60 lg:w-80 p-3 rounded-lg shadow-md my-2 ${
         isMe ? "bg-gray-800 text-white" : "bg-gray-50"
       } ${messageClass}`}
     >

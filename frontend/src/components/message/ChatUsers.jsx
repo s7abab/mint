@@ -5,6 +5,7 @@ import {
   fetchUserConnections,
 } from "../../redux/features/message/messageActions";
 import { useNavigate } from "react-router-dom";
+import socket from "../../services/socket.js";
 
 const ChatUsers = () => {
   const navigate = useNavigate();
@@ -12,15 +13,16 @@ const ChatUsers = () => {
   const { role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const handleNavigate = (data)=>{
-    if(role==="counselor"){
-      navigate("/counselor/messages/" + data.receiverId)
-    }else if(role==="user"){
-      navigate("/messages/" + data.receiverId)
+  const handleNavigate = (data) => {
+    if (role === "counselor") {
+      navigate("/counselor/messages/" + data.receiverId);
+    } else if (role === "user") {
+      navigate("/messages/" + data.receiverId);
     }
-  }
+  };
 
   useEffect(() => {
+    socket.current = socket;
     if (role === "counselor") {
       dispatch(fetchCounselorConnections());
     } else if (role === "user") {
@@ -41,7 +43,7 @@ const ChatUsers = () => {
           {connections.map((data, index) => (
             <div
               key={index}
-              onClick={()=>handleNavigate(data)}
+              onClick={() => handleNavigate(data)}
               className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer"
             >
               <div className="flex-shrink-0">
