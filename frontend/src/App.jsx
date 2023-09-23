@@ -24,6 +24,7 @@ const CounselorProfileAdmin = lazy(() =>
   import("./components/counselorProfile/CounselorProfileAdmin")
 );
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const KycPage = lazy(() => import("./pages/admin/KycPage"));
 const UserDashboard = lazy(() => import("./pages/user/UserDashboard"));
 const CounselorDashboard = lazy(() =>
   import("./pages/counselor/CounselorDashboard")
@@ -40,11 +41,14 @@ const RoomPage = lazy(() => import("./pages/RoomPage"));
 const PaymentsAdmin = lazy(() => import("./pages/admin/PaymentsAdmin"));
 const MessagePage = lazy(() => import("./pages/MessagePage"));
 const ChatScreen = lazy(() => import("./pages/ChatScreen"));
+
 import socket from "./services/socket";
 import { useSelector } from "react-redux";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+
 const App = () => {
   // socket connecting globally
-  const {_id} = useSelector(state=>state.auth)
+  const { _id } = useSelector((state) => state.auth);
   useEffect(() => {
     socket.current = socket;
     socket.current.emit("addUser", _id);
@@ -53,7 +57,6 @@ const App = () => {
     return () => {
       socket.current.off("getUsers");
     };
-    
   }, [_id]);
 
   return (
@@ -167,6 +170,14 @@ const App = () => {
             element={
               <Suspense fallback={<Loading />}>
                 <PaymentsAdmin />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/kyc"
+            element={
+              <Suspense fallback={<Loading />}>
+                <KycPage />
               </Suspense>
             }
           />
@@ -308,6 +319,7 @@ const App = () => {
               </Suspense>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </>

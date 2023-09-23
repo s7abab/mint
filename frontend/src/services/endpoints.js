@@ -19,6 +19,8 @@ const endpoints = {
     get_profit_data: "/admin/profit-data",
     get_total_users: "/admin//total-users",
     get_total_counselors: "/admin/total-counselors",
+    get_all_kycs: "/kyc/kyc",
+    change_kyc_status: "/kyc/kyc",
   },
   category: {
     fetch_categories_admin: "/admin/category",
@@ -48,6 +50,7 @@ const endpoints = {
     get_selected_user: "/counselor/get-user",
     get_profit_data: "/counselor/profit-data",
     get_booking_data: "counselor/bookings-data",
+    kyc_request: "/kyc/kyc-req",
   },
   user: {
     fetch_selected_user: "user/user/",

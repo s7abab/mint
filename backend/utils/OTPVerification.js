@@ -102,5 +102,57 @@ Mint App`,
     }
   });
 };
+// Send KYC approval email
+const sendKycApproveEmail = (to) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: "Application Approved",
+    text: `Hello Sir/Madam,
 
-module.exports = { sendOTPEmail, sendApplicationEmail, sendApprovalEmail, sendRejectionEmail };
+We are pleased to inform you that your KYC has been verified! Congratulations! You can now proceed with the next steps.
+
+Thank you,
+Mint App`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Approval Email sent: " + info.response);
+    }
+  });
+};
+
+// Send KYC rejection email
+const sendKycRejectEmail = (to) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: "Application Rejected",
+    text: `Hello Sir/Madam,
+
+We regret to inform you that your kyc has been rejected. Please try again later!
+
+Best regards,
+Mint App`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Rejection Email sent: " + info.response);
+    }
+  });
+};
+
+module.exports = {
+  sendOTPEmail,
+  sendApplicationEmail,
+  sendApprovalEmail,
+  sendRejectionEmail,
+  sendKycApproveEmail,
+  sendKycRejectEmail,
+};

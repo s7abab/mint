@@ -14,6 +14,7 @@ import {
   AiOutlineUser,
   AiOutlineBook,
   AiOutlineMessage,
+  AiOutlineIdcard
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
 import { BiUserCircle, BiTimeFive } from "react-icons/bi";
@@ -229,6 +230,14 @@ const Sidebar = () => {
                   <MdPayment className="h-5 w-5" />
                 </ListItemPrefix>
                 Payments
+              </ListItem>
+            </Link>
+            <Link to={"/admin/kyc"}>
+              <ListItem>
+                <ListItemPrefix>
+                  <AiOutlineIdcard className="h-5 w-5" />
+                </ListItemPrefix>
+                KYC
               </ListItem>
             </Link>
             <Link to={"/admin/category"}>

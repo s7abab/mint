@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   changeStatus,
+  fetchAllKycs,
   fetchAllUsers,
   fetchCounselorsForAdmin,
   fetchSelectedCounselorForAdmin,
@@ -8,18 +9,20 @@ import {
   fetchWithdrawals,
 } from "./adminActions";
 
+const initialState = {
+  counselors: [],
+  users: [],
+  selectedCounselor: null,
+  selectedUser: null,
+  status: null,
+  withdrawalReq: [],
+  kycs: [],
+  loading: false,
+  error: null,
+};
 const adminSlice = createSlice({
   name: "admin",
-  initialState: {
-    counselors: [],
-    users: [],
-    selectedCounselor: null,
-    selectedUser: null,
-    status: null,
-    withdrawalReq: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -104,6 +107,19 @@ const adminSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchWithdrawals.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message;
+      })
+      // fetch all kycs
+      .addCase(fetchAllKycs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllKycs.fulfilled, (state, { payload }) => {
+        state.kycs = payload;
+        state.loading = false;
+      })
+      .addCase(fetchAllKycs.rejected, (state, { error }) => {
         state.loading = false;
         state.error = error.message;
       });

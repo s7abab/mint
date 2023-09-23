@@ -169,9 +169,51 @@ export const settlement = createAsyncThunk(
         counselorId,
       });
       if (res.data.success) {
-        toast.success(res.data.message)
+        toast.success(res.data.message);
       } else {
-        toast.error("Something went wrong")
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+      toast(error.response.data.message);
+    }
+  }
+);
+
+// fetch kycs
+export const fetchAllKycs = createAsyncThunk(
+  "admin/fetchAllKycs",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Api.get(endpoints.admin.get_all_kycs);
+      if (res.data.success) {
+        return res.data.kycs;
+      } else {
+        rejectWithValue(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast(error.response.data.message);
+      rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+// change kyc status
+export const changeKycStatus = createAsyncThunk(
+  "admin/changeKycStatus",
+  async ({ kycId, status, counselorId }, { rejectWithValue }) => {
+    console.log(status)
+    try {
+      const res = await Api.post(endpoints.admin.change_kyc_status, {
+        kycId,
+        status,
+        counselorId
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+      } else {
+        toast.error("Something went wrong");
       }
     } catch (error) {
       console.log(error);

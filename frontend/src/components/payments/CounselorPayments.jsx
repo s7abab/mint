@@ -5,15 +5,18 @@ import {
   fetchBankDetails,
   fetchWalletAmountOfCounselor,
   withdrawReq,
+  kycRequest,
 } from "../../redux/features/counselor/counselorActions";
 import { Button } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import BankDetails from "../Modals/BankDetails";
 import WithdrawConfirm from "../Modals/WithdrawConfirm";
+import KycModal from "../Modals/KycModal";
 
 const CounselorPayments = () => {
   const [modal, setModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
+  const [kycModal, setKycModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Recent Transactions");
 
   const wallet = useSelector((state) => state?.counselor?.wallet?.wallet);
@@ -30,6 +33,14 @@ const CounselorPayments = () => {
   }
 
   const handleWithdrawModal = () => {
+    if (wallet?.kycSend) {
+      return toast(
+        "KYC verification in progress. Please wait while we verify your information"
+      );
+    }
+    if (!wallet?.isKyc) {
+      return setKycModal(!kycModal);
+    }
     setModal(!modal);
   };
 
@@ -46,6 +57,10 @@ const CounselorPayments = () => {
     }
     dispatch(withdrawReq());
     setModal(!modal);
+  };
+
+  const handleKycModal = () => {
+    setKycModal(!kycModal);
   };
 
   return (
@@ -81,9 +96,9 @@ const CounselorPayments = () => {
 
         {selectedOption === "Recent Transactions" && (
           <>
-            {wallet?.incomeTransactions?.map((data) => (
+            {wallet?.incomeTransactions?.map((data, index) => (
               <div
-                key={data.bookingId}
+                key={index}
                 className="bg-white rounded-lg shadow-lg p-4 mb-4"
               >
                 <div
@@ -104,9 +119,9 @@ const CounselorPayments = () => {
 
         {selectedOption === "Withdrawals" && (
           <>
-            {wallet?.withdrawTransactions?.map((data) => (
+            {wallet?.withdrawTransactions?.map((data, index) => (
               <div
-                key={data.date}
+                key={index}
                 className="bg-white rounded-lg shadow-lg p-4 mb-4"
               >
                 <div
@@ -122,7 +137,7 @@ const CounselorPayments = () => {
           </>
         )}
       </div>
-
+      {kycModal && <KycModal close={handleKycModal} />}
       {bankModal && <BankDetails close={handleChangeAc} />}
       {modal && (
         <WithdrawConfirm close={handleWithdrawModal} confirm={handleWithdraw} />

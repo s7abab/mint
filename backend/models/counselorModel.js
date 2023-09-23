@@ -25,6 +25,8 @@ const counselorSchema = new mongoose.Schema(
       },
       incomeTransactions: [Object],
       withdrawTransactions: [Object],
+      isKyc: { type: Boolean, default: false },
+      kycSend: {type:Boolean, default:false}
     },
     bankAC: {
       acNo: String,

@@ -410,12 +410,31 @@ export const fetchSelectedUser = createAsyncThunk(
         userId,
       });
       if (res.data.success) {
-        console.log(res.data.other)
-        return res.data.other
+        console.log(res.data.other);
+        return res.data.other;
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+    }
+  }
+);
+
+// kyc req
+export const kycRequest = createAsyncThunk(
+  "/counselor/kycRequest",
+  async ({file,doc}, { thunkApi }) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("document", doc);
+      const res = await Api.post(endpoints.counselor.kyc_request, formData)
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   }
 );
