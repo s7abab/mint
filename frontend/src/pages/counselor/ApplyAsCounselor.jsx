@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
 import { applyAsCounselor } from "../../redux/features/counselor/counselorActions";
-import VerifyCounselorOTP from "../../components/VerifyCounselorOTP";
+import VerifyCounselorOTP from "../../components/otp/VerifyCounselorOTP";
 import { useNavigate } from "react-router-dom";
 
 const Application = () => {
