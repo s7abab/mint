@@ -16,11 +16,9 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { AiFillStar } from "react-icons/ai";
-import socket from "../../services/socket";
+import { useWebRTC } from "../../utils/WebRTCRoom"
 
 const CounselorBookings = () => {
-  const counselorId = useSelector((state) => state.auth._id);
-  const user = useSelector((state) => state.auth.user);
   const bookings = useSelector((state) => state.counselor.bookings);
   const dispatch = useDispatch();
 
@@ -77,34 +75,7 @@ const CounselorBookings = () => {
     });
   };
 
-  //=================== VIDEO CALL START =========================/
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [room, setRoom] = useState("123");
-
-  const handleSubmitForm = useCallback(
-    (e, roomId) => {
-      e.preventDefault();
-      socket.emit("room:join", { email: user, room: roomId });
-    },
-    [email, room, socket]
-  );
-
-  const handleJoinRoom = useCallback((data) => {
-    const { email, room } = data;
-    navigate(`/room/${room}`);
-  }, []);
-
-  useEffect(() => {
-    socket.on("room:join", handleJoinRoom);
-
-    return () => {
-      socket.off("room:join", handleJoinRoom);
-    };
-  }, [socket, handleJoinRoom]);
-
-  //=================== VIDEO CALL START =========================/
-
+  const { handleSubmit } = useWebRTC();
   return (
     <Layout>
       <div className="p-2 w-screen">
@@ -186,7 +157,7 @@ const CounselorBookings = () => {
                           <Button
                             className="mx-4"
                             size="sm"
-                            onClick={(e) => handleSubmitForm(e, booking._id)}
+                            onClick={(e) => handleSubmit(e, booking._id)}
                           >
                             Join session
                           </Button>

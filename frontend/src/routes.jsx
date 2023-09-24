@@ -38,7 +38,7 @@ const Payment = lazy(() => import("./pages/Payment"));
 const RoomPage = lazy(() => import("./pages/Room"));
 const PaymentsAdmin = lazy(() => import("./pages/admin/Payments"));
 const Message = lazy(() => import("./pages/Message"));
-const ChatScreen = lazy(() => import("./pages/ChatScreen"));
+const ChatScreen = lazy(() => import("./components/message/ChatScreen"));
 
 export const publicRoutes = [
   {

@@ -4,7 +4,7 @@ import { fetchSlots } from "../../redux/features/users/userActions";
 import moment from "moment";
 import { selectSlot } from "../../redux/features/users/userSlice";
 import { Button } from "@material-tailwind/react";
-import BookingScreen from "./BookingScreen";
+import BookingScreen from "../bookings/BookingScreen";
 
 const TimeSlots = ({ counselorId }) => {
   const slots = useSelector((state) => state.user.slots);

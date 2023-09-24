@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { Button } from "@material-tailwind/react";
-import CreateSlot from "../../components/counselor/CreateSlot";
-import ScheduledSlots from "../../components/counselor/ScheduledSlots";
+import CreateSlot from "../../components/timeSlot/CreateSlot";
+import ScheduledSlots from "../../components/timeSlot/ScheduledSlots";
 
 const Slots = () => {
   const [isModal, setIsModal] = useState(false);

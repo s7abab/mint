@@ -26,21 +26,21 @@ function initializeSocket(server) {
     console.log(`Socket Connected`, socket.id);
 
     // for chat
-    socket.on("addUser", (userId) => {
+    socket.on("add:user", (userId) => {
       addUser(userId, socket.id);
-      io.emit("getUsers", users);
+      io.emit("get:sers", users);
     });
 
     // send and get messages
-    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    socket.on("send:message", ({ senderId, receiverId, text }) => {
       const user = getUser(receiverId);
       console.log(user)
       if (user) {
-        io.to(user.socketId).emit("getMessage", {
+        io.to(user.socketId).emit("get:message", {
           senderId,
           text,
         })
-        io.to(user.socketId).emit("getNotification", {
+        io.to(user.socketId).emit("get:notification", {
           senderId,
           notification:"new message"
         })

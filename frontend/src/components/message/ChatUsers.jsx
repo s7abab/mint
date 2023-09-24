@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCounselorConnections,
@@ -28,12 +28,14 @@ const ChatUsers = () => {
     } else if (role === "user") {
       dispatch(fetchUserConnections());
     }
-  }, [dispatch]);
+  }, [dispatch, role]);
 
   return (
     <div className="bg-white w-screen h-screen rounded-md shadow-lg">
       <div className="flex justify-between items-center"></div>
-      <div className="bg-gray-100 text-xl rounded-r-md p-5 font-bold">Chat Users</div>
+      <div className="bg-gray-100 text-xl rounded-r-md p-5 font-bold">
+        Chat Users
+      </div>
       <div className="p-4">
         <div className="overflow-y-auto max-h-60">
           {connections.map((data, index) => (

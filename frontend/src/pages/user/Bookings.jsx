@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,8 +6,7 @@ import {
   fetchAllBookings,
 } from "../../redux/features/users/userActions";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
-import socket from "../../services/socket";
+
 import {
   Button,
   Card,
@@ -16,6 +15,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import FeedbackModal from "../../components/Modals/FeedbackModal";
+import { useWebRTC } from "../../utils/WebRTCRoom"
 
 const Bookings = () => {
   const [modal, setModal] = useState(false);
@@ -90,33 +90,9 @@ const Bookings = () => {
   const handleModalClose = () => {
     setModal(!modal);
   };
-  //=================== VIDEO CALL START =========================/
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [room, setRoom] = useState("123");
 
-  const handleSubmitForm = useCallback(
-    (e, roomId) => {
-      e.preventDefault();
-      socket.emit("room:join", { email: user, room: roomId });
-    },
-    [email, room, socket]
-  );
-
-  const handleJoinRoom = useCallback((data) => {
-    const { email, room } = data;
-    navigate(`/room/${room}`);
-  }, []);
-
-  useEffect(() => {
-    socket.on("room:join", handleJoinRoom);
-
-    return () => {
-      socket.off("room:join", handleJoinRoom);
-    };
-  }, [socket, handleJoinRoom]);
-
-  //=================== VIDEO CALL START =========================/
+  const { handleSubmit } = useWebRTC();
+  
   return (
     <Layout>
       <div className=" p-2 w-screen">
@@ -198,7 +174,7 @@ const Bookings = () => {
                         {showSessionStartButton(booking.time, booking.date) && (
                           <Button
                             size="sm"
-                            onClick={(e) => handleSubmitForm(e, booking._id)}
+                            onClick={(e) => handleSubmit(e, booking._id)}
                           >
                             Join Session
                           </Button>

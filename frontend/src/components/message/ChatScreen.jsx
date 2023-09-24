@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "../components/message/Header";
-import Message from "../components/message/Message";
+import Header from "./Header";
+import Message from "./Message";
 import { useParams } from "react-router-dom";
 import {
   fetchConversation,
   fetchMessages,
   postMessage,
-} from "../redux/features/message/messageActions";
-import { setMessages } from "../redux/features/message/messageSlice";
+} from "../../redux/features/message/messageActions";
+import { setMessages } from "../../redux/features/message/messageSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Loading } from "../components/Loading";
-import socket from "../services/socket";
+import { Loading } from "../Loading";
+import socket from "../../services/socket";
 import { Button } from "@material-tailwind/react";
 
 const ChatScreen = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { _id, user } = useSelector((state) => state.auth);
+  const { _id} = useSelector((state) => state.auth);
   const conversation = useSelector((state) => state.message.conversation);
   const { messages, loading } = useSelector((state) => state.message);
   const [message, setMessage] = useState("");
@@ -44,7 +44,7 @@ const ChatScreen = () => {
   //socket
   useEffect(() => {
     socket.current = socket;
-    socket.current.on("getMessage", (data) => {
+    socket.current.on("get:message", (data) => {
       setArrivalMessage({
         senderId: data.senderId,
         message: data.text,
@@ -53,7 +53,7 @@ const ChatScreen = () => {
     });
 
     return () => {
-      socket.current.off("getMessage");
+      socket.current.off("get:message");
     };
   }, []);
 
@@ -63,13 +63,12 @@ const ChatScreen = () => {
       dispatch(setMessages(arrivalMessage));
   }, [arrivalMessage, conversation]);
 
-  // send message
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!message) {
       return;
     }
-    socket.current.emit("sendMessage", {
+    socket.current.emit("send:message", {
       senderId: _id,
       receiverId: id,
       text: message,

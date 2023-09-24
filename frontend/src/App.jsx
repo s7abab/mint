@@ -13,11 +13,11 @@ const App = () => {
   const { _id } = useSelector((state) => state.auth);
   useEffect(() => {
     socket.current = socket;
-    socket.current.emit("addUser", _id);
-    socket.current.on("getUsers", (users) => {});
+    socket.current.emit("add:user", _id);
+    socket.current.on("get:users", (users) => {});
 
     return () => {
-      socket.current.off("getUsers");
+      socket.current.off("get:users");
     };
   }, [_id]);
 

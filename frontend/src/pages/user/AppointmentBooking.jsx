@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchSelectedCounselorForUser } from "../../redux/features/users/userActions";
 import Layout from "../../components/Layout";
 import { Card } from "antd";
-import TimeSlots from "../../components/user/TimeSlots";
+import TimeSlots from "../../components/timeSlot/TimeSlots";
 
 const AppointmentBooking = () => {
   const { counselorId } = useParams();
