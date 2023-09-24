@@ -14,13 +14,11 @@ const ViewCounselors = () => {
   const counselors = useSelector((state) => state.admin.counselors);
   const navigate = useNavigate();
 
-  // Handle View Profile
   const handleViewProfile = (counselorId) => {
     dispatch(fetchSelectedCounselorForAdmin(counselorId));
     navigate(`/admin/counselors/${counselorId}`);
   };
 
-  // Handle block counselor
   const handleBlock = (counselorId, value) => {
     dispatch(blockCounselor({ counselorId, value }));
   };

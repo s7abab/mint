@@ -1,7 +1,7 @@
 import { Button, Input, Card } from "@material-tailwind/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { resendOtp, verifyOtp } from "../redux/features/auth/authActions";
+import { resendOtp, verifyOtp } from "../../redux/features/auth/authActions";
 
 const VerifyOTP = ({ closeModal, email }) => {
   const dispatch = useDispatch();

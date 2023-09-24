@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 
 import ChatUsers from "../components/message/ChatUsers";
 
-const MessagePage = () => {
+const Message = () => {
 
   return (
     <Layout>
@@ -12,4 +12,4 @@ const MessagePage = () => {
   );
 };
 
-export default MessagePage;
+export default Message;

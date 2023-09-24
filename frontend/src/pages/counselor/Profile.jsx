@@ -11,12 +11,8 @@ const CounselorProfile = () => {
   return (
     <>
       <Layout>
-        {/* User */}
         {role === "user" && <CounselorUser />}
-
-        {/* Admin */}
         {role === "admin" && <CounselorAdmin />}
-        {/* Counselor */}
         {role === "counselor" && <CounselorCounselor />}
       </Layout>
     </>

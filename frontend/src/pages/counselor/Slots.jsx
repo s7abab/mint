@@ -4,7 +4,7 @@ import { Button } from "@material-tailwind/react";
 import CreateSlot from "../../components/counselor/CreateSlot";
 import ScheduledSlots from "../../components/counselor/ScheduledSlots";
 
-const SlotsPage = () => {
+const Slots = () => {
   const [isModal, setIsModal] = useState(false);
   const handleClick = () => {
     setIsModal(!isModal);
@@ -26,4 +26,4 @@ const SlotsPage = () => {
   );
 };
 
-export default SlotsPage;
+export default Slots;

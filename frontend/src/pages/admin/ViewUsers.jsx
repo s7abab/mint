@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Layout from "../../components/Layout";
-import { fetchSelectedUser } from "../../redux/features/users/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Typography } from "@material-tailwind/react";
 import { blockUser, fetchAllUsers } from "../../redux/features/admin/adminActions";
@@ -11,12 +10,9 @@ const ViewUsers = () => {
   const navigate = useNavigate()
   const users = useSelector((state) => state.admin.users);
 
-   // Handle View Profile
    const handleViewProfile = (userId) => {
     navigate(`/admin/users/${userId}`);
   };
-
-  // Handle block
   const handleBlock = (userId, value) => {
     dispatch(blockUser({userId, value}));
   };

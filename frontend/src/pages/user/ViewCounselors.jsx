@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Select, Option, Input } from "@material-tailwind/react";
 import { fetchCategories } from "../../redux/features/category/categorySlice";
 import {
-  fetchCounselorsForUsers,
   searchCounselor,
 } from "../../redux/features/users/userActions";
 import { Button, IconButton } from "@material-tailwind/react";
@@ -12,7 +11,7 @@ import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 const CounselorCard = lazy(() => import("../../components/card/CounselorCard"));
 import { Loading } from "../../components/Loading";
 
-const ViewAllCounselors = () => {
+const UserViewCounselors = () => {
   const dispatch = useDispatch();
   let debounceTimeout;
   const searchCounselors = useSelector((state) => state.user.searchCounselors);
@@ -119,4 +118,4 @@ const ViewAllCounselors = () => {
   );
 };
 
-export default ViewAllCounselors;
+export default UserViewCounselors;

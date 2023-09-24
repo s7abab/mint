@@ -6,9 +6,9 @@ import { FcEndCall } from "react-icons/fc";
 import { BsCameraVideo } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import socket from "../services/socket"
+import socket from "../services/socket";
 
-const RoomPage = () => {
+const Room = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
@@ -236,4 +236,4 @@ const RoomPage = () => {
   );
 };
 
-export default RoomPage;
+export default Room;

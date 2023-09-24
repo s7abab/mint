@@ -1,28 +1,20 @@
-// BookingPage.js
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSelectedCounselorForUser } from "../../redux/features/users/userActions";
 import Layout from "../../components/Layout";
 import { Card } from "antd";
-
 import TimeSlots from "../../components/user/TimeSlots";
 
-const BookingPage = () => {
+const AppointmentBooking = () => {
   const { counselorId } = useParams();
   const dispatch = useDispatch();
   const counselor = useSelector((state) => state.user.selectedCounselor);
   const user = useSelector((state) => state.auth);
-  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     dispatch(fetchSelectedCounselorForUser(counselorId));
   }, [dispatch, counselorId, user]);
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   return (
     <Layout>
@@ -41,4 +33,4 @@ const BookingPage = () => {
   );
 };
 
-export default BookingPage;
+export default AppointmentBooking;

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import Layout from "../../components/Layout";
 import { TotalbookingsCounselor } from "../../components/dashboard/TotalbookingsCounselor";
-import { TotalProfit } from "../../c../../components/dashboard/TotalProfit";
+import { TotalProfit } from "../../components/dashboard/TotalProfit";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBookingData,
@@ -17,10 +17,8 @@ const CounselorDashboard = () => {
   useEffect(() => {
     dispatch(getProfitDataForCounselor());
     dispatch(getBookingData());
-    console.log(monthlyProfits)
   }, [dispatch]);
 
-  // Calculate the total profit using useMemo
   const totalProfit = useMemo(() => {
     if (monthlyProfits) {
       return monthlyProfits.reduce(

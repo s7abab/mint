@@ -29,7 +29,6 @@ const ChatScreen = () => {
     }
   }, [messages]);
 
-  // fetch conversations
   useEffect(() => {
     if (id) {
       dispatch(fetchConversation({ receiver: id, sender: _id }));

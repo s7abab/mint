@@ -52,7 +52,7 @@ const CounselorUser = () => {
             <p className="text-gray-700 mt-2">Fee: {counselor?.fee}</p>
           </div>
           <div className="flex justify-center mt-10 gap-8">
-            <Button onClick={()=>navigate(`/counselors/book-appointment/${counselorId}`)} className="w-28">Book</Button>
+            <Button onClick={()=>navigate(`/book-appointment/${counselorId}`)} className="w-28">Book</Button>
           </div>
         </div>
       </div>

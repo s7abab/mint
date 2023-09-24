@@ -4,7 +4,7 @@ import UserPayment from '../components/payments/UserPayments'
 import CounselorPayments from '../components/payments/CounselorPayments'
 import { useSelector } from 'react-redux'
 
-const PaymentPage = () => {
+const Payment = () => {
   const role = useSelector(state=>state.auth.role)
   return (
     <>
@@ -20,4 +20,4 @@ const PaymentPage = () => {
   )
 }
 
-export default PaymentPage
+export default Payment

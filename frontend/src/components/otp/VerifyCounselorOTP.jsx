@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   resendCounselorOtp,
   verifyCounselorOtp,
-} from "../redux/features/counselor/counselorActions";
+} from "../../redux/features/counselor/counselorActions";
 
 const VerifyCounselorOTP = ({ closeModal, email }) => {
   const dispatch = useDispatch();

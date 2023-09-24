@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   Card,
-  Chip,
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
 } from "@material-tailwind/react";
 import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
 import {
@@ -21,25 +19,12 @@ import { BiUserCircle, BiTimeFive } from "react-icons/bi";
 import { logout } from "../../redux/features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import socket from "../../services/socket";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const [notifications, setNotifications] = useState(0);
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    socket.current.on("getNotification", ({ senderId }) => {
-      toast(`New Message from ${senderId}`);
-      setNotifications((prevNotifications) => prevNotifications + 1);
-    });
-
-    return () => {
-      socket.current.off("getNotification");
-    };
-  }, []);
 
   return (
     <div className="hidden-custom ">
@@ -73,17 +58,6 @@ const Sidebar = () => {
                   <AiOutlineMessage className="h-5 w-5" />
                 </ListItemPrefix>
                 Messages
-                {notifications > 0 && (
-                  <ListItemSuffix>
-                    <Chip
-                      value={notifications}
-                      size="sm"
-                      variant="ghost"
-                      color="blue-gray"
-                      className="rounded-full"
-                    />
-                  </ListItemSuffix>
-                )}
               </ListItem>
             </Link>
             <Link to={"/payments"}>
