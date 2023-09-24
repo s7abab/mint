@@ -32,19 +32,15 @@ const ChatUsers = () => {
 
   return (
     <div className="bg-white w-screen h-screen rounded-md shadow-lg">
-      <div className="flex justify-between items-center p-4"></div>
+      <div className="flex justify-between items-center"></div>
+      <div className="bg-gray-100 text-xl rounded-r-md p-5 font-bold">Chat Users</div>
       <div className="p-4">
-        <input
-          className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring focus:border-gray-400 mb-4"
-          type="text"
-          placeholder="Search users"
-        />
         <div className="overflow-y-auto max-h-60">
           {connections.map((data, index) => (
             <div
               key={index}
               onClick={() => handleNavigate(data)}
-              className="flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer"
+              className="flex items-center space-x-3 p-4 rounded-md hover:bg-gray-100 cursor-pointer bg-gray-50 "
             >
               <div className="flex-shrink-0">
                 <img

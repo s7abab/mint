@@ -14,7 +14,7 @@ import {
   AiOutlineUser,
   AiOutlineBook,
   AiOutlineMessage,
-  AiOutlineIdcard
+  AiOutlineIdcard,
 } from "react-icons/ai";
 import { MdPayment, MdOutlineCategory } from "react-icons/md";
 import { BiUserCircle, BiTimeFive } from "react-icons/bi";
@@ -25,7 +25,7 @@ import socket from "../../services/socket";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const [notifications, setNotifications]= useState(0);
+  const [notifications, setNotifications] = useState(0);
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,14 +51,6 @@ const Sidebar = () => {
         <div className="mb-2 p-4"></div>
         {role === "user" && (
           <List>
-            <Link to={"/dashboard"}>
-              <ListItem>
-                <ListItemPrefix>
-                  <AiFillAppstore className="h-5 w-5" />
-                </ListItemPrefix>
-                Dashboard
-              </ListItem>
-            </Link>
             <Link to={"/counselors"}>
               <ListItem>
                 <ListItemPrefix>
@@ -81,17 +73,17 @@ const Sidebar = () => {
                   <AiOutlineMessage className="h-5 w-5" />
                 </ListItemPrefix>
                 Messages
-                {notifications >0 && 
-                <ListItemSuffix>
-                  <Chip
-                    value={notifications}
-                    size="sm"
-                    variant="ghost"
-                    color="blue-gray"
-                    className="rounded-full"
+                {notifications > 0 && (
+                  <ListItemSuffix>
+                    <Chip
+                      value={notifications}
+                      size="sm"
+                      variant="ghost"
+                      color="blue-gray"
+                      className="rounded-full"
                     />
-                </ListItemSuffix>
-                  }
+                  </ListItemSuffix>
+                )}
               </ListItem>
             </Link>
             <Link to={"/payments"}>

@@ -20,16 +20,6 @@ const Header = () => {
           </button>
         </div>
       </div>
-
-      {/* User Profile (Moved to the Right) */}
-      <div className="hidden md:flex items-center space-x-2">
-        <img
-          src="https://via.placeholder.com/40"
-          alt="Profile"
-          className="w-8 h-8 rounded-full"
-        />
-        <span className="text-lg font-semibold">John Doe</span>
-      </div>
     </div>
   );
 };

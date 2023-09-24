@@ -4,7 +4,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { Loading } from "./components/Loading";
 
-const HomePage = lazy(() => import("./pages/HomePage"));
+const Home = lazy(() => import("./pages/Home"));
 const LoginPage = lazy(() => import("../src/pages/auth/LoginPage"));
 const RegisterPage = lazy(() => import("../src/pages/auth/RegisterPage"));
 const ApplicationsPage = lazy(() => import("./pages/admin/ApplicationsPage"));
@@ -25,7 +25,6 @@ const CounselorProfileAdmin = lazy(() =>
 );
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const KycPage = lazy(() => import("./pages/admin/KycPage"));
-const UserDashboard = lazy(() => import("./pages/user/UserDashboard"));
 const CounselorDashboard = lazy(() =>
   import("./pages/counselor/CounselorDashboard")
 );
@@ -44,7 +43,7 @@ const ChatScreen = lazy(() => import("./pages/ChatScreen"));
 
 import socket from "./services/socket";
 import { useSelector } from "react-redux";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
+import NotFoundPage from "./pages/NotFound.jsx.jsx";
 
 const App = () => {
   // socket connecting globally
@@ -68,7 +67,7 @@ const App = () => {
             element={
               <Suspense fallback={<Loading />}>
                 {" "}
-                <HomePage />{" "}
+                <Home />{" "}
               </Suspense>
             }
           />
@@ -182,14 +181,6 @@ const App = () => {
             }
           />
           {/* USER ROUTES */}
-          <Route
-            path="/dashboard"
-            element={
-              <Suspense fallback={<Loading />}>
-                <UserDashboard />
-              </Suspense>
-            }
-          />
           <Route
             path="/bookings"
             element={

@@ -15,6 +15,7 @@ import {
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
+import { AiFillStar } from "react-icons/ai";
 import socket from "../../services/socket";
 
 const CounselorBookings = () => {
@@ -78,7 +79,6 @@ const CounselorBookings = () => {
 
   //=================== VIDEO CALL START =========================/
   const navigate = useNavigate();
-  // const { socket } = useContext(Global);
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("123");
 
@@ -213,7 +213,7 @@ const CounselorBookings = () => {
                   {completedBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-green-100 shadow-md p-4 rounded-lg m-2"
+                      className=" shadow-md p-4 rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-gray-600">
@@ -230,6 +230,16 @@ const CounselorBookings = () => {
                           <strong>Time:</strong>{" "}
                           {moment(booking.time, "HH:mm").format("hh:mm a")}
                         </Typography>
+                        <div className="flex justify-end">
+                          <Typography className="text-gray-600 font-bold">
+                            <strong>{booking?.feedback?.feedback}</strong>
+                          </Typography>
+                        </div>
+                          <strong className="flex justify-end">
+                            <p>Rating :</p>
+                            <p className="mx-1">{booking?.feedback?.rating}{" "}</p>
+                            <AiFillStar className="mt-1 text-yellow-600" />
+                          </strong>
                       </CardBody>
                     </Card>
                   ))}
@@ -243,7 +253,7 @@ const CounselorBookings = () => {
                   {canceledBookings.map((booking) => (
                     <Card
                       key={booking._id}
-                      className="bg-gray-300 shadow-md p-4 rounded-lg m-2"
+                      className=" shadow-md p-4 rounded-lg m-2"
                     >
                       <CardBody>
                         <Typography className="text-gray-600">

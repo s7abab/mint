@@ -14,15 +14,12 @@ const BookingPage = () => {
   const dispatch = useDispatch();
   const counselor = useSelector((state) => state.user.selectedCounselor);
   const user = useSelector((state) => state.auth);
-
-  // State to store the selected date
   const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     dispatch(fetchSelectedCounselorForUser(counselorId));
   }, [dispatch, counselorId, user]);
 
-  // Handler to update selectedDate when the DatePicker value changes
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };

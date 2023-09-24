@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "../components/Layout";
 
 import Section1 from "../components/homePage/Section1";
 import Section2 from "../components/homePage/Section2";
 import Section3 from "../components/homePage/Section3";
-import { useSelector } from "react-redux";
 
-const HomePage = () => {
+const Home = () => {
   
   return (
     <>
@@ -21,4 +20,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

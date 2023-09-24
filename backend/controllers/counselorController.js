@@ -678,7 +678,7 @@ const bookingsData = async (req, res) => {
   const counselorId = new mongoose.Types.ObjectId(req.body.authId);
   try {
     const bookings = await bookingModel.aggregate([
-      { $match: { counselorId } },
+      { $match: { counselorId, status: { $ne: "pending" } } },
       {
         $group: {
           _id: null,
@@ -727,11 +727,11 @@ const bookingsData = async (req, res) => {
 
 const profitData = async (req, res) => {
   try {
-    const { authId } = req.body;
+    const counselorId = new mongoose.Types.ObjectId(req.body.authId);
     const monthlyProfits = await bookingModel.aggregate([
       {
         $match: {
-          counselorId: authId,
+          counselorId,
           status: "completed",
         },
       },

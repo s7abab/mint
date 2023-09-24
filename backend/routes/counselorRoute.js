@@ -21,10 +21,10 @@ const {
   getSelectedUser,
   getConnections,
   bookingsData,
+  profitData,
 } = require("../controllers/counselorController");
 const upload = require("../middleware/uploadImage");
 const { isCounselor, isSigned } = require("../middleware/authMiddleware");
-const { profitData } = require("../controllers/adminController");
 
 const router = express.Router();
 

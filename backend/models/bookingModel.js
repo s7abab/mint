@@ -43,6 +43,7 @@ const bookingSchema = new mongoose.Schema(
     feedback: {
       feedback: {
         type: String,
+        default: "",
       },
       rating: {
         type: String,

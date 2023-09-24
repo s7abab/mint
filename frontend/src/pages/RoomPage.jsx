@@ -228,7 +228,7 @@ const RoomPage = () => {
           />
         )}
         <FcEndCall
-          className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-blue-500 hover:text-white cursor-pointer"
+          className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-red-500 hover:text-white cursor-pointer"
           onClick={handleHangUp}
         />
       </div>

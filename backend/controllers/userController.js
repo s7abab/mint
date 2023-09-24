@@ -4,6 +4,7 @@ const moment = require("moment");
 const bookingModel = require("../models/bookingModel");
 const Razorpay = require("razorpay");
 const { default: mongoose } = require("mongoose");
+const conversationModel = require("../models/conversationModel");
 
 const map = new Map();
 // GET ONE USER
@@ -172,7 +173,6 @@ const bookAppointment = async (req, res) => {
     date,
     time,
     razorpay_order_id,
-    amount,
     walletAmount,
   } = req.body;
   if (
@@ -245,6 +245,11 @@ const bookAppointment = async (req, res) => {
         },
       });
     }
+    const newConversation = new conversationModel({
+      members: [counselorId, userId],
+    });
+    await newConversation.save();
+    
     res.status(200).send({
       success: true,
       message: "Appointment booked successfully",

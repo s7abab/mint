@@ -7,8 +7,12 @@ import {
 } from "../../redux/features/users/userActions";
 
 const FeedbackModal = ({ close, bookingId, selectedBook }) => {
-  const [rating, setRating] = useState(selectedBook.rating);
-  const [feedback, setFeedback] = useState(selectedBook.feedback);
+  const [rating, setRating] = useState(
+    (selectedBook && selectedBook?.rating) || ""
+  );
+  const [feedback, setFeedback] = useState(
+    (selectedBook && selectedBook?.feedback) || ""
+  );
   const dispatch = useDispatch();
   const handleRating = (i) => {
     setRating(i);

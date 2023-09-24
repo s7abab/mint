@@ -117,10 +117,9 @@ const Bookings = () => {
   }, [socket, handleJoinRoom]);
 
   //=================== VIDEO CALL START =========================/
-
   return (
     <Layout>
-      <div className=" p-2 w-screen ">
+      <div className=" p-2 w-screen">
         <div className="max-w-7xl mx-auto ">
           <div className="mb-4 flex space-x-4 ">
             <Button
@@ -210,7 +209,6 @@ const Bookings = () => {
                 </div>
               </div>
             )}
-
             {selectedOption === "completed" && (
               <div>
                 <div className="mb-6 h-screen">
@@ -239,7 +237,9 @@ const Bookings = () => {
                         <Button
                           size="sm"
                           onClick={(e) => {
-                            handleModalClose(e), setselectedBookId(booking._id),setSelectedBooking(booking.feedback)
+                            handleModalClose(e),
+                              setselectedBookId(booking._id),
+                              setSelectedBooking(booking?.feedback);
                           }}
                         >
                           Leave Feedback
@@ -284,7 +284,11 @@ const Bookings = () => {
         </div>
       </div>
       {modal && (
-        <FeedbackModal close={handleModalClose} bookingId={selectedBookId} selectedBook={selelectedBooking} />
+        <FeedbackModal
+          close={handleModalClose}
+          bookingId={selectedBookId}
+          selectedBook={selelectedBooking}
+        />
       )}
     </Layout>
   );

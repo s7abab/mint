@@ -43,7 +43,7 @@ const CounselorCard = (data) => {
               <div className="text-center my-3">
                 <button
                   onClick={() => handleViewProfile(data.data._id)}
-                  className="w-1/3 bg-black hover:bg-green-600 text-white font-medium py-1 px-3 rounded-lg"
+                  className="w-1/3 bg-black hover:bg-gray-600 text-white font-medium py-1 px-3 rounded-lg"
                 >
                   View
                 </button>
