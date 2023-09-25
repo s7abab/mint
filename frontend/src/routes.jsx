@@ -86,7 +86,7 @@ export const publicRoutes = [
   { path: "/counselors/:counselorId", element: <CounselorProfile /> },
   { path: "/book-appointment/:counselorId", element: <AppointmentBooking /> },
   { path: "/profile", element: <UserProfile /> },
-  { path: "/payments", element: <RoomPage /> },
+  { path: "/payments", element: <Payment /> },
   { path: "/messages", element: <Message /> },
   { path: "/messages/:id", element: <ChatScreen /> },
 
@@ -95,7 +95,7 @@ export const publicRoutes = [
   { path: "/counselor/bookings", element: <CounselorBookings /> },
   { path: "/counselor/slots", element: <Slots /> },
   { path: "/counselor/profile", element: <CounselorCounselor /> },
-  { path: "/counselor/payments", element: <RoomPage /> },
+  { path: "/counselor/payments", element: <Payment /> },
   { path: "/counselor/messages", element: <Message /> },
   { path: "/counselor/messages/:id", element: <ChatScreen /> },
 ];

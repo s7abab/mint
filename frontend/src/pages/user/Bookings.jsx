@@ -72,7 +72,7 @@ const Bookings = () => {
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (bookingDate === Date && minuteDiff < 1) {
+    if (!bookingDate === Date && minuteDiff < 1) {
       return true;
     }
   };

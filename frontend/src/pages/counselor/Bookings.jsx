@@ -49,7 +49,7 @@ const CounselorBookings = () => {
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (bookingDate === Date && minuteDiff < 0) {
+    if (!bookingDate === Date && minuteDiff < 0) {
       return true;
     }
   };
