@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Api = axios.create({ baseURL: "http://localhost:8080" });
+const Api = axios.create({ baseURL: import.meta.env.VITE_SOCKET_URL });
 
 Api.interceptors.request.use((req) => {
   if (localStorage.getItem("token")) {
