@@ -126,7 +126,9 @@ const UserUser = () => {
         <div className="flex justify-center">
           <div className="relative w-32 h-32 rounded-full overflow-hidden">
             <img
-              src={`import.meta.env.VITE_BACKEND_URL${user && user[0]?.image}`}
+              src={`${import.meta.env.VITE_BACKEND_URL}${
+                user && user[0]?.image
+              }`}
               alt="Profile Photo"
               className="w-full h-full object-cover"
             />
