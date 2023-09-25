@@ -8,10 +8,8 @@ const UserProfile = () => {
 
   return (
     <>
-      {/* User */}
-      {role === "user" && <UserUser />}
 
-      {/* Admin */}
+      {role === "user" && <UserUser />}
       {role === "admin" && <UserAdmin />}
     </>
   );
