@@ -33,7 +33,7 @@ const Bookings = () => {
   const [selectedOption, setSelectedOption] = useState("upcoming");
 
   const time = moment().format("HH:mm");
-  const date = moment().format("DD-MM-YYYY");
+  const date = moment().format("DD-MM-YYYY")
 
   const upcomingBookings = bookings.filter(
     (booking) => booking.status === "booked"
@@ -49,14 +49,14 @@ const Bookings = () => {
   const isoTime = moment().toISOString();
   // Cancel only possible atleast 1 hr before
   const shouldShowCancelButton = (bookingTime, bookingDate) => {
-    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const bDate = moment(bookingDate).format("DD-MM-YYYY")
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).format("HH:mm");
+    const bTime = moment(bookingTime).subtract(5.5, 'hours').format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (bookingDate > Date) {
+    if (bDate > date) {
       return true;
     }
     if (minuteDiff > 60) {
@@ -65,14 +65,14 @@ const Bookings = () => {
   };
   // Show session start button
   const showSessionStartButton = (bookingTime, bookingDate) => {
-    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const bDate = moment(bookingDate).format("DD-MM-YYYY")
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).format("HH:mm");
+    const bTime = moment(bookingTime).subtract(5.5, "hours").format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (!bookingDate === Date && minuteDiff < 1) {
+    if (bDate === date && minuteDiff<1) {
       return true;
     }
   };
@@ -152,7 +152,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).format("hh:mm a")}
+                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -171,14 +171,14 @@ const Bookings = () => {
                             Cancel Booking
                           </Button>
                         )}
-                        {/* {showSessionStartButton(booking.time, booking.date) && ( */}
+                        {showSessionStartButton(booking.time, booking.date) && (
                           <Button
                             size="sm"
                             onClick={(e) => handleSubmit(e, booking._id)}
                           >
                             Join Session
                           </Button>
-                        {/* )} */}
+                        )}
                       </CardFooter>
                     </Card>
                   ))}
@@ -206,7 +206,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).format("hh:mm a")}
+                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -248,7 +248,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).format("hh:mm a")}
+                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
                         </Typography>
                       </CardBody>
                     </Card>

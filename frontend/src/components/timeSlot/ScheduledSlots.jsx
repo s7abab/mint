@@ -101,8 +101,8 @@ const Section = ({ title, slots, onCancel, onDelete }) => {
               Date: {moment(data.date).format("DD-MM-YYYY")}
             </Typography>
             <Typography variant="small" className="font-normal">
-              Time: {moment(data.time).format("h:mm a")} -{" "}
-              {moment(data.time).add(1, "hours").format("h:mm a")}
+              Time: {moment(data.time).subtract(5.5, "hours").format("h:mm a")} -{" "}
+              {moment(data.time).subtract(4.5, "hours").format("h:mm a")}
             </Typography>
             <div className="flex items-center mt-4">
               <Typography

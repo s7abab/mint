@@ -40,7 +40,6 @@ const CreateSlot = ({ close }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-        {console.log(date)}
         <div className="flex">
           <p className="cursor-pointer" onClick={close}>
             X

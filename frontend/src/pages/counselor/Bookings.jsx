@@ -1,5 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +15,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { AiFillStar } from "react-icons/ai";
-import { useWebRTC } from "../../utils/WebRTCRoom"
+import { useWebRTC } from "../../utils/WebRTCRoom";
 
 const CounselorBookings = () => {
   const bookings = useSelector((state) => state.counselor.bookings);
@@ -42,23 +41,27 @@ const CounselorBookings = () => {
   );
   // SHOW SESSION START BUTTON
   const showSessionStartButton = (bookingTime, bookingDate) => {
-    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const bDate = moment(bookingDate).format("DD-MM-YYYY");
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).format("HH:mm");
+    const bTime = moment(bookingTime).subtract(5.5, "hours").format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
     );
-    if (!bookingDate === Date && minuteDiff < 0) {
+    if (bDate === date && minuteDiff < 1) {
       return true;
     }
   };
   // SHOW SESSION COMPLETED BUTTON
   const showCompletedButton = (bookingTime, bookingDate) => {
-    const Date = moment(date, "DD-MM-YYYY").toISOString();
+    const bDate = moment(bookingDate).format("DD-MM-YYYY");
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).add(1, "hours").format("HH:mm");
-    if (bookingDate <= Date && bTime < Time) {
+    const bTime = moment(bookingTime).subtract(4.5, "hours").format("HH:mm");
+    const minuteDiff = moment(bTime, "HH:mm").diff(
+      moment(Time, "HH:mm"),
+      "minutes"
+    );
+    if (bDate === date && minuteDiff < 1) {
       return true;
     }
   };
@@ -135,7 +138,9 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).format("hh:mm a")}
+                          {moment(booking.time)
+                            .subtract(5.5, "hours")
+                            .format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -153,7 +158,7 @@ const CounselorBookings = () => {
                         >
                           Cancel Booking
                         </Button>
-                        {/* {showSessionStartButton(booking.time, booking.date) && ( */}
+                        {showSessionStartButton(booking.time, booking.date) && (
                           <Button
                             className="mx-4"
                             size="sm"
@@ -161,7 +166,7 @@ const CounselorBookings = () => {
                           >
                             Join session
                           </Button>
-                        {/* )} */}
+                        )}
                         {showCompletedButton(booking.time, booking.date) && (
                           <Button
                             className="bg-green-900 m-1"
@@ -199,18 +204,20 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time, "HH:mm").format("hh:mm a")}
+                          {moment(booking.time)
+                            .subtract(5.5, "hours")
+                            .format("hh:mm a")}
                         </Typography>
                         <div className="flex justify-end">
                           <Typography className="text-gray-600 font-bold">
                             <strong>{booking?.feedback?.feedback}</strong>
                           </Typography>
                         </div>
-                          <strong className="flex justify-end">
-                            <p>Rating :</p>
-                            <p className="mx-1">{booking?.feedback?.rating}{" "}</p>
-                            <AiFillStar className="mt-1 text-yellow-600" />
-                          </strong>
+                        <strong className="flex justify-end">
+                          <p>Rating :</p>
+                          <p className="mx-1">{booking?.feedback?.rating} </p>
+                          <AiFillStar className="mt-1 text-yellow-600" />
+                        </strong>
                       </CardBody>
                     </Card>
                   ))}
@@ -239,7 +246,9 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time, "HH:mm").format("hh:mm a")}
+                          {moment(booking.time)
+                            .subtract(5.5, "hours")
+                            .format("hh:mm a")}
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Cancelled By:</strong>{" "}

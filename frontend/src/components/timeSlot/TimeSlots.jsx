@@ -63,8 +63,8 @@ const TimeSlots = ({ counselorId }) => {
             }}
           >
             <p className="text-md">
-              {moment(slot.time).format("h:mm a")} -{" "}
-              {moment(slot.time).add(1, "hours").format("h:mm a")}
+              {moment(slot.time).subtract(5.5, "hours").format("h:mm a")} -{" "}
+              {moment(slot.time).subtract(4.5, "hours").format("h:mm a")}
             </p>
             <p className="text-md mt-1">
               {moment(slot.date).format("DD-MM-YYYY")}
