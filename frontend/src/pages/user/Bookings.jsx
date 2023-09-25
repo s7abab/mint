@@ -171,14 +171,14 @@ const Bookings = () => {
                             Cancel Booking
                           </Button>
                         )}
-                        {showSessionStartButton(booking.time, booking.date) && (
+                        {/* {showSessionStartButton(booking.time, booking.date) && ( */}
                           <Button
                             size="sm"
                             onClick={(e) => handleSubmit(e, booking._id)}
                           >
                             Join Session
                           </Button>
-                        )}
+                        {/* )} */}
                       </CardFooter>
                     </Card>
                   ))}

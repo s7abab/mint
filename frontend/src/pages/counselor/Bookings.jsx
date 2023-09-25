@@ -153,7 +153,7 @@ const CounselorBookings = () => {
                         >
                           Cancel Booking
                         </Button>
-                        {showSessionStartButton(booking.time, booking.date) && (
+                        {/* {showSessionStartButton(booking.time, booking.date) && ( */}
                           <Button
                             className="mx-4"
                             size="sm"
@@ -161,7 +161,7 @@ const CounselorBookings = () => {
                           >
                             Join session
                           </Button>
-                        )}
+                        {/* )} */}
                         {showCompletedButton(booking.time, booking.date) && (
                           <Button
                             className="bg-green-900 m-1"
