@@ -186,7 +186,6 @@ const VideoCall = () => {
         {remoteStream && (
           <ReactPlayer
             playing
-            muted
             height="100%"
             width="100%"
             url={remoteStream}
@@ -197,7 +196,6 @@ const VideoCall = () => {
         {myStream && (
           <ReactPlayer
             playing
-            muted
             height="100%"
             width="100%"
             url={myStream}
