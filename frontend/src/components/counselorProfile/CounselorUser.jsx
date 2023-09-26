@@ -27,7 +27,7 @@ const CounselorUser = () => {
             {counselor?.image ? (
               <img
                 className="w-32 h-32 rounded-full mx-auto"
-                src={`http://localhost:8080${counselor?.image}`}
+                src={`https://server.mintcounseling.online${counselor?.image}`}
                 alt="John Doe"
               />
             ) : (
