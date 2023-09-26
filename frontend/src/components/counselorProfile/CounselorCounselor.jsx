@@ -50,7 +50,7 @@ const CounselorCounselor = () => {
           <div className="flex justify-center">
             <div className="relative w-32 h-32 rounded-full">
               <img
-                src={`http://localhost:8080${user?.image}`}
+                src={`${import.meta.env.VITE_BACKEND_URL}${user?.image}`}
                 alt="Profile Photo"
                 className="w-full h-full object-cover"
               />

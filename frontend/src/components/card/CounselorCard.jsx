@@ -17,7 +17,7 @@ const CounselorCard = (data) => {
               {data.data.image ? (
                 <img
                   className="w-32 h-32 rounded-full mx-auto"
-                  src={`http://localhost:8080${data.data.image}`}
+                  src={`${import.meta.env.VITE_BACKEND_URL}${data.data.image}`}
                   alt="John Doe"
                 />
               ) : (

@@ -46,7 +46,7 @@ const ChatUsers = () => {
             >
               <div className="flex-shrink-0">
                 <img
-                  src={`http://localhost:8080${data?.image}`}
+                  src={`${import.meta.env.VITE_BACKEND_URL}${data?.image}`}
                   alt=""
                   className="w-12 h-12 rounded-full"
                 />
