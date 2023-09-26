@@ -7,7 +7,7 @@ import { fetchSelectedCounselorForUser } from "../../redux/features/users/userAc
 
 const CounselorUser = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { counselorId } = useParams();
   useEffect(() => {
     dispatch(fetchSelectedCounselorForUser(counselorId));
@@ -52,7 +52,12 @@ const CounselorUser = () => {
             <p className="text-gray-700 mt-2">Fee: {counselor?.fee}</p>
           </div>
           <div className="flex justify-center mt-10 gap-8">
-            <Button onClick={()=>navigate(`/book-appointment/${counselorId}`)} className="w-28">Book</Button>
+            <Button
+              onClick={() => navigate(`/book-appointment/${counselorId}`)}
+              className="w-28"
+            >
+              Book
+            </Button>
           </div>
         </div>
       </div>
