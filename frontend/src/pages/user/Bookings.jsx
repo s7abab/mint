@@ -51,7 +51,7 @@ const Bookings = () => {
   const shouldShowCancelButton = (bookingTime, bookingDate) => {
     const bDate = moment(bookingDate).format("DD-MM-YYYY")
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).subtract(5.5, 'hours').format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
@@ -67,7 +67,7 @@ const Bookings = () => {
   const showSessionStartButton = (bookingTime, bookingDate) => {
     const bDate = moment(bookingDate).format("DD-MM-YYYY")
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).subtract(5.5, "hours").format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
@@ -152,7 +152,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -206,7 +206,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -248,7 +248,7 @@ const Bookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time).subtract(5.5,"hours").format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                       </CardBody>
                     </Card>

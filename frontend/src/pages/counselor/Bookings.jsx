@@ -43,7 +43,7 @@ const CounselorBookings = () => {
   const showSessionStartButton = (bookingTime, bookingDate) => {
     const bDate = moment(bookingDate).format("DD-MM-YYYY");
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).subtract(5.5, "hours").format("HH:mm");
+    const bTime = moment(bookingTime).format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
@@ -56,7 +56,7 @@ const CounselorBookings = () => {
   const showCompletedButton = (bookingTime, bookingDate) => {
     const bDate = moment(bookingDate).format("DD-MM-YYYY");
     const Time = moment(time, "HH:mm").format("HH:mm");
-    const bTime = moment(bookingTime).subtract(4.5, "hours").format("HH:mm");
+    const bTime = moment(bookingTime).add(1, "hours").format("HH:mm");
     const minuteDiff = moment(bTime, "HH:mm").diff(
       moment(Time, "HH:mm"),
       "minutes"
@@ -138,9 +138,7 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time)
-                            .subtract(5.5, "hours")
-                            .format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                       </CardBody>
                       <CardFooter>
@@ -204,9 +202,7 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time)
-                            .subtract(5.5, "hours")
-                            .format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                         <div className="flex justify-end">
                           <Typography className="text-gray-600 font-bold">
@@ -246,9 +242,7 @@ const CounselorBookings = () => {
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Time:</strong>{" "}
-                          {moment(booking.time)
-                            .subtract(5.5, "hours")
-                            .format("hh:mm a")}
+                          {moment(booking.time).format("hh:mm a")}
                         </Typography>
                         <Typography className="text-gray-600">
                           <strong>Cancelled By:</strong>{" "}

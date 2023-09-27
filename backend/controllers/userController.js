@@ -3,7 +3,7 @@ const userModel = require("../models/userModel");
 const moment = require("moment");
 const bookingModel = require("../models/bookingModel");
 const Razorpay = require("razorpay");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Mongoose } = require("mongoose");
 const conversationModel = require("../models/conversationModel");
 
 const map = new Map();
@@ -216,10 +216,10 @@ const bookAppointment = async (req, res) => {
         message: "Booking not found",
       });
     }
-
+    const uId = new mongoose.Types.ObjectId(userId)
     const counselor = await counselorModel.findByIdAndUpdate(counselorId, {
       $addToSet: {
-        connections: userId,
+        connections: uId,
       },
     });
     // Update the booking fields
@@ -231,9 +231,10 @@ const bookAppointment = async (req, res) => {
     booking.fee = counselor.fee;
     await booking.save();
 
+    const cId = new mongoose.Types.ObjectId(counselorId)
     const Date = moment().format("DD-MM-YYYY");
     if (walletAmount > 0) {
-      const userData = await userModel.findByIdAndUpdate(userId, {
+      await userModel.findByIdAndUpdate(userId, {
         $inc: { "wallet.balance": -walletAmount },
         $addToSet: {
           "wallet.transactions": {
@@ -241,7 +242,7 @@ const bookAppointment = async (req, res) => {
             date: Date,
             bookingId: booking._id,
           },
-          connections: counselorId,
+          connections: cId,
         },
       });
     }
