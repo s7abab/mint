@@ -14,7 +14,7 @@ const Section1 = () => {
   return (
     <div className=" pt-20 bg-green-opacity">
       <div className="container mx-auto text-center p-5 sm:p-0">
-        <h1 className="sm:text-4xl text-lg font-bold mb-6">
+        <h1 className="sm:text-4xl text-xl font-bold mb-6">
           Refresh Your Mind With <span className="text-green-500">MINt</span>{" "}
         </h1>
         <p className="sm:text-lg text-xs mb-8">Your Online Mental Counseling Companion</p>

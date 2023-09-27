@@ -216,10 +216,16 @@ const bookAppointment = async (req, res) => {
         message: "Booking not found",
       });
     }
-    const uId = new mongoose.Types.ObjectId(userId)
+    const uId = new mongoose.Types.ObjectId(userId);
+    const cId = new mongoose.Types.ObjectId(counselorId);
     const counselor = await counselorModel.findByIdAndUpdate(counselorId, {
       $addToSet: {
         connections: uId,
+      },
+    });
+    await userModel.findByIdAndUpdate(userId, {
+      $addToSet: {
+        connections: cId,
       },
     });
     // Update the booking fields
@@ -231,7 +237,6 @@ const bookAppointment = async (req, res) => {
     booking.fee = counselor.fee;
     await booking.save();
 
-    const cId = new mongoose.Types.ObjectId(counselorId)
     const Date = moment().format("DD-MM-YYYY");
     if (walletAmount > 0) {
       await userModel.findByIdAndUpdate(userId, {
@@ -242,7 +247,6 @@ const bookAppointment = async (req, res) => {
             date: Date,
             bookingId: booking._id,
           },
-          connections: cId,
         },
       });
     }
@@ -250,7 +254,7 @@ const bookAppointment = async (req, res) => {
       members: [counselorId, userId],
     });
     await newConversation.save();
-    
+
     res.status(200).send({
       success: true,
       message: "Appointment booked successfully",
@@ -538,19 +542,26 @@ const addFeedback = async (req, res) => {
 
 const getConnections = async (req, res) => {
   try {
-    const authId=new mongoose.Types.ObjectId(req.body.authId)
+    const authId = new mongoose.Types.ObjectId(req.body.authId);
     const connections = await userModel.aggregate([
-      { $match: { _id: authId }},
+      { $match: { _id: authId } },
       {
-        $lookup:{
-          from:'counselors',
-          localField:"connections",
+        $lookup: {
+          from: "counselors",
+          localField: "connections",
           foreignField: "_id",
-          as: "connectionsData"
-        }
+          as: "connectionsData",
+        },
       },
-      {$unwind:'$connectionsData'},
-      {$project:{name:'$connectionsData.name',image:'$connectionsData.image',_id:0, receiverId:`$connectionsData._id`}}
+      { $unwind: "$connectionsData" },
+      {
+        $project: {
+          name: "$connectionsData.name",
+          image: "$connectionsData.image",
+          _id: 0,
+          receiverId: `$connectionsData._id`,
+        },
+      },
     ]);
     res.status(200).send({
       success: true,

@@ -8,7 +8,6 @@ const { sendOTPEmail } = require("../utils/OTPVerification");
 const register = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, role } = req.body;
-    //VALIDATION
     if (!name) {
       return res.send({ message: "Name is Required" });
     }
@@ -24,9 +23,8 @@ const register = async (req, res) => {
     if (password !== confirmPassword) {
       return res.send({ message: "Password do not match" });
     }
-    //CHECK USER
     const existingUser = await userModel.findOne({ email, isVerified: true });
-    //EXISTING USER
+
     if (existingUser) {
       return res.status(200).send({
         success: false,

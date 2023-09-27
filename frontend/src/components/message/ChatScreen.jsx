@@ -88,9 +88,6 @@ const ChatScreen = () => {
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
         <div className="flex h-screen w-screen">
           <div className="flex-1 flex flex-col">
             <Header />
@@ -123,7 +120,6 @@ const ChatScreen = () => {
             </div>
           </div>
         </div>
-      )}
     </>
   );
 };
