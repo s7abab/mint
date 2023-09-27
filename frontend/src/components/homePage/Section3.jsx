@@ -3,16 +3,16 @@ import React from "react";
 const Section3 = () => {
   const testimonials = [
     {
-      name: "Abhinanth",
+      name: "John Doe",
       testimonial:
         "I found immense relief and support through the counseling sessions on Mint. It has truly changed my life.",
-      image: "../../../public/836.jpg",
+      image: "path-to-image1.jpg",
     },
     {
-      name: "Shajahan",
+      name: "Jane Smith",
       testimonial:
         "Mint helped me manage my anxiety in ways I never thought possible. I'm grateful for the guidance.",
-      image: "../../../public/836.jpg",
+      image: "https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-855.jpg?size=626&ext=jpg&uid=R112318752&ga=GA1.2.1862689560.1693377037&semt=ais",
     },
   ];
   return (
@@ -24,7 +24,7 @@ const Section3 = () => {
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <img
-                  src={testimonial.image}
+                  // src={testimonial.image}
                   alt={testimonial.name}
                   className="h-20 w-20 object-cover rounded-full mx-auto mb-4"
                 />

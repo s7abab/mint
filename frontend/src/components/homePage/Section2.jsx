@@ -6,19 +6,19 @@ const Section2 = () => {
       title: "Mindful Breathing",
       description:
         "Practice deep breathing to calm your mind and reduce stress.",
-      image: "../../../public/22874405_6686835.svg",
+      image: "path-to-image1.jpg",
     },
     {
       title: "Guided Meditation",
       description:
         "Listen to soothing guided meditation sessions for relaxation.",
-      image: "../../../public/13297285_5184245.svg",
+      image: "",
     },
     {
       title: "Nature Walk Visualization",
       description:
         "Imagine taking a calming walk through a peaceful natural setting.",
-      image: "../../../public/21118463_6428537.svg",
+      image: "path-to-image3.jpg",
     },
   ];
   return (
@@ -35,7 +35,7 @@ const Section2 = () => {
             {cardData.map((card, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <img
-                  src={card.image}
+                  // src={card.image}
                   alt={card.title}
                   className="h-32 object-cover mb-4 rounded-lg"
                 />
