@@ -3,16 +3,16 @@ import React from "react";
 const Section3 = () => {
   const testimonials = [
     {
-      name: "John Doe",
+      name: "Abhinanth",
       testimonial:
         "I found immense relief and support through the counseling sessions on Mint. It has truly changed my life.",
-      image: "path-to-image1.jpg",
+      image: "../../../public/836.jpg",
     },
     {
-      name: "Jane Smith",
+      name: "Shajahan",
       testimonial:
         "Mint helped me manage my anxiety in ways I never thought possible. I'm grateful for the guidance.",
-      image: "path-to-image2.jpg",
+      image: "../../../public/836.jpg",
     },
   ];
   return (
@@ -24,7 +24,7 @@ const Section3 = () => {
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6">
                 <img
-                  // src={testimonial.image}
+                  src={testimonial.image}
                   alt={testimonial.name}
                   className="h-20 w-20 object-cover rounded-full mx-auto mb-4"
                 />
