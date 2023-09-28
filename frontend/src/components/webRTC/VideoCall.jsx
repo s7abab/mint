@@ -109,35 +109,22 @@ const VideoCall = () => {
   ]);
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
-      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
-      {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={myStream}
-          />
-        </>
-      )}
-      {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={remoteStream}
-          />
-        </>
-      )}
+    <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
+      <h4>{remoteSocketId && "Connected"}</h4>
+      <div className="absolute top-5 left-5 z-50">
+        {myStream && <button onClick={sendStreams}>Send Stream</button>}
+        {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+      </div>
+      <div className="rounded h-screen relative">
+        {remoteStream && (
+          <ReactPlayer playing height="100%" width="100%" url={remoteStream} />
+        )}
+      </div>
+      <div className="absolute w-1/5 bottom-16 right-0 border-2 border-black">
+        {myStream && (
+          <ReactPlayer playing height="100%" width="100%" url={myStream} />
+        )}
+      </div>
     </div>
   );
 };
