@@ -62,7 +62,7 @@ const UserViewCounselors = () => {
     <>
       <Layout>
         <div className="w-screen">
-          <div className="sm:flex gap-2 m-4 top-20 bg-white sticky">
+          <div className="sm:flex gap-2 m-4 top-20 bg-white sticky z-10">
             <Select onChange={handleCategory} label="Specialization">
               <Option>All</Option>
               {categories

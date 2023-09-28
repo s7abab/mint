@@ -81,7 +81,7 @@ const CounselorBookings = () => {
   const { handleSubmit } = useWebRTC();
   return (
     <Layout>
-      <div className="p-2 w-screen">
+      <div className="p-2 w-screen ">
         <div className="max-w-7xl mx-auto ">
           <div className="mb-4 flex space-x-4">
             <Button
@@ -119,7 +119,7 @@ const CounselorBookings = () => {
           <div className="bg-white rounded-lg shadow-md p-2">
             {selectedOption === "upcoming" && (
               <div>
-                <div className="h-screen">
+                <div className="h-screen overflow-y-scroll">
                   {upcomingBookings.map((booking) => (
                     <Card
                       key={booking._id}
@@ -183,7 +183,7 @@ const CounselorBookings = () => {
 
             {selectedOption === "completed" && (
               <div>
-                <div className="h-screen">
+                <div className="h-screen overflow-y-scroll">
                   {completedBookings.map((booking) => (
                     <Card
                       key={booking._id}
@@ -222,8 +222,8 @@ const CounselorBookings = () => {
             )}
 
             {selectedOption === "canceled" && (
-              <div className="">
-                <div className="h-screen">
+              <div>
+                <div className="h-screen overflow-y-scroll">
                   {canceledBookings.map((booking) => (
                     <Card
                       key={booking._id}

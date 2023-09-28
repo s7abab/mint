@@ -42,7 +42,7 @@ const ScheduledSlots = () => {
     selectedOption === "pending" ? pendingBookings : bookedSlots;
 
   return (
-    <Card className=" w-full mt-5 ">
+    <Card className=" w-full mt-5 overflow-x-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 p-2">
         <div>
           <div className="flex items-center space-x-4 mb-4">

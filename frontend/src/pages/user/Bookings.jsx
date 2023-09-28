@@ -95,8 +95,8 @@ const Bookings = () => {
   
   return (
     <Layout>
-      <div className=" p-2 w-screen">
-        <div className="max-w-7xl mx-auto ">
+      <div className=" p-2 w-screen ">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-4 flex space-x-4 ">
             <Button
               className={`${
@@ -130,7 +130,7 @@ const Bookings = () => {
             </Button>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-2">
+          <div className="h-screen overflow-y-scroll rounded-lg shadow-md p-2 ">
             {selectedOption === "upcoming" && (
               <div>
                 <div className="mb-6 h-screen">
@@ -158,7 +158,8 @@ const Bookings = () => {
                       <CardFooter>
                         {shouldShowCancelButton(booking.time, booking.date) && (
                           <Button
-                            className="bg-red-800 text-white mt-2 py-1 px-4 rounded-md hover:bg-red-600"
+                          size="sm"
+                            className="bg-red-900 text-white  hover:bg-red-600"
                             onClick={() =>
                               handleCancelBooking(
                                 booking._id,
@@ -187,7 +188,7 @@ const Bookings = () => {
             )}
             {selectedOption === "completed" && (
               <div>
-                <div className="mb-6 h-screen">
+                <div className="mb-6 h-screen overflow-y-scroll">
                   {completedBookings.map((booking) => (
                     <Card
                       key={booking._id}
@@ -228,8 +229,8 @@ const Bookings = () => {
             )}
 
             {selectedOption === "canceled" && (
-              <div className="">
-                <div className="mb-6 h-screen">
+              <div className="h-screen overflow-y-scroll">
+                <div className="mb-6 ">
                   {canceledBookings.map((booking) => (
                     <Card
                       key={booking._id}

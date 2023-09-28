@@ -134,68 +134,60 @@ const Header = ({ className }) => {
               </Button>
             )}
             {role === "user" && (
-                <List>
-                  <Link to={"/dashboard"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <PresentationChartBarIcon className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Dashboard
-                    </ListItem>
-                  </Link>
-                  <Link to={"/counselors"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <AiOutlineUser className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Counselors
-                    </ListItem>
-                  </Link>
-                  <Link to={"/bookings"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <AiOutlineBook className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Bookings
-                    </ListItem>
-                  </Link>
-                  <Link to={"/messages"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <AiOutlineMessage className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Messages
-                    </ListItem>
-                  </Link>
-                  <Link to={"/payments"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <MdPayment className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Payments
-                    </ListItem>
-                  </Link>
-                  <Link to={"/profile"}>
-                    <ListItem>
-                      <ListItemPrefix>
-                        <BiUserCircle className="h-5 w-5" />
-                      </ListItemPrefix>
-                      Profile
-                    </ListItem>
-                  </Link>
-                  <ListItem
-                    onClick={() => {
-                      dispatch(logout());
-                      toast.success("Logout successfully");
-                      navigate("/");
-                    }}
-                  >
+              <List>
+                <Link to={"/counselors"}>
+                  <ListItem>
                     <ListItemPrefix>
-                      <PowerIcon className="h-5 w-5" />
+                      <AiOutlineUser className="h-5 w-5" />
                     </ListItemPrefix>
-                    Log Out
+                    Counselors
                   </ListItem>
-                </List>
+                </Link>
+                <Link to={"/bookings"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineBook className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Bookings
+                  </ListItem>
+                </Link>
+                <Link to={"/messages"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <AiOutlineMessage className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Messages
+                  </ListItem>
+                </Link>
+                <Link to={"/payments"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <MdPayment className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Payments
+                  </ListItem>
+                </Link>
+                <Link to={"/profile"}>
+                  <ListItem>
+                    <ListItemPrefix>
+                      <BiUserCircle className="h-5 w-5" />
+                    </ListItemPrefix>
+                    Profile
+                  </ListItem>
+                </Link>
+                <ListItem
+                  onClick={() => {
+                    dispatch(logout());
+                    toast.success("Logout successfully");
+                    navigate("/");
+                  }}
+                >
+                  <ListItemPrefix>
+                    <PowerIcon className="h-5 w-5" />
+                  </ListItemPrefix>
+                  Log Out
+                </ListItem>
+              </List>
             )}
             {role === "counselor" && (
               <List>

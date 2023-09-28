@@ -21,7 +21,7 @@ const CounselorUser = () => {
 
   return (
     <>
-      <div className=" w-screen h-1/2 flex justify-center mt-10">
+      <div className=" w-screen h-1/2 flex justify-center mt-12">
         <div className="w-96 m-2 mt-8 py-10 b border-2 border-white object-cover object-center shadow-xl shadow-blue-gray-900/50 rounded-2xl">
           <div className="flex justify-center">
             {counselor?.image ? (
