@@ -18,12 +18,12 @@ const Section3 = () => {
   ];
   return (
     <>
-      <div className="bg-gray-100 py-16 bg-green-opacity">
+      <div className="py-16 bg-green-opacity px-6 ">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-10">What Our Users Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6">
+              <div key={index} className="rounded-lg shadow-xl p-6 bg-white hover:bg-gray-100 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer">
                 <img
                   src={testimonial.image}
                   alt={testimonial.name}

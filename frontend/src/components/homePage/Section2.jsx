@@ -36,7 +36,7 @@ const Section2 = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {cardData.map((card, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6">
+              <div key={index} className="rounded-lg shadow-xl p-6 bg-white hover:bg-gray-100 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer">
                 <img
                   src={card.image}
                   alt={card.title}
