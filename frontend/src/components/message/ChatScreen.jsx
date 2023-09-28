@@ -90,7 +90,6 @@ const ChatScreen = () => {
 
       await dispatch(fetchMessages({ conversationId: conversation[0]._id }));
     } catch (error) {
-      // Handle any errors here
       console.error("Error sending message:", error);
     } finally {
       e.target.querySelector("button").removeAttribute("disabled");

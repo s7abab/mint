@@ -29,7 +29,6 @@ const counselorSlice = createSlice({
       })
       .addCase(fetchSelectedCounselor.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log(payload);
         state.selectedCounselor = payload;
         state.error = null;
       })
