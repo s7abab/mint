@@ -48,7 +48,7 @@ const ChatScreen = () => {
       setArrivalMessage({
         senderId: data.senderId,
         message: data.text,
-        date: moment()
+        date: moment(),
       });
     });
 
@@ -68,6 +68,7 @@ const ChatScreen = () => {
     if (!message) {
       return;
     }
+
     socket.current.emit("send:message", {
       senderId: _id,
       receiverId: id,
@@ -88,38 +89,38 @@ const ChatScreen = () => {
 
   return (
     <>
-        <div className="flex h-screen w-screen">
-          <div className="flex-1 flex flex-col">
-            <Header />
-            <div className="flex-1 p-4 overflow-y-auto bg-gray-100 ">
-              <div className="message-container space-y-2">
-                {messages.map((data, index) => (
-                  <div ref={scroll} key={index}>
-                    <Message
-                      data={data}
-                      isMe={data.senderId === _id} // Check if the message is from you
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* input message */}
-            <div className="bg-white border-t p-4">
-              <form onSubmit={handleSendMessage} className="flex items-center">
-                <input
-                  onChange={(e) => setMessage(e.target.value)}
-                  type="text"
-                  value={message}
-                  className="flex-1 py-2 px-3 rounded-full border border-gray-300 focus:outline-none"
-                  placeholder="Type a message..."
-                />
-                <Button type="submit" className="rounded-full ml-2">
-                  Send
-                </Button>
-              </form>
+      <div className="flex h-screen w-screen">
+        <div className="flex-1 flex flex-col">
+          <Header />
+          <div className="flex-1 p-4 overflow-y-auto bg-gray-100 ">
+            <div className="message-container space-y-2">
+              {messages.map((data, index) => (
+                <div ref={scroll} key={index}>
+                  <Message
+                    data={data}
+                    isMe={data.senderId === _id} // Check if the message is from you
+                  />
+                </div>
+              ))}
             </div>
           </div>
+          {/* input message */}
+          <div className="bg-white border-t p-4">
+            <form onSubmit={handleSendMessage} className="flex items-center">
+              <input
+                onChange={(e) => setMessage(e.target.value)}
+                type="text"
+                value={message}
+                className="flex-1 py-2 px-3 rounded-full border border-gray-300 focus:outline-none"
+                placeholder="Type a message..."
+              />
+              <Button type="submit" className="rounded-full ml-2">
+                Send
+              </Button>
+            </form>
+          </div>
         </div>
+      </div>
     </>
   );
 };
