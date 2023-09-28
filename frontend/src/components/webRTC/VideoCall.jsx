@@ -1,23 +1,12 @@
 import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../../services/peer";
-import { AiOutlineAudioMuted } from "react-icons/ai";
-import { FcEndCall } from "react-icons/fc";
-import { BsCameraVideo } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import socket from "../../services/socket"
+import socket from "../../services/socket";
 
 const VideoCall = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
-  const [call, setCall] = useState(false);
-  const [streamBtn, setStreamBtn] = useState(false);
-  const [isAudioMuted, setIsAudioMuted] = useState(true);
-  const [isCameraOff, setIsCameraOff] = useState(true);
-  const role = useSelector((state) => state.auth.role);
-  const navigate = useNavigate();
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
@@ -58,8 +47,6 @@ const VideoCall = () => {
   const handleCallAccepted = useCallback(
     ({ from, ans }) => {
       peer.setLocalDescription(ans);
-      setStreamBtn(true);
-      setCall(true);
       console.log("Call Accepted!");
       sendStreams();
     },
@@ -88,45 +75,7 @@ const VideoCall = () => {
 
   const handleNegoNeedFinal = useCallback(async ({ ans }) => {
     await peer.setLocalDescription(ans);
-    setStreamBtn(true);
-    setCall(true);
   }, []);
-
-  const handleHangUp = () => {
-    if (myStream) {
-      myStream.getTracks().forEach((track) => track.stop());
-    }
-    setMyStream(null);
-    setRemoteStream(null);
-    setStreamBtn(false);
-    setCall(false);
-    socket.emit("hangup");
-    if (role === "user") {
-      navigate("/bookings");
-    } else if (role === "counselor") {
-      navigate("/counselor/bookings");
-    }
-  };
-  // Function to toggle audio mute
-  const toggleAudioMute = () => {
-    if (myStream) {
-      const audioTrack = myStream.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = !isAudioMuted;
-        setIsAudioMuted(!isAudioMuted);
-      }
-    }
-  };
-  // Function to toggle camera off
-  const toggleCamera = () => {
-    if (myStream) {
-      const videoTrack = myStream.getVideoTracks()[0];
-      if (videoTrack) {
-        videoTrack.enabled = !isCameraOff;
-        setIsCameraOff(!isCameraOff);
-      }
-    }
-  };
 
   useEffect(() => {
     peer.peer.addEventListener("track", async (ev) => {
@@ -160,78 +109,36 @@ const VideoCall = () => {
   ]);
 
   return (
-    <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
-      <div className="absolute top-5 left-5 z-50">
-        <h4 className="bg-white p-2 rounded-lg">
-          {remoteSocketId && "Connected"}
-        </h4>
-        {myStream && !streamBtn && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded-lg mt-2"
-            onClick={sendStreams}
-          >
-            Send Stream
-          </button>
-        )}
-        {remoteSocketId && !myStream && !call && (
-          <button
-            className="bg-red-500 text-white p-2 rounded-lg mt-2"
-            onClick={handleCallUser}
-          >
-            CALL
-          </button>
-        )}
-      </div>
-      <div className="rounded h-screen relative">
-        {remoteStream && (
+    <div>
+      <h1>Room Page</h1>
+      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
+      {myStream && <button onClick={sendStreams}>Send Stream</button>}
+      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+      {myStream && (
+        <>
+          <h1>My Stream</h1>
           <ReactPlayer
             playing
-            height="100%"
-            width="100%"
-            url={remoteStream}
-          />
-        )}
-      </div>
-      <div className="absolute w-1/5 bottom-16 right-0 border-2 border-black">
-        {myStream && (
-          <ReactPlayer
-            playing
-            height="100%"
-            width="100%"
+            muted
+            height="100px"
+            width="200px"
             url={myStream}
           />
-        )}
-      </div>
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
-        {isCameraOff ? (
-          <BsCameraVideo
-            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
-            onClick={toggleCamera}
+        </>
+      )}
+      {remoteStream && (
+        <>
+          <h1>Remote Stream</h1>
+          <ReactPlayer
+            playing
+            muted
+            height="100px"
+            width="200px"
+            url={remoteStream}
           />
-        ) : (
-          <BsCameraVideo
-            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
-            onClick={toggleCamera}
-          />
-        )}
-        {isAudioMuted ? (
-          <AiOutlineAudioMuted
-            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
-            onClick={toggleAudioMute}
-          />
-        ) : (
-          <AiOutlineAudioMuted
-            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
-            onClick={toggleAudioMute}
-          />
-        )}
-        <FcEndCall
-          className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-red-500 hover:text-white cursor-pointer"
-          onClick={handleHangUp}
-        />
-      </div>
+        </>
+      )}
     </div>
   );
 };
-
 export default VideoCall;

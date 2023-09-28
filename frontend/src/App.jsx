@@ -14,7 +14,8 @@ const App = () => {
   useEffect(() => {
     socket.current = socket;
     socket.current.emit("add:user", _id);
-    socket.current.on("get:users", (users) => {});
+    socket.current.on("get:users", (users) => {
+    });
 
     return () => {
       socket.current.off("get:users");
