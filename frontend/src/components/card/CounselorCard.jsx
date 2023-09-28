@@ -11,7 +11,7 @@ const CounselorCard = (data) => {
   return (
     <>
       <div>
-        <div className="w-52 ">
+        <div className="w-52 bg-white hover:bg-gray-100 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer">
           <div className="bg-white shadow-xl rounded-lg py-3">
             <div className="photo-wrapper p-2">
               {data.data.image ? (

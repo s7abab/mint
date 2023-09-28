@@ -42,7 +42,7 @@ const RegisterPage = () => {
   return (
     <>
       <Layout sidebar={true}>
-        <div className="w-full mt-12 flex justify-center items-center">
+        <div className="w-full mt-14 flex justify-center items-center">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
               Register

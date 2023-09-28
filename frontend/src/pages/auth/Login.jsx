@@ -34,7 +34,7 @@ const LoginPage = () => {
   return (
     <>
       <Layout sidebar={true}>
-        <div className="w-full mt-24 flex justify-center items-center">
+        <div className="w-full mt-32 flex justify-center items-center">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
               Login

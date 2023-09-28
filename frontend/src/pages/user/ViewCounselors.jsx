@@ -76,7 +76,7 @@ const UserViewCounselors = () => {
             <Input onChange={handleChange} label="Search" />
           </div>
           <div>
-            <div className="flex flex-wrap gap-2 mt-6 mx-2 justify-center ">
+            <div className="flex flex-wrap gap-5 mt-6 mx-2 justify-center ">
               <Suspense fallback={<Loading />}>
                 {searchCounselors.map((data) => (
                   <CounselorCard key={data._id} data={data} />
