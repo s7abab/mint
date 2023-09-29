@@ -35,10 +35,6 @@ const VideoCall = () => {
     setMyStream(stream);
   }, [remoteSocketId, socket]);
 
-  if(remoteSocketId){
-    handleCallUser()
-  }
-
   const handleIncommingCall = useCallback(
     async ({ from, offer }) => {
       setRemoteSocketId(from);
