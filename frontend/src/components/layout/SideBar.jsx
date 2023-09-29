@@ -80,7 +80,6 @@ const Sidebar = () => {
               onClick={() => {
                 dispatch(logout());
                 toast.success("Logout successfully");
-                navigate("/");
               }}
             >
               <ListItemPrefix>
@@ -145,7 +144,6 @@ const Sidebar = () => {
               onClick={() => {
                 dispatch(logout());
                 toast.success("Logout successfully");
-                navigate("/");
               }}
             >
               <ListItemPrefix>
@@ -218,7 +216,6 @@ const Sidebar = () => {
               onClick={() => {
                 dispatch(logout());
                 toast.success("Logout successfully");
-                navigate("/");
               }}
             >
               <ListItemPrefix>

@@ -6,21 +6,18 @@ import third from '../../icons/22874405_6686835.svg'
 const Section2 = () => {
   const cardData = [
     {
-      title: "Mindful Breathing",
-      description:
-        "Practice deep breathing to calm your mind and reduce stress.",
+      title: "Pieceful Mind",
+      description: "Practice deep breathing to calm your mind and reduce stress.",
       image: first,
     },
     {
       title: "Guided Meditation",
-      description:
-        "Listen to soothing guided meditation sessions for relaxation.",
+      description: "Listen to soothing guided meditation sessions for relaxation.",
       image: second,
     },
     {
-      title: "Nature Walk Visualization",
-      description:
-        "Imagine taking a calming walk through a peaceful natural setting.",
+      title: "Relationship Guidance",
+      description: "Enhance your relationships through mindfulness.",
       image: third,
     },
   ];

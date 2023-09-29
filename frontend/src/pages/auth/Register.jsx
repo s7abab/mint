@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../../redux/features/auth/authActions";
 import VerifyOTP from "../../components/otp/VerifyOTP";
+import { isEmailValid, isPasswordValid } from "../../utils/validation";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -16,9 +17,13 @@ const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //Handle register
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!isEmailValid(email)) return toast.error("Invalid email address");
+    if (!isPasswordValid(password))
+      return toast.error(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+      );
     const res = await dispatch(
       userRegister({ name, email, password, confirmPassword })
     );
@@ -28,7 +33,6 @@ const RegisterPage = () => {
     }
   };
 
-  // Close Modal
   const closeModal = () => {
     setModal(false);
   };
@@ -38,7 +42,7 @@ const RegisterPage = () => {
     if (user) {
       navigate("/login");
     }
-  }, [user,navigate]);
+  }, [user, navigate]);
   return (
     <>
       <Layout sidebar={true}>

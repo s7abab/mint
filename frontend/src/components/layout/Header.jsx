@@ -75,7 +75,7 @@ const Header = ({ className }) => {
               variant="gradient"
               size="sm"
               className="hidden lg:inline-block"
-              onClick={() => navigate("/login")}
+              onClick={() => window.location.replace("/login")}
             >
               <span>Login</span>
             </Button>

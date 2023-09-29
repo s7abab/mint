@@ -36,6 +36,11 @@ const Application = () => {
 
   const handleApply = async (e) => {
     e.preventDefault();
+    if (!isEmailValid(email)) return toast.error("Invalid email address");
+    if (!isPasswordValid(password))
+      return toast.error(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+      );
     try {
       const res = await dispatch(
         applyAsCounselor({
@@ -50,7 +55,6 @@ const Application = () => {
         })
       );
       if (res.payload.success) {
-        console.log(res.payload);
         toast.success(res.payload.message);
         setModal(!modal);
       }
@@ -130,6 +134,7 @@ const Application = () => {
                     ))}
                 </Select>
                 <Input
+                  type="number"
                   onChange={(e) => setExperience(e.target.value)}
                   size="md"
                   label="Experince"

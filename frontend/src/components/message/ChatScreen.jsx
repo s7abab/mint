@@ -9,10 +9,8 @@ import {
 } from "../../redux/features/message/messageActions";
 import { setMessages } from "../../redux/features/message/messageSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Loading } from "../Loading";
 import socket from "../../services/socket";
 import { Button } from "@material-tailwind/react";
-import moment from "moment";
 
 const ChatScreen = () => {
   const dispatch = useDispatch();
