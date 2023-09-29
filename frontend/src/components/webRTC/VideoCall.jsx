@@ -16,6 +16,7 @@ const VideoCall = () => {
   const [remoteStream, setRemoteStream] = useState();
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [isCameraOff, setIsCameraOff] = useState(true);
+  const [call, setCall] = useState(false);
   const role = useSelector((state) => state.auth.role);
 
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const VideoCall = () => {
   }, []);
 
   const handleCallUser = useCallback(async () => {
+    setCall(true);
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -156,16 +158,13 @@ const VideoCall = () => {
     }
   };
 
-  if(remoteSocketId){
-    handleCallUser()
-  }
 
   return (
     <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
       <h4 className="text-green-900">{remoteSocketId && "Connected"}</h4>
       <div className="absolute top-5 left-5 z-50">
-        {myStream && <Button onClick={sendStreams}>Send Stream</Button>}
-        {/* {remoteSocketId && !remoteStream && <Button onClick={handleCallUser}>CALL</Button>} */}
+        {myStream && !call && <Button onClick={sendStreams}>Send Stream</Button>}
+        {remoteSocketId && !remoteStream && !call && <Button onClick={handleCallUser}>CALL</Button>}
       </div>
       <div className="rounded h-screen relative">
         {remoteStream && (
