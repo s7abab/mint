@@ -2,11 +2,23 @@ import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../../services/peer";
 import socket from "../../services/socket";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { Button } from "@material-tailwind/react";
+import { AiOutlineAudioMuted } from "react-icons/ai";
+import { FcEndCall } from "react-icons/fc";
+import { BsCameraVideo } from "react-icons/bs";
 
 const VideoCall = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
+  const [isAudioMuted, setIsAudioMuted] = useState(true);
+  const [isCameraOff, setIsCameraOff] = useState(true);
+  const role = useSelector((state) => state.auth.role);
+
+  const navigate = useNavigate();
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
@@ -108,12 +120,48 @@ const VideoCall = () => {
     handleNegoNeedFinal,
   ]);
 
+  // Function to toggle camera off
+  const toggleCamera = () => {
+    if (myStream) {
+      const videoTrack = myStream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !isCameraOff;
+        setIsCameraOff(!isCameraOff);
+      }
+    }
+  };
+
+  // Function to toggle audio mute
+  const toggleAudioMute = () => {
+    if (myStream) {
+      const audioTrack = myStream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !isAudioMuted;
+        setIsAudioMuted(!isAudioMuted);
+      }
+    }
+  };
+
+  const handleHangUp = () => {
+    if (myStream) {
+      myStream.getTracks().forEach((track) => track.stop());
+    }
+    setMyStream(null);
+    setRemoteStream(null);
+    socket.emit("hangup");
+    if (role === "user") {
+      navigate("/bookings");
+    } else if (role === "counselor") {
+      navigate("/counselor/bookings");
+    }
+  };
+
   return (
     <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
-      <h4>{remoteSocketId && "Connected"}</h4>
+      <h4 className="text-green-900">{remoteSocketId && "Connected"}</h4>
       <div className="absolute top-5 left-5 z-50">
-        {myStream && <button onClick={sendStreams}>Send Stream</button>}
-        {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+        {myStream && <Button onClick={sendStreams}>Send Stream</Button>}
+        {remoteSocketId && <Button onClick={handleCallUser}>CALL</Button>}
       </div>
       <div className="rounded h-screen relative">
         {remoteStream && (
@@ -124,6 +172,34 @@ const VideoCall = () => {
         {myStream && (
           <ReactPlayer playing height="100%" width="100%" url={myStream} />
         )}
+      </div>
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
+        {isCameraOff ? (
+          <BsCameraVideo
+            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleCamera}
+          />
+        ) : (
+          <BsCameraVideo
+            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleCamera}
+          />
+        )}
+        {isAudioMuted ? (
+          <AiOutlineAudioMuted
+            className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleAudioMute}
+          />
+        ) : (
+          <AiOutlineAudioMuted
+            className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
+            onClick={toggleAudioMute}
+          />
+        )}
+        <FcEndCall
+          className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-red-500 hover:text-white cursor-pointer"
+          onClick={handleHangUp}
+        />
       </div>
     </div>
   );
