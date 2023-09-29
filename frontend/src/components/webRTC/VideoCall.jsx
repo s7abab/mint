@@ -14,7 +14,7 @@ const VideoCall = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
-  const [isAudioMuted, setIsAudioMuted] = useState(true);
+  // const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [isCameraOff, setIsCameraOff] = useState(true);
   const role = useSelector((state) => state.auth.role);
 
@@ -132,15 +132,15 @@ const VideoCall = () => {
   };
 
   // Function to toggle audio mute
-  const toggleAudioMute = () => {
-    if (myStream) {
-      const audioTrack = myStream.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = !isAudioMuted;
-        setIsAudioMuted(!isAudioMuted);
-      }
-    }
-  };
+  // const toggleAudioMute = () => {
+  //   if (myStream) {
+  //     const audioTrack = myStream.getAudioTracks()[0];
+  //     if (audioTrack) {
+  //       audioTrack.enabled = !isAudioMuted;
+  //       setIsAudioMuted(!isAudioMuted);
+  //     }
+  //   }
+  // };
 
   const handleHangUp = () => {
     if (myStream) {
@@ -185,7 +185,7 @@ const VideoCall = () => {
             onClick={toggleCamera}
           />
         )}
-        {isAudioMuted ? (
+        {/* {isAudioMuted ? (
           <AiOutlineAudioMuted
             className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2  hover:text-white cursor-pointer"
             onClick={toggleAudioMute}
@@ -195,7 +195,7 @@ const VideoCall = () => {
             className="text-5xl mr-5 bg-red-500 text-white rounded-full p-2  hover:text-white cursor-pointer"
             onClick={toggleAudioMute}
           />
-        )}
+        )} */}
         <FcEndCall
           className="text-5xl mr-5 bg-gray-700 text-white rounded-full p-2 hover:bg-red-500 hover:text-white cursor-pointer"
           onClick={handleHangUp}
