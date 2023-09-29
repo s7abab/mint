@@ -28,7 +28,7 @@ const CounselorProfileAdmin = () => {
               {counselor?.image ? (
                 <img
                   className="w-32 h-32 rounded-full mx-auto"
-                  src={`http://localhost:8080${counselor?.image}`}
+                  src={`${import.meta.env.VITE_BACKEND_URL}${counselor?.image}`}
                   alt="John Doe"
                 />
               ) : (

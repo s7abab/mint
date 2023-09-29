@@ -32,7 +32,7 @@ const UserAdmin = () => {
               {user[0].image ? (
                 <img
                   className="w-32 h-32 rounded-full mx-auto"
-                  src={`http://localhost:8080${user[0].image}`}
+                  src={`${import.meta.env.VITE_BACKEND_URL}${user[0].image}`}
                   alt="John Doe"
                 />
               ) : (
