@@ -35,6 +35,10 @@ const VideoCall = () => {
     setMyStream(stream);
   }, [remoteSocketId, socket]);
 
+  if(remoteSocketId){
+    handleCallUser()
+  }
+
   const handleIncommingCall = useCallback(
     async ({ from, offer }) => {
       setRemoteSocketId(from);
@@ -165,12 +169,12 @@ const VideoCall = () => {
       </div>
       <div className="rounded h-screen relative">
         {remoteStream && (
-          <ReactPlayer muted playing height="100%" width="100%" url={remoteStream} />
+          <ReactPlayer playing height="100%" width="100%" url={remoteStream} />
         )}
       </div>
       <div className="absolute w-1/5 bottom-16 right-0 border-2 border-black">
         {myStream && (
-          <ReactPlayer muted playing height="100%" width="100%" url={myStream} />
+          <ReactPlayer playing height="100%" width="100%" url={myStream} />
         )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
