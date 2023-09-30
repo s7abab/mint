@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CounselorCard = (data) => {
   const navigate = useNavigate();
-
+  const { loading } = useSelector((state) => state.user);
   // Handle View Profile
   const handleViewProfile = (counselorId) => {
     navigate(`/counselors/${counselorId}`);

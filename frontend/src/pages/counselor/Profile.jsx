@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Layout from "../../components/Layout";
 import CounselorAdmin from "../../components/counselorProfile/CounselorAdmin";
 import CounselorUser from "../../components/counselorProfile/CounselorUser";

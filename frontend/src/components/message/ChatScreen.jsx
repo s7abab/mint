@@ -40,6 +40,7 @@ const ChatScreen = () => {
     }
   }, [dispatch, id, conversation]);
 
+  // socket code
   useEffect(() => {
     socket.current = socket;
     socket.current.on("get:message", (data) => {

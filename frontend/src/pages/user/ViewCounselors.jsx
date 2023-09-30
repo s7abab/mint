@@ -29,7 +29,7 @@ const UserViewCounselors = () => {
     debounceTimeout = setTimeout(() => {
       setActive(1);
       handleSearch(newValue);
-    }, 400);
+    }, 100);
   };
   const handleSearch = (query) => {
     dispatch(searchCounselor({ search: query, page: 1, category }));

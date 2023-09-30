@@ -249,6 +249,12 @@ const bookAppointment = async (req, res) => {
           },
         },
       });
+      
+      await counselorModel.findByIdAndUpdate(counselorId, {
+        $addToSet: {
+          connections: uId,
+        },
+      });
     }
     const newConversation = new conversationModel({
       members: [counselorId, userId],
