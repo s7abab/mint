@@ -18,6 +18,8 @@ const VideoCall = () => {
   const [isCameraOff, setIsCameraOff] = useState(true);
   const [call, setCall] = useState(false);
   const [streamBtn, setStreamBtn] = useState(false);
+  const [incomingCall, setIncomingCall] =useState(false)
+
   const role = useSelector((state) => state.auth.role);
 
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ const VideoCall = () => {
       setMyStream(stream);
       console.log(`Incoming Call`, from, offer);
       const ans = await peer.getAnswer(offer);
+      setIncomingCall(true)
       socket.emit("call:accepted", { to: from, ans });
     },
     [socket]
@@ -55,6 +58,7 @@ const VideoCall = () => {
 
   const sendStreams = useCallback(() => {
     setStreamBtn(true);
+    setIncomingCall(false)
     for (const track of myStream.getTracks()) {
       peer.peer.addTrack(track, myStream);
     }
@@ -162,11 +166,24 @@ const VideoCall = () => {
 
   return (
     <div className="h-screen bg-gray-800  w-screen flex flex-col items-center justify-center relative">
+       {incomingCall && (
+    <div className="bg-white p-6 rounded-lg shadow-md mt-2">
+      <h1 className="text-2xl font-semibold mb-2">Incoming Call...</h1>
+      <div className="flex justify-center space-x-4">
+      {myStream && !call && !streamBtn && (
+          <Button className=" bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none" onClick={sendStreams}>Accept</Button>
+        )}
+        <Button
+          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none"
+        >
+          Reject
+        </Button>
+      </div>
+    </div>
+  )}
       <h4 className="text-green-900">{remoteSocketId && "Connected"}</h4>
       <div className="absolute top-5 left-5 z-50">
-        {myStream && !call && !streamBtn && (
-          <Button onClick={sendStreams}>Send Stream</Button>
-        )}
+        
         {remoteSocketId && !remoteStream && !call && (
           <Button onClick={handleCallUser}>CALL</Button>
         )}
