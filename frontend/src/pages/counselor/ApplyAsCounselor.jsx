@@ -36,11 +36,9 @@ const Application = () => {
 
   const handleApply = async (e) => {
     e.preventDefault();
-    if (!isEmailValid(email)) return toast.error("Invalid email address");
-    if (!isPasswordValid(password))
-      return toast.error(
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
-      );
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long");
+    }
     try {
       const res = await dispatch(
         applyAsCounselor({
@@ -96,6 +94,7 @@ const Application = () => {
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
                   size="md"
+                  type="email"
                   label="Email"
                   required
                 />
