@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback, useState } from "react";
-import ReactPlayer from "react-player";
-import peer from "../../services/peer";
-import socket from "../../services/socket";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import ReactPlayer from "react-player";
 import { Button } from "@material-tailwind/react";
 import { AiOutlineAudioMuted } from "react-icons/ai";
 import { FcEndCall } from "react-icons/fc";
 import { BsCameraVideo } from "react-icons/bs";
+
+import peer from "../../services/peer";
+import socket from "../../services/socket";
 
 const VideoCall = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
@@ -127,7 +127,7 @@ const VideoCall = () => {
     handleNegoNeedFinal,
   ]);
 
-  // Function to toggle camera off
+  // toggle camera
   const toggleCamera = () => {
     if (myStream) {
       const videoTrack = myStream.getVideoTracks()[0];
@@ -138,7 +138,7 @@ const VideoCall = () => {
     }
   };
 
-  // Function to toggle audio mute
+  // toggle audio mute
   const toggleAudioMute = () => {
     if (myStream) {
       const audioTrack = myStream.getAudioTracks()[0];
@@ -198,7 +198,7 @@ const VideoCall = () => {
       </div>
       <div className="absolute w-1/5 bottom-16 right-0 border-2 border-black">
         {myStream && (
-          <ReactPlayer playing height="100%" width="100%" url={myStream} />
+          <ReactPlayer muted playing height="100%" width="100%" url={myStream} />
         )}
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-gray-900 p-4 text-white flex justify-center">
