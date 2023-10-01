@@ -24,11 +24,11 @@ const CounselorProfileAdmin = () => {
           <div className="w-full">
             <div className="bg-white  shadow overflow-hidden sm:rounded-lg">
               <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg leading-6 font-bold text-center mb-2 text-gray-900">
                   {counselor?.name}'s Profile
                 </h3>
               </div>
-              <div className="mb-5">
+              <div className="mb-5 object-cover">
                 {counselor?.image ? (
                   <img
                     className="w-32 h-32 rounded-full mx-auto"
@@ -51,7 +51,7 @@ const CounselorProfileAdmin = () => {
                     <dt className="text-sm font-medium text-gray-500">
                       Full name
                     </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 ">
                       {counselor?.name}
                     </dd>
                   </div>

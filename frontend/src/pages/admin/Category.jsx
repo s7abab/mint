@@ -46,7 +46,7 @@ const CategoryPage = () => {
     <>
       <Layout>
         <Card className="h-full w-full overflow-scroll mt-10">
-          <Button onClick={() => setModal(!modal)} className="w-44">
+          <Button onClick={() => setModal(!modal)} className="w-44 mb-5">
             Add new category
           </Button>
           <table className="w-full min-w-max table-auto text-left">

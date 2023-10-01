@@ -28,11 +28,11 @@ const UserAdmin = () => {
           <div className="w-full">
             <div className="bg-white  shadow overflow-hidden sm:rounded-lg">
               <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg leading-6  text-gray-900 font-bold text-center mb-2">
                   {user[0].name}'s Profile
                 </h3>
               </div>
-              <div className="mb-5">
+              <div className="mb-5 ">
                 {user[0].image ? (
                   <img
                     className="w-32 h-32 rounded-full mx-auto"
