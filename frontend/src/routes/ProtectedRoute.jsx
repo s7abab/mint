@@ -14,7 +14,7 @@ const ProtectedRoute = () => {
     if (token) {
       dispatch(getCurrentUser());
     } else {
-      window.location.replace("/");
+      navigate("/");
     }
   }, [token, dispatch]);
 
