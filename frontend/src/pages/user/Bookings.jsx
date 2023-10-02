@@ -59,6 +59,9 @@ const Bookings = () => {
     if (bDate > date) {
       return true;
     }
+    if(bDate < date){
+      return false
+    }
     if (minuteDiff > 60) {
       return true;
     }
