@@ -5,14 +5,13 @@ import { Outlet } from "react-router-dom";
 
 const PublicRoute = () => {
   const token = localStorage.getItem("token");
-  const tokenRedux = useSelector((state) => state.auth.token);
   // Get current user's data
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (token) {
-      dispatch(getCurrentUser());
-    }
-  }, [token, dispatch]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(getCurrentUser());
+  //   }
+  // }, [token, dispatch]);
   return <Outlet />;
 };
 
