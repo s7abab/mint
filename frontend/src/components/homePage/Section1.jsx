@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Section1 = () => {
-  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const token = window.localStorage.getItem("token")
 
   const handleGetStarted = () => {
     navigate("/register");
@@ -18,7 +18,7 @@ const Section1 = () => {
           Refresh Your Mind With <span className="text-green-500 moving-text">MINt</span>{" "}
         </h1>
         <p className="sm:text-lg text-xs mb-8">Your Online Mental Counseling Companion</p>
-        {user ? (
+        {token ? (
           <Button
           className="sm:w-32 w-24 sm:text-[10px] text-[8px]"
             onClick={() => navigate("/login")}

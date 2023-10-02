@@ -114,7 +114,7 @@ const Header = ({ className }) => {
             {navList}
             {!token && (
               <Button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/login")}
                 variant="gradient"
                 size="sm"
                 fullWidth

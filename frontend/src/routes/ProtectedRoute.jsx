@@ -5,7 +5,6 @@ import {Outlet, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../redux/features/auth/authActions";
 
 const ProtectedRoute = () => {
-  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   // Get current user's data
@@ -15,7 +14,7 @@ const ProtectedRoute = () => {
       dispatch(getCurrentUser());
     } 
     else {
-      navigate("/");
+      window.location.replace("/")
     }
   }, [token, dispatch]);
 
