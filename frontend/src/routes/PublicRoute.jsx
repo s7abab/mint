@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { getCurrentUser } from "../redux/features/auth/authActions";
 import { Outlet } from "react-router-dom";
 
 const PublicRoute = () => {
   const token = localStorage.getItem("token");
   // Get current user's data
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (token) {
-  //     dispatch(getCurrentUser());
-  //   }
-  // }, [token, dispatch]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (token) {
+      dispatch(getCurrentUser());
+    }
+  }, [token, dispatch]);
   return <Outlet />;
 };
 

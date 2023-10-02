@@ -31,7 +31,6 @@ const Header = ({ className }) => {
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
   const token = window.localStorage.getItem("token");
-  const tokenRedux = useSelector(state=>state.auth.token)
 
   useEffect(() => {
     window.addEventListener(
@@ -61,7 +60,7 @@ const Header = ({ className }) => {
           </Typography>
           <div className="hidden lg:block">{navList}</div>
 
-          {!token && tokenRedux && (
+          {!token && (
             <Button
               variant="gradient"
               size="sm"
@@ -115,7 +114,7 @@ const Header = ({ className }) => {
             {navList}
             {!token && (
               <Button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/")}
                 variant="gradient"
                 size="sm"
                 fullWidth
