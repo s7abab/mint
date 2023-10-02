@@ -147,7 +147,7 @@ const BookingScreen = ({ close }) => {
               <input
                 onChange={(e) => setAge(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-                type="text"
+                type="number"
               />
             </div>
             <div className="mb-4">
