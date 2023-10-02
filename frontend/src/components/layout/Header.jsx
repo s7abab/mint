@@ -9,18 +9,8 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-  Card,
 } from "@material-tailwind/react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
 import {
   AiFillAppstore,
   AiOutlineForm,
@@ -40,7 +30,7 @@ const Header = ({ className }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
-  const token = useSelector((state) => state.auth.token);
+  const token = window.localStorage.getItem("token");
 
   useEffect(() => {
     window.addEventListener(
