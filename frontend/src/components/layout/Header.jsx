@@ -169,7 +169,6 @@ const Header = ({ className }) => {
                   onClick={() => {
                     dispatch(logout());
                     toast.success("Logout successfully");
-                    navigate("/");
                   }}
                 >
                   <ListItemPrefix>
@@ -234,7 +233,6 @@ const Header = ({ className }) => {
                   onClick={() => {
                     dispatch(logout());
                     toast.success("Logout successfully");
-                    navigate("/");
                   }}
                 >
                   <ListItemPrefix>
@@ -299,7 +297,6 @@ const Header = ({ className }) => {
                   onClick={() => {
                     dispatch(logout());
                     toast.success("Logout successfully");
-                    navigate("/");
                   }}
                 >
                   <ListItemPrefix>

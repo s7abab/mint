@@ -29,7 +29,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(getProfitDataForAdmin.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log(payload)
         state.monthlyProfits = payload;
         state.error = null;
       })
