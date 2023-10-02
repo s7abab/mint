@@ -1,7 +1,7 @@
 // ProtectedRoute.js
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../redux/features/auth/authActions";
 
 const ProtectedRoute = () => {
@@ -13,9 +13,8 @@ const ProtectedRoute = () => {
   useEffect(() => {
     if (token) {
       dispatch(getCurrentUser());
-    } 
-    else {
-      navigate("/");
+    } else {
+      window.location.replace("/");
     }
   }, [token, dispatch]);
 
