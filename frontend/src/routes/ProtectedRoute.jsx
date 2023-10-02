@@ -20,14 +20,14 @@ const ProtectedRoute = () => {
 
   //
   if (!token) {
-    // return (
-    //   <div className="unauthorized">
-    //     <h1>Unauthorized :(</h1>
-    //     <span>
-    //       <NavLink to="/login">Login</NavLink> to gain access
-    //     </span>
-    //   </div>
-    // );
+    return (
+      <div className="unauthorized">
+        <h1 className="font-bold">Unauthorized :</h1>
+        <span>
+          <NavLink to="/login">Login</NavLink> to gain access
+        </span>
+      </div>
+    );
   }
   return <Outlet />;
 };

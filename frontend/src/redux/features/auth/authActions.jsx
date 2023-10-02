@@ -61,7 +61,6 @@ export const userRegister = createAsyncThunk(
 export const verifyOtp = createAsyncThunk(
   "auth/verifyOtp",
   async ({ email, otp }, { rejectWithValue }) => {
-    console.log(email, otp);
     try {
       const res = await Api.post(endpoints.auth.verify_OTP, { email, otp });
       if (res.data.success) {
