@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (max-width: 765px) {
+  .hidden-custom {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+* {
+  -ms-overflow-style: none;
+}
+
+.moving-text {
+  font-weight: bold;
+  animation: moveText 5s ease infinite, changeColor 5s ease infinite;
+  white-space: nowrap;
+}
+
+@keyframes moveText {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes changeColor {
+  0% {
+    color: #66279e; /* Initial color */
+  }
+  50% {
+    color: #2c8f3b; /* Midway color */
+  }
+  100% {
+    color: #1b7d6a; /* Final color */
+  }
+}
