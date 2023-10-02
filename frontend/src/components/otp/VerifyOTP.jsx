@@ -42,7 +42,6 @@ const VerifyOTP = ({ closeModal, email }) => {
       };
     }
   }, [time]);
-
   return (
     <>
       <div className="flex justify-center items-center fixed inset-0">
