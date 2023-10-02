@@ -49,7 +49,7 @@ const VerifyCounselorOTP = ({ closeModal, email }) => {
   return (
     <>
       <div className="flex justify-center items-center fixed inset-0">
-        <Card className="shadow-xl p-5" color="transparent" shadow={false}>
+        <Card className="bg-gray-200 p-5" color="transparent" shadow={false}>
           <p className="cursor-pointer w-2" onClick={closeModal}>
             X
           </p>
