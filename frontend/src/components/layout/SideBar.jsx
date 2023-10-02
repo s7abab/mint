@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  List,
-  ListItem,
-  ListItemPrefix,
-} from "@material-tailwind/react";
+import { Card, List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
 import {
   AiFillAppstore,
@@ -77,10 +72,11 @@ const Sidebar = () => {
               </ListItem>
             </Link>
             <ListItem
-               onClick={() => {
-                dispatch(logout());
-                toast.success("Logout successfully");
-                navigate("/");
+              onClick={() => {
+                dispatch(logout()).then(() => {
+                  navigate("/");
+                  toast.success("Logout successfully");
+                });
               }}
             >
               <ListItemPrefix>
@@ -142,10 +138,11 @@ const Sidebar = () => {
               </ListItem>
             </Link>
             <ListItem
-               onClick={() => {
-                dispatch(logout());
-                toast.success("Logout successfully");
-                navigate("/");
+              onClick={() => {
+                dispatch(logout()).then(() => {
+                  navigate("/");
+                  toast.success("Logout successfully");
+                });
               }}
             >
               <ListItemPrefix>
@@ -216,8 +213,10 @@ const Sidebar = () => {
             </Link>
             <ListItem
               onClick={() => {
-                dispatch(logout());
-                toast.success("Logout successfully");
+                dispatch(logout()).then(() => {
+                  navigate("/");
+                  toast.success("Logout successfully");
+                });
               }}
             >
               <ListItemPrefix>
