@@ -13,8 +13,9 @@ const ProtectedRoute = () => {
   useEffect(() => {
     if (token) {
       dispatch(getCurrentUser());
-    } else {
-      navigate("/login");
+    } 
+    else {
+      navigate("/");
     }
   }, [token, dispatch]);
 
