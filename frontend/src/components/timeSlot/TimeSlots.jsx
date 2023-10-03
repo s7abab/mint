@@ -11,7 +11,7 @@ const TimeSlots = ({ counselorId }) => {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(null);
   const [modal, setModal] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(""); 
+  const [selectedDay, setSelectedDay] = useState("");
 
   const handleSlotSelection = (slotId) => {
     setSelected(slotId);
@@ -32,7 +32,6 @@ const TimeSlots = ({ counselorId }) => {
 
   return (
     <div className="container mx-auto mt-4 p-2">
-  
       <div className="mb-2">
         <label className="mr-2 ">Select a Day:</label>
         <input
@@ -43,6 +42,11 @@ const TimeSlots = ({ counselorId }) => {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 overflow-hidden">
+        {filteredSlots.length===0 && (
+          <h1 className="font-bold text-red-900 text-center">
+            Slots were not scheduled by the counselor
+          </h1>
+        )}
         {filteredSlots.map((slot) => (
           <div
             key={slot._id}
@@ -69,7 +73,7 @@ const TimeSlots = ({ counselorId }) => {
             <p className="text-md mt-1">
               {moment(slot.date).format("DD-MM-YYYY")}
             </p>
-            {slot.status === "pending"  ? (
+            {slot.status === "pending" ? (
               <p
                 className={`text-sm mt-1 ${
                   selected === slot._id ? "text-indigo-600" : ""
@@ -83,7 +87,11 @@ const TimeSlots = ({ counselorId }) => {
           </div>
         ))}
       </div>
-      {selected !== null && <Button className="mt-5" onClick={()=>setModal(!modal)}>Book Appointment</Button>}
+      {selected !== null && (
+        <Button className="mt-5" onClick={() => setModal(!modal)}>
+          Book Appointment
+        </Button>
+      )}
       {modal && <BookingScreen close={handleClose} />}
     </div>
   );

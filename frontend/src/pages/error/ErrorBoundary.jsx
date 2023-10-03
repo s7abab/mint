@@ -17,7 +17,7 @@ class ErrorBoundary extends Component {
       // Render a fallback UI when an error occurs.
       return <div>Something went wrong.</div>;
     }
-    return this.props.children; // Render the child components normally.
+    return this.props.children; 
   }
 }
 
