@@ -1,44 +1,44 @@
 import React, { lazy } from "react";
 
-const Home = lazy(() => import("./pages/Home"));
-const Login = lazy(() => import("./pages/auth/Login"));
-const Register = lazy(() => import("./pages/auth/Register"));
-const NotFoundPage = lazy(() => import("./pages/NotFound.jsx.jsx"));
+const Home = lazy(() => import("../pages/Home"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
+const NotFoundPage = lazy(() => import("../pages/error/NotFound.jsx.jsx"));
 const ApplyAsCounselor = lazy(() =>
-  import("./pages/counselor/ApplyAsCounselor")
+  import("../pages/counselor/ApplyAsCounselor")
 );
 
-const ApplicationsPage = lazy(() => import("./pages/admin/Applications"));
-const CategoryPage = lazy(() => import("./pages/admin/Category"));
-const ViewCounselors = lazy(() => import("./pages/admin/ViewCounselors"));
-const UserViewCounselors = lazy(() => import("./pages/user/ViewCounselors"));
-const UserProfile = lazy(() => import("./pages/user/Profile"));
+const ApplicationsPage = lazy(() => import("../pages/admin/Applications"));
+const CategoryPage = lazy(() => import("../pages/admin/Category"));
+const ViewCounselors = lazy(() => import("../pages/admin/ViewCounselors"));
+const UserViewCounselors = lazy(() => import("../pages/user/ViewCounselors"));
+const UserProfile = lazy(() => import("../pages/user/Profile"));
 const CounselorProfile = lazy(() =>
-  import("./pages/counselor/Profile")
+  import("../pages/counselor/Profile")
 );
 const CounselorCounselor = lazy(() =>
-  import("./components/counselorProfile/CounselorCounselor")
+  import("../components/counselorProfile/CounselorCounselor")
 );
-const ViewUsers = lazy(() => import("./pages/admin/ViewUsers"));
+const ViewUsers = lazy(() => import("../pages/admin/ViewUsers"));
 const CounselorProfileAdmin = lazy(() =>
-  import("./components/counselorProfile/CounselorProfileAdmin")
+  import("../components/counselorProfile/CounselorProfileAdmin")
 );
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const KycPage = lazy(() => import("./pages/admin/Kyc"));
+const AdminDashboard = lazy(() => import("../pages/admin/Dashboard"));
+const KycPage = lazy(() => import("../pages/admin/Kyc"));
 const CounselorDashboard = lazy(() =>
-  import("./pages/counselor/Dashboard")
+  import("../pages/counselor/Dashboard")
 );
-const AppointmentBooking = lazy(() => import("./pages/user/AppointmentBooking.jsx"));
-const Slots = lazy(() => import("./pages/counselor/Slots"));
-const Bookings = lazy(() => import("./pages/user/Bookings"));
+const AppointmentBooking = lazy(() => import("../pages/user/AppointmentBooking.jsx"));
+const Slots = lazy(() => import("../pages/counselor/Slots"));
+const Bookings = lazy(() => import("../pages/user/Bookings"));
 const CounselorBookings = lazy(() =>
-  import("./pages/counselor/Bookings")
+  import("../pages/counselor/Bookings")
 );
-const Payment = lazy(() => import("./pages/Payment"));
-const RoomPage = lazy(() => import("./pages/Room"));
-const PaymentsAdmin = lazy(() => import("./pages/admin/Payments"));
-const Message = lazy(() => import("./pages/Message"));
-const ChatScreen = lazy(() => import("./components/message/ChatScreen"));
+const Payment = lazy(() => import("../pages/Payment"));
+const RoomPage = lazy(() => import("../pages/Room"));
+const PaymentsAdmin = lazy(() => import("../pages/admin/Payments"));
+const Message = lazy(() => import("../pages/Message"));
+const ChatScreen = lazy(() => import("../components/message/ChatScreen"));
 
 export const publicRoutes = [
   {

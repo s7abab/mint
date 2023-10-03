@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
-import { privateRoutes, publicRoutes } from "./routes";
+import { privateRoutes, publicRoutes } from "./routes/routes";
 
 import { useSelector } from "react-redux";
 import socket from "./services/socket";
