@@ -54,6 +54,7 @@ EMAIL_USER
 EMAIL_PASS 
 KEY_ID 
 KEY_SECRET
+
 -------------
 frondend env
 -------------
