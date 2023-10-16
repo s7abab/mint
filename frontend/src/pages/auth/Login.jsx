@@ -6,6 +6,8 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../../redux/features/auth/authActions";
 
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,13 @@ const LoginPage = () => {
     e.preventDefault();
     if (!email || !password) {
       return toast.error("Please provide all fields");
+    }
+    if (!emailRegex.test(email)) {
+      return toast.error("Invalid email address");
+    }
+    
+    if (!passwordRegex.test(password)) {
+      return toast.error("Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.");
     }
     dispatch(userLogin({ email, password }));
   };

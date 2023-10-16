@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../../redux/features/auth/authActions";
 import VerifyOTP from "../../components/otp/VerifyOTP";
 
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,9 +20,13 @@ const RegisterPage = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-   if(password.length <6){
-    return toast.error("Password must be at least 6 characters long");
-   }
+    if (!emailRegex.test(email)) {
+      return toast.error("Invalid email address");
+    }
+    
+    if (!passwordRegex.test(password)) {
+      return toast.error("Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+    }
     const res = await dispatch(
       userRegister({ name, email, password, confirmPassword })
     );
