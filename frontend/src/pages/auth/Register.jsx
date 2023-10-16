@@ -25,7 +25,7 @@ const RegisterPage = () => {
     }
     
     if (!passwordRegex.test(password)) {
-      return toast.error("Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+      return toast.error("Password must be at least 6 characters long");
     }
     const res = await dispatch(
       userRegister({ name, email, password, confirmPassword })

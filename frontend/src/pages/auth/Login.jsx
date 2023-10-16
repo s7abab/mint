@@ -36,7 +36,7 @@ const LoginPage = () => {
     }
     
     if (!passwordRegex.test(password)) {
-      return toast.error("Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+      return toast.error("Password must be at least 6 characters long");
     }
     dispatch(userLogin({ email, password }));
   };
@@ -60,6 +60,7 @@ const LoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   size="lg"
                   label="Email"
+                  type="email"
                 />
                 <Input
                   onChange={(e) => setPassword(e.target.value)}
